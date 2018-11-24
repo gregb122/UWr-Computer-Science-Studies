@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+<title> Zadanie 3</title>
+<meta charset="utf-8">
+<meta name="keywords" content="Technologie internetowe, Kurs WWW, HTML5, CSS, Javascript">
+<meta name="description" content="Pusty szablon dokumentu HTML5">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css" href="style.css" >
+
+</head>
+<body>
+
+<h1> Selektor type - stylowanie dotyczy wszystkich znacznikow podanego typu </h1>
+<h2> Selektor descendant "*" - przykladowo div * p oznacza wszystkich potomków diva od stopnia wnuka w głąb </h2>
+<p> Zwykły paragraf, poza divem - nie </p>
+<div><p> Paragraf w divie, jest dzieckiem diva, ale nie wnukiem  </p> </div>
+<div> <article> <p> Paragraf w article w divie, spełnia div * p - jest wnukiem diva </p> </article> </div>
+
+<h2> Selektor child ">" - a > b działa dla wszystkich dzieci typu b będących rodzicami typu a </h2>
+<article> <h3> H3 jest dzieckiem article - article > h3 </h3> </article>
+
+<h2> Selektor adjacent "+" - </h2>
+<h4> Adjacent h4 + h5 stylizuje odstep miedzy tymi znacznikami </h4>
+<h5> Jest zmniejszony odstep od h4 o 7mm</h5>
+
+<h2> Selektor class "."</h2>
+Działa dla wszystkich znaczników, które w atrybucie html będą przypisane do tej klasy poprzez
+class="nazwa_klasy". Klasa daje swoim członkom stylizowanie zdefiniowane w jej wnętrzu.
+Przykład: .p1
+<p class="p1"> Jestesmy w paragrafie z klasy p1 </p>
+<p class="p1"> Tutaj też... </p>
+<a href="http://www.wp.pl" class="p1"> ten link też jest w klasie p1 </a>
+<p> Ten paragraf nie jest w klasie p1... </p>
+
+<h2> Selektor id "#" - działa dla tych znaczników, które mają jako atrybut id="nazwa_id"</h2>
+<div id='div1'> Jesteśmy w divie o id div </div>
+<div> Zwykły div... </div>
+
+</body>
+
+
+</html>

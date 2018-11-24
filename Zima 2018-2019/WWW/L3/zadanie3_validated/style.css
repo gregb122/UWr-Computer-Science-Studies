@@ -1,0 +1,25 @@
+.a
+{
+  position: relative; top: 100px;
+  background-color: red;
+  width:1000px;
+  height: 1000px;
+}
+
+.b
+{
+  background-color: green;
+  position: relative; left: 500px; top: 45px;
+}
+
+.c
+{
+  background-color: yellow;
+  position: absolute; left: 100px; top:100px;
+}
+
+.d
+{
+  background-color: blue;
+  position: fixed; left: 100px; top:100px;
+}

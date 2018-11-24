@@ -1,0 +1,88 @@
+#content
+{   margin-left: auto;
+    margin-right: auto;
+    width: 1300px;
+    height: 600px;
+    background-color: beige
+}
+#time_counter
+{
+    float: left;
+    width: 130px;
+    height: 550px;
+    background-color: blueviolet;
+    padding: 10px;
+}
+#scores
+{
+    float: left;
+    width: 130px;
+    height: 50px;
+    background-color: blueviolet;
+    padding: 10px;
+}
+#best_scores
+{
+    width: 130px;
+    height: 480px;
+    float: right;
+    background-color: green;
+    padding: 10px;
+}
+#playboard
+{
+    float: left;
+    position: relative;
+    padding: 10px;
+    width: 980px;
+    height: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: lightgray;
+
+}
+#header
+{   
+    padding: 10px;
+    width: 1280px;
+    height: 25px;
+    background-color: aqua;
+    font-size: 20px;
+    text-align: center;
+}
+
+#footer
+{
+    padding: 10px;
+    clear: both;
+    width: 1280px;
+    height: 25px;
+    background-color: aqua;
+    font-size: 20px;
+    text-align: center;
+}
+
+#center_square
+{
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);    
+    background-color: cyan;
+}
+
+.square
+{
+    float:left;
+    width: 50px;
+    height: 50px;
+    margin: 10px
+}
+
+#center_square:hover
+{
+    background-color: black;
+}
+

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+<title> Zadanie 2</title>
+<meta charset="utf-8">
+<meta name="keywords" content="Technologie internetowe, Kurs WWW, HTML5, CSS, Javascript">
+<meta name="description" content="Pusty szablon dokumentu HTML5">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<script src="form_validate.js">
+</script>
+
+</head>
+<body>
+<form name="formularz" action="#" onsubmit="return validateForm()" method="post">
+  <fieldset>
+    <legend> Formularz kontaktowy: </legend>
+   <br>
+  <br>
+  <label> Numer konta: </label> <br> <input type="text" name="account_number" 
+  title="Numer konta powinien składać się z 26 cyfr"> <br>
+  <br>
+  <label> PESEL: </label> <br> <input type="text" name="pesel"
+  title="Numer PESEL powinien składać się z 11 cyfr"> <br>
+  <br>
+  <label> Data urodzenia: </label> <br> <input type="text" name="birth_date_day" 
+  title="Podaj dzień jako liczbę od 0 do 31"> Dzień <br>
+  <input type="text" name="birth_date_month" 
+  title="Podaj miesiąc jako liczbę od 1 do 12"> Miesiąc <br>
+  <input type="text" name="birth_date_year" 
+  title="Podaj rok jako czterocyfrową liczbę"> Rok <br>
+  <br>
+  <label> E-mail: </label> <br> <input type="email" name="email"> <br>
+  <br>
+  </fieldset>
+  <input type="submit" value="Prześlij">
+  <input type="reset" value="Zresetuj">
+</form>
+
+</body>
+
+
+</html>

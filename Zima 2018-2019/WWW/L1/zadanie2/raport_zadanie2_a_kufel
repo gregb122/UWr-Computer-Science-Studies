@@ -1,0 +1,40 @@
+﻿Autor: Adam Kufel
+Kurs WWW, Lista 1
+Zadanie 2: Raport dotyczący możliwości zagnieżdżania danych znaczników.
+
+Według walidatora:
+1.Znacznik header nie może być zagnieżdżony w:
+  znaczniku header
+  znaczniku footer
+  znaczniku address
+  znaczniku h1
+  znaczniku h2
+2.Znacznik footer nie może być zagnieżdżony w:
+  znaczniku header
+  znaczniku footer
+  znaczniku address
+  znaczniku h1
+  znaczniku h2
+3.Znacznik address nie może być zagnieżdżony w:
+  znaczniku address
+  znaczniku h1
+  znaczniku h2
+4.Znacznik section nie może być zagnieżdżony w:
+  znaczniku address
+  znaczniku h1
+  znaczniku h2
+5.Znacznik article nie może być zagnieżdżony w:
+  znaczniku article
+  znaczniku h1
+  znaczniku h2
+6.Znacznik nav nie może być zagnieżdżony w:
+  znaczniku address
+  znaczniku h1
+  znaczniku h2
+7.Znacznik aside nie może być zagnieżdżony w:
+  znaczniku h1
+  znaczniku h2
+8.Znacznik h1 nie może być zagnieżdżony w:
+  znaczniku address
+9.Znacznik h2 nie może być zagnieżdżony w:
+  znaczniku address

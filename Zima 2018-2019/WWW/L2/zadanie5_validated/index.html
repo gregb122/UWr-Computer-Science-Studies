@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+<title> Zadanie 5</title>
+<meta charset="utf-8">
+<meta name="keywords" content="Technologie internetowe, Kurs WWW, HTML5, CSS, Javascript">
+<meta name="description" content="Pusty szablon dokumentu HTML5">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" type="text/css" href="style.css" >
+
+</head>
+<body>
+  <h2> first-of-type </h2>
+<p class="p1">Paragraf 1: first-of-type działa dla pierwszego napotkanego dziecka dla danego rodzica.</p>
+<p class="p1">Paragraf 2: Ten już nie jest pierwszy.. </p>
+
+  <h2> last-of-type </h2>
+<p class="p2"> Paragraf 3: ........ </p>
+<p class="p2"> Paragraf 4, póki co ostatni.. wystylizowany przez last-of-typ</p>
+<h6> inny znacznik </h6>
+
+  <h2> only-of-type</h2>
+  <div> <p class="p3"> Div1: Paragraf  w div1...jest jedynym dzieckiem swojego rodzica </p> </div>
+  <div> <p class="p3"> Div2: Paragraf jest pierwszym dzieckiem w tym div2... </p>
+    <p class="p3"> Paragraf jest dzieckiem div2</p>
+    <p class="p3"> Ale paragraf też jest dzieckiem tego samego diva </p>
+  </div>
+
+  <h2> nth-type(#)</h2>
+  <div> <p class="p4">Div3: zadziała na n-tym pojawiającym się znaczniku tego typu wśród dzieci diva </p>
+      <p class="p4"> Paragraf 2... </p>
+      <p class="p4"> Paragraf 3 </p>
+      <p class="p4"> Paragraf 4 </p>
+      <p class="p4"> Paragraf 5 </p>
+      <p class="p4"> Paragraf 6 </p>
+  </div>
+
+  <h2> :nth-last-of-type </h2>
+  <div> <p class="p7" > div6:  zadziała na n-tym od końca pojawiającym się znaczniku tego typu wśród dzieci diva </p>
+        <p class="p7"> Paragraf 2 </p>
+        <p class="p7"> Paragraf 3 </p>
+        <p class="p7"> Paragraf 4 </p>
+  </div>
+
+  <h2> :nth-last-child(#) </h2>
+  <div> <p class="p5"> div4: zadziała jeśli n-te od końca dziecko-znacznik jest podanego typu</p>
+        <p class="p5"> Paragraf 2 </p>
+        <p class="p5"> Paragraf 3, jeśli zmienimy na coś innego typu nie zadziała </p>
+        <p class="p5"> Paragraf 4 </p>
+  </div>
+
+  <h2> :nth-child(#) </h2>
+  <div> <p class="p6" > div5: zadziała, jeśli n-te dziecko-znacznik jest podanego typu  </p>
+        <h3> inny typ dziecka </h3>
+        <p class="p6"> Paragraf 2, gdyby to nie było z klasy p6, nth-child nie zadziałałby </p>
+        <p class="p6"> Paragraf 3 </p>
+        <p class="p6"> Paragraf 4 </p>
+  </div>
+
+  <h2> :last-child </h2>
+  <div>
+    <p class="p9"> Paragraf 1 </p>
+    <p class="p9"> Paragraf 2 </p>
+    <h6> inny znacznik </h6>
+  </div>
+
+    <h2> root - zmienia dla całego dokumentu html stylizowanie</h2>
+
+    <h2> empty - ustawia stylizowanie dla pustych elementow okreslonego typu </h2>
+    <p class="p10"> </p>
+    <p class="p10"> Niepusty paragraf </p>
+
+
+    <h2> not(...) - stylizuje wszystkie rzeczy, ktore nie sa tym podanego typu</h2>
+      <div> <h1 class="p8"> nagłówek h1 </h1>
+          <h3 class="p8"> to nie jest nagłówek h1 </h3>
+          <p class="p8"> to nie jest nagłówke h1 równiez </p>
+      </div>
+
+
+    <h2> selection </h2>
+      Selektor selection umozliwia stylowanie domyślnego podświetlenia zaznaczonych elementów.
+
+
+</body>
+
+
+</html>

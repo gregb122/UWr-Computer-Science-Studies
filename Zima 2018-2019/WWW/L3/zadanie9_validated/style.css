@@ -1,0 +1,41 @@
+.photo_gallery
+{
+  display: inline-block;
+  position:relative;
+  width: 384px;
+  height: 216px;
+}
+
+
+.photo_gallery > img
+{
+  width: 384px;
+  height: 216px;
+
+}
+
+.photo_gallery:hover img
+{
+  -webkit-filter: blur(5px);
+}
+
+.photo_gallery:hover .photo_description
+{
+  visibility: visible;
+  opacity: 1;
+}
+
+.photo_description
+{
+  position:absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  font-size: 30px;
+  opacity: 0;
+  transition: opacity 1s;
+}

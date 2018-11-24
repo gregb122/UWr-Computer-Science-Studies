@@ -1,0 +1,52 @@
+.p1:first-of-type
+{
+  background: red;
+}
+.p2:last-of-type
+{
+  background: cyan;
+}
+.p3:only-of-type
+{
+  background: green;
+}
+.p4:nth-of-type(6)
+{
+  background: black;
+}
+
+.p5:nth-last-child(2)
+{
+  background: violet;
+}
+.p6:nth-child(3)
+{
+  background: blue;
+}
+.p7:nth-last-of-type(2)
+{
+  background: purple;
+}
+.p8:not(h1)
+{
+  background:green;
+}
+.p9:last-child
+{
+  background: yellow;
+}
+:root
+{
+  background-color: gray;
+}
+.p10:empty
+{
+  width: 100px;
+  height: 20px;
+  background: black;
+}
+::selection
+{
+    color: red;
+    background: yellow;
+}

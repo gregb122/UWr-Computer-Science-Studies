@@ -1,0 +1,73 @@
+#img_container
+{
+    float:left;
+    width: 700px;
+    height: 500px;
+    padding: 30px;
+    border-style: dashed;
+}
+
+#palette
+{
+    margin-left: 20px;
+    width: 530px;
+    height: 500px;
+    padding: 30px;
+    border-style: dotted;
+    float:left;
+}
+.pic_square
+{
+    position: absolute;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    border-style: solid;
+}
+.square
+{
+    float:left;
+    width: 100px;
+    height: 100px;
+}
+
+#red
+{
+    background-color: red;
+}
+#blue
+{
+    background-color: blue;
+}
+#green
+{
+    background-color: green;
+}
+#yellow
+{
+    background-color: yellow;
+}
+#cyan
+{
+    background-color: cyan;
+}
+#orange
+{
+    background-color: orange;
+}
+#purple
+{
+    background-color: purple;
+}
+#beige
+{
+    background-color: beige;
+}
+#gray
+{
+    background-color: gray;
+}
+#black
+{
+    background-color: black;
+}

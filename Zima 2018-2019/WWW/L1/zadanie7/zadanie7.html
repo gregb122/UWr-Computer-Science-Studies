@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head>
+<title> Zadanie 7</title>
+<meta charset="utf-8">
+<meta name="keywords" content="Technologie internetowe, Kurs WWW, HTML5, CSS, Javascript">
+<meta name="description" content="Pusty szablon dokumentu HTML5">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+</head>
+<body>
+<!-- po wcisnieciu klawisza submit wykonuje sie skrypt na serwerze okreslony w action
+atrybut name pozwala serwerowi rozroznic przesylane dane
+
+-->
+<form id="formularz" action="index.html">
+  <fieldset>
+    <legend> Dane osobowe: </legend>
+  <label> Imię: </label> <br> <input type="text" name="first_name" autofocus required> <br>
+  <br>
+  <label> Nazwisko: </label> <br> <input type="text" name="last_name" required> <br>
+  <br>
+  </fieldset>
+
+  <br>
+  <fieldset>
+    <legend> Dane kontaktowe: </legend>
+  <label> Miejscowość: </label> <br> <input list="town_list" name="town_list" >
+    <datalist id="town_list">
+      <option value="Warszawa"> </option>
+      <option value="Wrocław"> </option>
+      <option value="Kraków">  </option>
+      <option value="Poznań">  </option>
+      <option value="Gdańsk">  </option>
+      <option value="Łódź">  </option>
+    </datalist>
+   <br>
+  <br>
+  <label> Kod pocztowy: </label> <br> <input type="text" name="postal_code" pattern="^[0-9]{2}-[0-9]{3}$"
+  title="Podaj pięć cyfr w formacie: 00-000"> <br>
+  <br>
+  <label> E-mail: </label> <br> <input type="email" name="email" required> <br>
+  <br>
+  <label> Numer telefonu: </label> <br> <input type="text" name="phone" pattern="^[0-9]{9}$"
+  title="Dziewięć cyfr, np. 000000000"> <br>
+  <br>
+  </fieldset>
+
+  <br>
+  <fieldset>
+    <legend> Dane dotyczące przelewu: </legend>
+  <label> Numer konta: </label> <br> <input type="text" name="account_number" pattern="^[0-9]{26}$" required
+  title="Numer konta powinien składać się z 26 cyfr"> <br>
+  <br>
+  <label> Data przelewu: </label> <br> <input type="date" name="transfer_date" > <br>
+  <br>
+  <label> Kwota: </label> <br> <input type="number"> <br>
+  <br>
+  <label> Hasło: </label> <br> <input type="password" name="password" required> <br>
+  <br>
+  </fieldset>
+  <br>
+  <input type="submit" value="Prześlij">
+  <input type="reset" value="Zresetuj">
+</form>
+
+</body>
+
+
+</html>

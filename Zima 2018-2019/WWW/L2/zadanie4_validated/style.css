@@ -1,0 +1,106 @@
+/*before - dodaje treść na początku elementu
+after - dodaje treść na końcu elementu */
+
+p {
+  width: 80%;
+  padding: 15px 0 15px 20px;
+  margin: 15px 0;
+  position: relative;
+}
+
+p:before {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 1px;
+    position: absolute;
+    top: -1px;
+    left: 0;
+    background-color: #efc73c;
+}
+
+p:after {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 1px;
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    background-color: #efc73c;
+}
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000;
+}
+a:after {
+    content: " /";
+}
+a:first-child:before {
+    content: " » ";
+}
+a:last-child:after {
+    content: "";
+}
+.p3
+{
+  float: left;
+display: block;
+width: 100px;
+}
+.p4:before {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+span.quoted {
+    font-family: Georgia;
+    font-size: 16px;
+    display: block;
+    margin: 14px 0 0 0;
+    font-style: italic;
+}
+span.quoted:before {
+    content: "“";
+    font-size: 40px;
+    color: #999;
+    line-height: 0;
+    display: inline-block;
+    margin: 0 6px 0 0;
+}
+span.quoted:after {
+    content: " ”";
+    font-size: 40px;
+    color: #999;
+    line-height: 0;
+    display: inline-block;
+    margin: 0 0 0 4px;
+}
+
+.naglowek {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.naglowek:after {
+    display: inline-block;
+    margin: 0 0 8px 20px;
+    height: 3px;
+    content: " ";
+    text-shadow: none;
+    background-color: #999;
+    width: 140px;
+}
+.naglowek:before {
+    display: inline-block;
+    margin: 0 20px 8px 0;
+    height: 3px;
+    content: " ";
+    text-shadow: none;
+    background-color: #999;
+    width: 140px;
+}

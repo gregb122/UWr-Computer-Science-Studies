@@ -1,0 +1,75 @@
+.c
+{
+  height: 500px;
+  width: 500px;
+  background-color: green;
+  text-align: center;
+}
+.d
+{
+      width:50%;
+      margin-left:  auto;
+      margin-right: auto;
+      border:2px solid black;
+
+}
+.e
+{
+  text-align: center;
+
+}
+
+
+div.a
+{
+    position: relative;
+    font-size: 12px;
+    background-color: cyan;
+    width: 500px;
+    height: 500px;
+    margin: 20px;
+    padding: 20px;
+    border: 2px;
+    border-style: groove;
+
+}
+
+div.a p
+{
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+  background: yellow;
+  position: absolute;
+  top: 50%;/* umiesć zawartość w połowie wysokości kontenera*/
+  left: 50%; /* przesuń element, ścieśnij go w lewo do połowy kontenera*/
+  transform: translate(-50%,-50%); /* przenies element za pomoca translate na x i na y*/
+  /* za pomoca margin right albo margin left mozemy dociagac do horyzontalnych/wertykalnych granic kontenera*/
+}
+
+div.b
+{
+  height: 100px;
+  width: 200px;
+  position: absolute;
+  background-color: black;
+  padding: 5px;
+  margin: 0;
+  position: absolute;
+  top: 50%;/* umiesć zawartość w połowie wysokości kontenera*/
+  left: 50%; /* przesuń element, ścieśnij go w lewo do połowy kontenera*/
+  transform: translate(-50%,-50%); /* przenies element za pomoca translate na x i na y*/
+
+}
+span.span_a
+{
+  display: inline;
+  padding: 10px;
+  text-align: center;
+  background-color: gray;
+  position: absolute;
+  top: 50%;/* umiesć zawartość w połowie wysokości kontenera*/
+  left: 50%; /* przesuń element, ścieśnij go w lewo do połowy kontenera*/
+  transform: translate(-50%,-50%); /* przenies element za pomoca translate na x i na y*/
+
+}

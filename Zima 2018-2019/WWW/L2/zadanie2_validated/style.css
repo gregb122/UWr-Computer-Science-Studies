@@ -1,0 +1,21 @@
+a:link/*okresla atrybuty formatowania dla wszystkich odsylaczy, ktore nie zostaly odwiedzone przez uzytkownika*/
+{
+  font-weight: bold;
+}
+a:visited /* przegladarka ocenia na podstawie historii odwiedzonych stron, czy byla odwiedzona czy nie */
+{
+  color:pink;
+}
+a:hover/* aktywowany po najechaniu kursorem*/
+{
+  background-color: gray;
+}
+a:active/* aktywowany, gdy użytkownik jest w trakcie akcji, np. wciśnie przycisk myszy, przytrzymując go */
+{
+  font-size: 32px;
+}
+a:focus/*aktywowany po naciśnięciu na obiekt kursorem myszy lub poprzez przejście tabulatorem */
+{
+  color:white;
+  background-color: black;
+}

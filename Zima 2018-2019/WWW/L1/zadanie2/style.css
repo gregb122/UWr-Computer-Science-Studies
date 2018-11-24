@@ -1,0 +1,23 @@
+.div1
+{
+  width: 200px;
+  height: 100px;
+  background-color: blue;
+}
+
+.div2
+{
+  width: 200px;
+  height: 100px;
+  background-color: red;
+}
+
+.span1
+{
+background-color: green;
+}
+
+.span2
+{
+background-color: yellow;
+}

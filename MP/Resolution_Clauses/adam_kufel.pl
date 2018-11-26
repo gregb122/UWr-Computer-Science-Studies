@@ -1,0 +1,688 @@
+:- module(adam_kufel, [resolve/4, prove/2]).
+:- op(200, fx, ~).
+:- op(500, xfy, v).
+%Metody Programowania
+%Pracownia: Zadanie nr 2 - Rezolucja zbioru klauzul
+%Autor: Adam Kufel
+%Wroclaw 2017
+%
+%
+% Modul 1: Predykaty pomocnicze sluzace do podstawowych przeksztalcen
+% - uzywane w calym programie
+%
+%
+% 1a: predykat change/2, Tryb: (+-), Przykladowy In/Out:
+% change(p v ~q v r, X).
+% X = [p,~q,r]
+% Opis dzialania: zamienia klauzule na liste pojedynczych literalow
+%
+change(Literal_A v Literal_B, [Literal_A|RestofLiterals]) :-
+    change(Literal_B, RestofLiterals),!.
+change(Literal_A, [Literal_A]).
+
+%
+% 1b: predykat rmneg/2 (Remove negation) ,Tryb:(+-), Przykladowy In/Out:
+% rmneg([p,~q,r], X).
+% X = [p,q,r]
+% Opis dzialania: usuwa negacje, zamienia liste pojedynczych literalow
+% na liste pojedynczych zmiennych zdaniowych
+%
+rmneg([Literal_A|RestofLiterals], [Variable_A|RestofVariables]) :-
+    Literal_A = ~X, Variable_A = X, rmneg(RestofLiterals, RestofVariables), !.
+rmneg([Literal_A|RestofLiterals], [Variable_A|RestofVariables]) :-
+    Literal_A = X, Variable_A = X, rmneg(RestofLiterals, RestofVariables).
+rmneg([],[]) :- !.
+
+% 1c predykat rmdup/2 (Remove duplicates), Tryb:(+-), Przykladowy
+% In/Out: rmdup([p,q,p,r], X).
+% X = [p,q,r]
+% Opis dzialania: usuwa duplikaty z listy pojedynczych zmiennych
+% zdaniowych
+%
+rmdup([], []) :- !.
+rmdup([Variable_A|RestofVariables], [Variable_A|RestVarsNotDuplicated]) :- not(member(Variable_A, RestofVariables)), rmdup(RestofVariables, RestVarsNotDuplicated), !.
+rmdup([Variable_A|RestofVariables], ListWithoutDuplicates) :- member(Variable_A, RestofVariables), rmdup(RestofVariables, ListWithoutDuplicates), !.
+
+% 1d predykat elim1/3 oraz elim2/3, Tryb:(++-), Przykladowy In/Out:
+% elim1([p,~q,r,~p],p,Y)
+% Y = [~p,r,~q].
+% Opis dzialania: Usuwa z listy pojedynczych literalow pare X
+% i ~X, gdzie X- zmienna zdaniowa
+%
+elim1(ListofLiterals, X, Result) :-
+    elim1(ListofLiterals, X, Result, []).
+
+elim1([], _, Result, Result):- !.
+elim1([Literal|RestofLiterals], X, Result, Accumulate) :-
+     Literal = X, !, elim1(RestofLiterals, X, Result, Accumulate).
+elim1([Literal|RestofLiterals], X, Result, Accumulate) :-
+    not(Literal = X), elim1(RestofLiterals, X, Result, [Literal|Accumulate]).
+
+elim2(ListofLiterals, X, Result) :-
+    elim2(ListofLiterals, X, Result, []).
+
+elim2([], _, Result, Result):- !.
+elim2([Literal|RestofLiterals], X, Result, Accumulate) :-
+    Literal = ~X,!, elim2(RestofLiterals, X, Result, Accumulate).
+elim2([Literal|RestofLiterals], X, Result, Accumulate) :-
+    not(Literal = ~X), elim2(RestofLiterals, X, Result, [Literal|Accumulate]).
+
+
+% 1e: predykat addv/2, Tryb:(+-), Przykladowy In/Out:
+% addv([p,r,~t], X).
+% X = p v r v ~t
+% Opis dzialania: zamiana listy pojedynczych literalow na
+% pojedyncza klauzule
+%
+addv([Literal], Literal) :- !.
+addv([Literal|RestofLiterals], Literal v RestofClause) :-
+    addv(RestofLiterals, RestofClause).
+
+
+%Modul 2: Predykat resolve/4, Tryb:(+++-):
+%
+%1 argument = zmienna X, wzgledem ktorej dokonywana jest rezolucja
+%2 argument = klauzula zawierajaca pozytywne wystapienia literalu X
+%3 argument = klauzula zawierajaca negatywne wystapienia literalu X
+%Przykladowy In/Out:
+%resolve(p, p v q v r, ~p v q , Y).
+% Y = q v r
+% Opis dzialania: tworzy z 2 klauzul rezolwente wzgledem zmiennej X
+%
+resolve([], _, _, []) :- !.
+resolve(_, [], _, []) :- !.
+resolve(_, _, [], []) :- !.
+resolve(Literal, ~Literal, Literal ,[]) :- !.
+resolve(Literal, Literal, ~Literal ,[]) :- !.
+resolve(Literal, Clause1, Clause2, Result) :-
+    change(Clause1, ListofLits1), change(Clause2, ListofLits2), rmdup(ListofLits1, Without1),
+    rmdup(ListofLits2, Without2), elim1(Without1, Literal, Rez3),
+    elim2(Without2, Literal, Rez4),
+    append(Rez3,Rez4, Valresolve1), rmdup(Valresolve1, Valresolve), addv(Valresolve, Result), !.
+
+
+% Modul 3: Generowanie wszystkich mozliwych rezolwent dla zadanego
+% zbioru klauzul - jesli w wygenerowanym zbiorze znajduje sie rezolwenta
+% pusta ([]), istnieje dowod sprzecznosci - wtedy tez przestajemy
+% generowac dalej. Jesli
+% nie ma pustej, wygenerujemy wszystkie mozliwe rezolwenty, wtedy tez
+% dowod sprzecznosci nie istnieje.
+%
+% 3a: predykat makeoneresolwent/4: Tryb:(+++-)
+% 1 arg - literal
+% 2 arg - 1 klauzula
+% 3 arg - 2 klauzula
+% Przykladowy In/Out:
+% makeoneresolwent(p, ~p v q, p v q, X).
+% X = q
+% Opis dzialania: tworzy rezolwente z dwoch klauzul,
+% niezaleznie od tego, w ktorych wystepuja pozytywne i negatywne
+% wystapienia zmiennej
+
+makeoneresolwent([], _,_, _) :- !.
+makeoneresolwent(Lit, Clause1, Clause2, Resolwent) :-
+    ifcandor(Lit,Clause1, Clause2), resolve(Lit, Clause1, Clause2, Resolwent),!.
+makeoneresolwent(Lit, Clause1, Clause2, Resolwent) :-
+    ifcandor(Lit,Clause2, Clause1), resolve(Lit, Clause2, Clause1, Resolwent),!.
+
+% 3b: predykat createresolwents/4, Tryb:(+++-)
+%1 - lista literalow
+%2 - clause1
+%3 - clause2
+% Przykladowy In/Out:
+% createresolwents([p,q,r,t], p v ~q v r, ~p v t v q, X).
+% X = [t v ~p v r v p,r v ~q v q v t].
+%4 - wynik - lista z wszystkimi mozliwymi rezolwentami 2 klauzul,
+% wzgledem wszystkich mozliwych wystepujacych literalow.
+%
+createresolwents([Lit|Rest], Clause1, Clause2, Res) :-
+    createresolwents([Lit|Rest], Clause1, Clause2, Res, []).
+
+createresolwents([], _, _, Res, Res) :- !.
+createresolwents([Lit|Rest], Clause1, Clause2, Res, Acc) :-
+    makeoneresolwent(Lit, Clause1, Clause2, Wynik), Accnew = [Wynik|Acc], !,
+    createresolwents(Rest, Clause1, Clause2, Res, Accnew).
+createresolwents([Lit|Rest], Clause1, Clause2, Res, Acc) :-
+    not(makeoneresolwent(Lit, Clause1, Clause2, _)), createresolwents(Rest, Clause1, Clause2, Res, Acc).
+
+
+%3c: predykat makeresolwentoperations/3, Tryb:(++-),
+% 1 - Klauzula
+% 2 - lista klauzul
+% 3 - lista wszystkich mozliwych rezolwent Klauzuli z lista klauzul
+% Przykladowy In/Out:
+% ?- makeresolwentsoperations(p v q v ~r, [p v ~q, ~p v r, r], X).
+%X = [q v p,~p v q v p,~r v q v r,~r v p].
+
+makeresolwentsoperations(ClauseActive, PassiveList, Table):-
+    makeresolwentsoperations(ClauseActive, PassiveList, Table, []).
+makeresolwentsoperations([], _, [], []) :- !.
+makeresolwentsoperations([[]], _, [[]], [[]]).
+makeresolwentsoperations(_, [], Table, Table) :- !.
+makeresolwentsoperations(ClauseActive, [H2|Passive], Table, Acc) :-
+    removedup1(ClauseActive, ClearedActiveCl),
+    removedup1(H2, ClearedPassiveCl),
+   changeintolistlit(ClearedActiveCl, Listoflit),
+   createresolwents(Listoflit, ClearedActiveCl, ClearedPassiveCl, Res),
+   append(Res, Acc, NewAcc),
+   makeresolwentsoperations(ClearedActiveCl, Passive, Table, NewAcc).
+
+%3d: predykat makefilteredresolwents/3, Tryb:(++-),
+% 1 - Klauzula
+% 2 - lista klauzul
+% 3 - lista tych rezolwent Klauzuli z lista klauzul, ktore nie sa
+% tautologiami. Usuwa rowniez duplikaty literalow z powstalych
+% rezolwent przed dodaniem ich do wyniku.
+% Przykladowy In//Out: ?-
+% makefilteredresolwents(p v p v q v ~r, [p v ~q, ~p v r, r], X). X =
+% [~r v p,q v p].
+%
+makefilteredresolwents(ClauseActive,PassiveList, ClearedRes) :-
+    makeresolwentsoperations(ClauseActive, PassiveList, Result), removetaut(Result, NoTautRes),
+    rmdup(NoTautRes,ClearedRes).
+
+
+%3f: predykat makeresolwentsforsetofclauses/2, Tryb: (+-),
+%Przykladowe In/Out:
+%?- makeresolwentsforsetofclauses([p, p v q, p v ~q, r, q v r, r v ~p], X).
+%X = [r,p,q v r,r v p,~q v r].
+% ?- makeresolwentsforsetofclauses([p, p v q, ~p v ~q, r, q v r, r v ~p,
+% ~p], X). X = [~q,r,[]].
+%
+% Opis dzialania: Predykat generuje wszystkie mozliwe rezolwenty dla
+% zbioru klauzul, chyba ze powstanie rezolwenta pusta ([]). Wtedy
+% przestaje generowac dalej, wiadomo juz, ze istnieje dowod
+% sprzecznosci.
+%
+makeresolwentsforsetofclauses(ListofClauses,TableofRecords) :-
+    makeresolwentsforsetofclauses(ListofClauses,TableofRecords, []).
+makeresolwentsforsetofclauses(ListofClauses, TableofRecords, TableofRecords) :-
+    member([], ListofClauses).
+makeresolwentsforsetofclauses([], TableofRecords, TableofRecords) :- !.
+makeresolwentsforsetofclauses([Clause|RestofClauses], TableofRecords, AccTable) :-
+    makefilteredresolwents(Clause, RestofClauses, Resolwents),
+    addlistofresolwents(Resolwents, AccTable, NewResolwents),
+    append(AccTable, NewResolwents, NewAccTable),
+    addlistofresolwents(Resolwents, [Clause|RestofClauses], NewResolwents2),
+    append([Clause|RestofClauses], NewResolwents2, [_|T]),
+    makeresolwentsforsetofclauses(T, TableofRecords, NewAccTable), !.
+
+
+% addresolwents(++-) dodaje nowe rezolwenty, jesli ich juz nie ma na
+% liscie
+%
+%
+%
+%
+%Modul 4: Predykaty pomocnicze wykorzystywane w module 3.
+%
+%4a: Predykat ifcandor/3 (if can do resolwent), Tryb:(+++)
+% Zwraca True, jesli jest mozliwe wykonanie rezolwenty
+%  False wpp.
+% Opis dzialania: zamienia dwie klauzule - kandydatki do stworzenia
+% rezolwenty - na, odpowiednio, dwie listy pojedynczych literalow.
+% nastepnie sprawdza, czy zmienna, wzgledem ktorej chcemy dokonac
+% rezolwenty, zawiera pozytywne wystapienia w 1 liscie i negatywne w 2.
+%
+
+ifcandor(Lit, Cla1, Cla2) :-
+    change(Cla1, Res1), change(Cla2, Res2),
+    member(Lit, Res1), member(~Lit, Res2),!.
+
+
+%4b Predykat changeintolistlit/2, Tryb:(+-)
+%Przykladowy In/Out:
+%?- changeintolistlit(~p v q v r, X).
+%X = [p,q,r].
+% Opis dzialania: zamienia klauzule na liste pojedynczych wystepujacych
+% w niej zmiennych
+%
+changeintolistlit(Clause, ListofVariables) :-
+    change(Clause, ListofLiterals), rmdup(ListofLiterals, ListofLiteralsWithoutDuplicates), rmneg(ListofLiteralsWithoutDuplicates, ListofVariables).
+
+
+%4c Predykat removedup1/2, Tryb:(+-),
+%
+% Przykladowy In/Out:
+% ?- removedup1(p v q v r v p, X).
+%X = q v r v p.
+%Opis dzialania: Usuwa powtarzajace sie literaly w klauzuli.
+
+removedup1(Clause, GoodClause) :-
+    change(Clause, Listraw), rmdup(Listraw, Cleared), addv(Cleared, GoodClause).
+
+%4d predykat iftautoloty/1. Tryb:(+),
+%Sprawdza, czy klauzula jest tautologia
+% Zwraca True, jesli klauzula jest tautologia
+% False wpp.
+
+iftautology(Clause) :-
+    change(Clause, ListofLiterals),
+    member(X, ListofLiterals),
+    member(~X, ListofLiterals), !.
+
+
+%4e predykat remove tautology/2 - oczyszcza liste active z tautologii
+%tryb (+- ) : lista klauzul, oczyszczona lista klauzul
+% Opis dzialania: sprawdzenie czy klauzula jest tautologia,
+% jesli tak, to wtedy jej nie dodaje do wyniku.
+% Przykladowy In/Out:
+% ?- removetaut([p v ~p v q, p v q], X).
+%X = [p v q].
+%
+removetaut([],[]) :- !.
+removetaut([Clause|RestofClauses], ClearedList) :-
+    removetaut([Clause|RestofClauses], ClearedList, []).
+
+removetaut([], ClearedList, ClearedList) :- !.
+removetaut([Clause|RestofClauses], ClearedList, Acc) :-
+    iftautology(Clause), removetaut(RestofClauses, ClearedList, Acc), !.
+removetaut([Clause|RestofClauses], ClearedList, Acc) :-
+    not(iftautology(Clause)), removetaut(RestofClauses, ClearedList, [Clause|Acc]).
+
+%4f predykat addresolwent/3 , Tryb(++-),
+%1 - rezolwenta
+%2 - lista klauzul/wczesniej zrobionych rezolwent
+%3 - wynik
+%Przykladowy In/Out:
+%?- addresolwent(p v q, [p, ~p v r], X).
+%X = [p v q].
+%Opis dzialania: Zwraca jako wynik rezolwente podawana na 1 miejscu,
+%jesli nie mam jej na liscie(2)
+% zwraca jako wynik [], wpp.
+addresolwent(Resolwent, List, NewClause) :-
+    not(member(Resolwent, List)), NewClause = [Resolwent], !.
+addresolwent(Resolwent, List, []) :-
+    member(Resolwent, List), !.
+
+
+%4g predykat addlistofresolwents/3, Tryb(++-),
+%1 Lista rezolwent
+%2 Lista wczesniej wygenerowanych rezolwent/klauzul
+% 3 - wynik
+%Przykladowy In/Out:
+%?- addlistofresolwents([p v q, ~p v r, t v s], [p v q, ~p, t v s], X).
+%X = [~p v r].
+%Opis dzialania: wynikiem jest lista, na ktorej znajduja sie rezolwenty
+% nieznajdujace sie na liscie podawanej na 2 miejscu.
+%
+addlistofresolwents(ListofResolwent, List, Result) :-
+    addlistofresolwents(ListofResolwent, List, Result, []).
+addlistofresolwents([], _, Result, Result) :- !.
+
+addlistofresolwents([Resolwent|Rest], List, Result, Acc) :-
+    addresolwent(Resolwent, List, NewAcc),
+    append(Acc, NewAcc, Resultat),
+    addlistofresolwents(Rest, List, Result, Resultat).
+
+
+
+
+%Modul 5: predykat makewholelist/2 Tryb(+-),
+%Przykladowy In/Out:
+% ?- makewholelistofresolwentsandaxioms([p v q, ~r v p, s v t, r, ~s v
+% t, ~p], X). X = [(p v q,1,axiom),(~r v p,2,axiom),(s v
+% t,3,axiom),(r,4,axiom),(~s v
+% t,5,axiom),(~p,6,axiom),(q,7,resolwent),(p,8,resolwent),(~r,9,resolwent),(t,10,resolwent),([],11,resolwent)].
+%
+% Opis dzialania:
+% Generuje za pomoca predykatu makeresolwentsforsetofclauses rezolwenty
+% nastepnie formatuje liste klauzul do postaci trojek,
+% a nastepnie formatuje liste uzyskanych rezolwent do postaci trojek,
+% po czym scala obie listy uzyskujac wynik
+%
+
+%
+makewholelistofresolwentsandaxioms(Clauses, WholeList) :-
+    makeresolwentsforsetofclauses(Clauses, Resolwents), member([], Resolwents),
+    formsetaxioms(Clauses, FormattedClauses),
+    formsetresolwentsreversed(Resolwents, FormattedResolwents, Clauses),
+    append(FormattedClauses, FormattedResolwents, WholeList).
+
+
+
+
+
+
+
+% Modul 6: Predykaty pomocnicze, dotyczace formatowania wyniku dowodu
+% sprzecznosci:
+
+% 6a: Predykat formsetaxioms/2. Tryb:(+-)
+%
+%Przeformatowanie wejsciowego zbioru
+% klauzul(axiomow)
+% Przykladowy In/Out
+% ?- formsetclauses([p v q, ~p, r v ~r], X).
+%X = [(r v ~r, 3, axiom),  (~p, 2, axiom),  (p v q, 1, axiom)].
+
+%
+formsetclauses(SetClauses, FormattedSetClauses) :-
+    formsetclauses(SetClauses, FormattedSetClauses, [], 1, 1).
+formsetclauses([], FormattedSetClauses, FormattedSetClauses, _, _) :- !.
+formsetclauses([Clause|Rest], FormattedSetClauses, Acc, Number, ANum) :-
+    NewNum is ANum + Number,
+     formsetclauses(Rest, FormattedSetClauses, [(Clause, ANum, axiom)|Acc],Number, NewNum).
+formsetaxioms(SetClauses, Formatted) :-
+    formsetclauses(SetClauses, ResultFormatted), reverse(ResultFormatted, Formatted).
+
+%6b: Predykat formsetresolwentsreversed/3, Tryb:(+-+)
+% Przeformatowanie zbioru rezolwent
+%Przykladowy In/Out:
+%?- formsetresolwentsreversed([p v q, ~p, r v t], X, [p v q]).
+% X = [(p v q, 2, resolwent), (~p, 3, resolwent), (r v t, 4, resolwent)].
+%
+%
+formsetresolwents(Setres, FormattedSetClauses, Clauses) :-
+    length(Clauses, X), Y is X + 1 ,formsetresolwents(Setres, FormattedSetClauses,Clauses, [], Y, Y).
+
+formsetresolwents([], FormattedSetClauses, _, FormattedSetClauses, _, _) :- !.
+formsetresolwents([Clause|Rest], FormattedSetClauses, Cl,Acc, Number, ANum) :-
+    NewNum is ANum + 1,
+     formsetresolwents(Rest, FormattedSetClauses,Cl, [(Clause, ANum, resolwent)|Acc],Number, NewNum).
+formsetresolwentsreversed(SetClauses, Formatted, Clauses) :-
+    formsetresolwents(SetClauses, ResultFormatted, Clauses), reverse(ResultFormatted, Formatted).
+
+
+% Modul 7: tworzenie dowodu z tablicy z ponumerowanymi klauzulami i
+% rezolwentami, uzyskanej za pomoca predykatu w module 5.
+%
+%
+% 7a: predykat findsource/2: szuka numerow klauzul/rezolwent, z ktorych
+% powstala rezolwenta pusta, Tryb: (+-) przykladowy in/out: ?-
+% findsource([(p v q,1,axiom),(r v
+% ~q,2,axiom),(~p,3,axiom),(~r,4,axiom),(p v
+% r,5,resolwent),(q,6,resolwent),(~q,7,resolwent),(r,8,resolwent),(p,9,resolwent),([],10,r%esolwent)],
+% %X).
+% X = ([],q,6,7).
+% Opis dzialania: zwraca jako wynik klauzule pusta w docelowym formacie
+% (z informacja, z ktorych klauzul powstala i wzgledem jakiej zmiennej)
+findsource(Listall,  Res) :-
+member(([], _, resolwent), Listall),select((X, N1, _), Listall,Listarest), select((~X, N2, _),Listarest, _),
+   Res = ([],(X, N1, N2)), !.
+
+%7b: predykat findnext/2, Tryb:(+-),
+% szuka pustej klauzuli oraz klauzul, z ktorych powstala
+% i zwraca calosc w odpowiednim formacie
+% Przykladowy In/Out:
+
+findnext(Listall, Acc) :-
+    findsource(Listall, Res),
+    Res = (_,_,N1 ,N2),
+    select((X, N1, Z1), Listall, Listrest),
+    select((Y, N2, Z2), Listrest, _),
+    append([(X, N1, Z1)], [(Y, N2, Z2)], Resolwents),
+    append(Resolwents, [Res], Acc).
+
+% 7c: predykat findcanditates/4. Tryb: (++--),
+%szuka pierwotnych
+% klauzul, z ktorych mogla powstac rezolwenta
+% Przykladowy In/Out:
+% ?- findcanditates((~q,7, resolwent),[(p v q,1,axiom),(r v ~q,2,axiom),(~p,3,axiom),(~r,4,axiom),(p v r,5,resolwent),(q,6,resolwent),(r,8,resolwent),(p,9,resolwent)], X, Y).
+%X =  (r v ~q,2,axiom),
+%Y =  (~r,4,axiom).
+%
+
+findcanditates((X,_, resolwent), List, Source1, Source2) :-
+    select((Z1, N1, T1), List, Listnew), select((Z2, N2, T2), Listnew, _),
+    changeintolistlit(Z1, ListofLit1),
+    changeintolistlit(Z2, ListofLit2),
+    append(ListofLit1, ListofLit2, ListofList),
+    rmdup(ListofList, ListofLit),
+    createresolwents(ListofLit , Z1, Z2, Y),
+    Y = [H],
+    change(X,X1),
+    change(H, Y1),
+    sort(X1, X2),
+    addv(X2, Clause),
+    sort(Y1, Y2),
+    addv(Y2, Y3),
+    member(Clause, [Y3]),
+    !,
+    Source1= (Z1, N1, T1),
+    Source2 = (Z2, N2, T2).
+
+
+%7d: Predykat startfindprove/2, Tryb:(+-),
+%Szuka dowodu, zaczynajac od zbadania zrodel dla klauzuli pustej.
+%
+%Przykladowy In/Out:
+% ?- startfindprove([(p v ~q,1,axiom),(q v
+% ~r,2,axiom),(r,3,axiom),(~p,4,axiom),(~r v
+% p,5,r%esolwent),(~q,6,resolwent),(q,7,resolwent),(~r,8,resolwent),(p,9,resolwent),([],10%,resolwent)],
+% X).
+% X = [(p v ~q,1,axiom),(~p,4,axiom),(~q,_14416188,1,4),(q v
+% ~r,2,axiom),(~r,_14415580,2,6),%(r,3,axiom),([],r,3,8)]
+%
+%
+%
+
+startfindprove(Listall, Prove) :-
+    findnext(Listall, New), not(member((_,_,resolwent), New)),
+                                Prove = New.
+startfindprove(Listall, Prove) :-
+    findnext(Listall, New), member((X, N, resolwent), New),
+    select((X, N, resolwent), New, Updated),!,
+    append([(X,_, N1,N2)],Updated,  Valid),
+    select(([],_,_), Listall, Listallwithoutempty),
+    findcanditates((X, N, resolwent), Listallwithoutempty, Resolwent1,Resolwent2),
+    Resolwent1 = (_, N1, _), Resolwent2 = (_,N2,_),
+    append([Resolwent1], [Resolwent2], Resolwents2),
+    append(Resolwents2, Valid, TProve), continuefindprove(Listallwithoutempty,TProve,NewProve),
+    Prove = NewProve.
+
+%version with acc
+%7e: predykat continuefindprove/3, Tryb:(++-)
+%Kontynuuje poszukiwanie zrodel dla powstalych rezolwent do momentu,
+%w ktorym na liscie wynikowej nie ma juz wiecej nieopisanych rezolwent
+%(w formacie(_,_,resolwent).
+continuefindprove(List, Prove, NewProve) :-
+    continuefindprove(List, Prove, NewProve, Prove).
+
+continuefindprove(_,_, NewProve, NewProve) :-
+   not(member((_, _, resolwent), NewProve)),!.
+
+continuefindprove(Listall,Prove, NewProve, AccProve) :-
+     member((X, N, resolwent), AccProve),
+     %sprawdza, czy w dowodzie znajduje sie nieopisana rezolwenta
+    select((X, N, resolwent), AccProve, Updated), !,
+    %bierze jedna z takich rezolwent
+    append([(X,_, N1,N2)],Updated,  Valid),
+    %dodaje ja z nowym formatem do dowodu
+    findcanditates((X, N, resolwent), Listall, Resolwent1,Resolwent2),
+    %szuka jej zrodlowych klauzul, z ktorych mogla powstac
+    Resolwent1 = (_, N1, _), Resolwent2 = (_,N2,_),
+    %dodaje je do wyniku w formacie listall
+    append([Resolwent1], [Resolwent2], Resolwents2),
+    append(Resolwents2, Valid, NewAccProve),
+    continuefindprove(Listall,Prove,NewProve,NewAccProve).
+
+
+
+
+%7f making final format of prove
+
+makefinalproofformat(RawProof, Proof):-
+reverse(RawProof, Reversed),    makefinalproofformat(Reversed, Proof, []).
+
+makefinalproofformat([], Proof, Proof) :- !.
+
+makefinalproofformat([Elem|RestofProof], Proof, Acc) :-
+    Elem = ([], _, _),
+    makefinalproofformat(RestofProof, Proof, [Elem|Acc]), !.
+
+makefinalproofformat([Elem|RestofProof], Proof, Acc) :-
+    Elem = (Clause, _, axiom), NewElem = (Clause, axiom),makefinalproofformat(RestofProof, Proof, [NewElem|Acc]), !.
+%axiom axiom
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, _, N1, N2), Next1 = (Z1, _, axiom),
+    Next2 = (Z2, _, axiom), change(Z1, R1),
+    change(Z2, R2), member(Y, R1), member(~Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, axiom),
+    Next2 = (Z2, _, axiom), var(X), change(Z1, R1),
+    change(Z2, R2), member(~Y, R1), member(Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+%axiom, res
+
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, axiom),
+    Next2 = (Z2, _, _,_), var(X), change(Z1, R1),
+    change(Z2, R2), member(~Y, R1), member(Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, axiom),
+    Next2 = (Z2, _, _,_), var(X), change(Z1, R1),
+    change(Z2, R2), member(Y, R1), member(~Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+%res, axiom
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, _,_),
+    Next2 = (Z2, _, axiom), var(X), change(Z1, R1),
+    change(Z2, R2), member(~Y, R1), member(Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, _,_),
+    Next2 = (Z2, _, axiom), var(X), change(Z1, R1),
+    change(Z2, R2), member(Y, R1), member(~Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+
+
+%res, res
+
+
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, _,_),
+    Next2 = (Z2, _, _,_), var(X), change(Z1, R1),
+    change(Z2, R2), member(~Y, R1), member(Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+makefinalproofformat([Elem,Next1,Next2|RestofProof], Proof, Acc) :-
+    Elem = (Term, X, N1, N2), Next1 = (Z1, _, _,_),
+    Next2 = (Z2, _, _,_), var(X), change(Z1, R1),
+    change(Z2, R2), member(Y, R1), member(~Y, R2),
+    NewElem = (Term, Y, N1, N2), makefinalproofformat([Next1,Next2|RestofProof], Proof, [NewElem|Acc]), !.
+
+
+
+
+correctnumbers(RawProof, NewProof2) :-
+    correctnumbers(RawProof, NewProof2, [], 1).
+
+correctnumbers([], NewProof2, NewProof, _) :-
+    reverse(NewProof, NewProof2),!.
+%axiom axiom resolwent
+correctnumbers([], NewProof, NewProof, _) :- !.
+
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z, axiom), Next1 = (Z2, axiom),
+    change(Z, List1), change(Z2, List2), member(Lit,List1), member(~Lit, List2),
+    NewNext2 = (X, Lit, Count, NextCount), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2,Next1, Elem|Acc], NextCount), !.
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z, axiom), Next1 = (Z2, axiom),
+    change(Z, List1), change(Z2, List2), member(Lit,List2), member(~Lit, List1),
+    NewNext2 = (X, Lit, NextCount, Count), NextCount is Count + 1,
+    correctnumbers([Next1,Next2|Rest], NewProof, [NewNext2,Next1, Elem|Acc], NextCount), !.
+
+%resolwent axiom resolwent
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z1, _,_,_), Next1 = (Z2, axiom),
+    change(Z1, List1), change(Z2, List2), member(~Lit,List1), member(Lit, List2),
+    NewNext2 = (X, Lit, NextCount, Count), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2,Next1|Acc], NextCount), !.
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z, _,_,_), Next1 = (Z2, axiom),
+    change(Z, List1), change(Z2, List2), member(Lit,List1), member(~Lit, List2),
+    NewNext2 = (X, Lit, Count, NextCount), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2,Next1|Acc], NextCount), !.
+
+
+%axiom, resolwent, resolwent
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z1, axiom), Next1 = (Z2, _,_,_),
+    change(Z1, List1), change(Z2, List2), member(~Lit,List1), member(Lit, List2),
+    NewNext2 = (X, Lit, NextCount, Count), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2|Acc], NextCount), !.
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z1, axiom), Next1 = (Z2, _,_,_),
+    change(Z1, List1), change(Z2, List2), member(Lit,List1), member(~Lit, List2),
+    NewNext2 = (X, Lit, Count, NextCount), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2,Next1, Elem|Acc], NextCount), !.
+
+%resolwent, resolwent, resolwent
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z1, _,_,_), Next1 = (Z2, _,_,_),
+    change(Z1, List1), change(Z2, List2), member(~Lit,List1), member(Lit, List2),
+    NewNext2 = (X, Lit, NextCount, Count), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2|Acc], NextCount), !.
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (X, Lit, _, _ ), Elem = (Z1, _,_,_), Next1 = (Z2, _,_,_),
+    change(Z1, List1), change(Z2, List2), member(Lit,List1), member(~Lit, List2),
+    NewNext2 = (X, Lit, Count, NextCount), NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [NewNext2|Acc], NextCount), !.
+
+
+%axiom, axiom, axiom
+
+correctnumbers([Elem, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Elem = (_, axiom), Next1 = (_,axiom),Next2  = (_, axiom),
+    NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, [Elem|Acc], NextCount), !.
+
+
+%_ ,_, axiom,
+%
+correctnumbers([_, Next1, Next2|Rest], NewProof, Acc, Count) :-
+    Next2  = (_, axiom),
+    NextCount is Count + 1,
+    correctnumbers([Next1, Next2|Rest], NewProof, Acc, NextCount), !.
+
+
+
+    %resolwent axiom
+correctnumbers([Elem, Next1], NewProof, Acc, Count) :-
+    Elem = (_,_,_,_), Next1 = (_, axiom), NextCount is Count + 1,
+    correctnumbers([], NewProof, Acc, NextCount), !.
+
+
+%axiom resolwent
+
+correctnumbers([Elem, Next1], NewProof, Acc, Count) :-
+    Next1 = (_, _, _, _), Elem = (_, axiom),
+    NextCount is Count + 1,
+    correctnumbers([Next1], NewProof, Acc, NextCount), !.
+%resolwent
+correctnumbers([_], NewProof, Acc, Count) :-
+    NextCount is Count + 1,
+    correctnumbers([], NewProof, Acc, NextCount), !.
+
+
+
+
+%modul 8:
+
+prove(Clauses, Proof) :-
+    member([], Clauses), Proof = [([], axiom)], !.
+
+prove(Clauses, Proof) :-
+    makewholelistofresolwentsandaxioms(Clauses, FormattedList),
+    startfindprove(FormattedList, RawProof), makefinalproofformat(RawProof, Proof2),
+    correctnumbers(Proof2, Proof),!.
+
+
+
+
+
+
+

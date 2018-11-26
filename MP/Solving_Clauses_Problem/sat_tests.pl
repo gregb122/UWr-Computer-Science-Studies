@@ -1,0 +1,48 @@
+
+:- module(sat_tests, [tests/5]).
+:- op(200, fx, ~).
+:- op(500, xfy, v).
+
+
+tests(single_variable, validity, [p], 1000, solution([(p,t)])).
+tests(single_var_negate, validity, [~p], 1000, solution([(p,f)])).
+tests(set_of_clauses_with_one_literals, validity, [~p, q, ~r, ~s], 1000, solution([(p,f),(q,t),(r,f), (s,f)])).
+tests(set_of_empty_set, validity, [[]], 1000, count(0)).
+tests(empty_set, validity, [ ], 1000, solution([])).
+tests(set_of_clause_simple, validity, [p v q, ~p, r v ~q, q], 1000, solution([(p, f), (r, t), (q, t)])).
+tests(set_of_clause_with_a_few_vars, validity, [p v q v r, ~p v q, ~r, q v r], 1000, count(2)).
+tests(set_with_one_extended_clause, validity, [p v q v r v s v ~p v ~r v t v y v ~q], 1000, count(64)).
+tests(set_of_clause_with_one_empty_clause, validity, [p v q v ~r, [], p v ~q v q, p v ~p], 1000, count(0)).
+tests(extended_set_of_clause, validity, [p v q v r v z v ~e, e v p v q, ~p v q v ~r, e v z, r v z v e], 1000, count(18)).
+tests(set_with_lots_of_clauses, validity, [p, p v q, p v ~q, r, q v r, r v ~p, r v ~q, ~q v r v s, s v r, p v s, s v ~p], 1000, count(2)).
+tests(set_with_clauses_3, validity, [p v q, z v s, t, e, r v ~t, y, u v i, p v g, ~e v t, ~z v d, c v d],1000, count(105)).
+tests(set_with_lots_of_clauses_2, validity, [p v q v r v ~r v t, e v y v ~t, p, q v ~t, f v q, r v y, ~q v t, r, ~t v e, q v p, ~p v t, t v r, y v ~t, p v r, r v t v y, e v p v ~q, q v t v e, p v r v t, r v e v p, p v q, e v ~y v ~t], 1000, count(2)).
+tests(set_with_a_few_empty_clauses, validity, [ p v q, [], r v ~s, r v ~q, [], s v ~t v q, [], p v ~q, ~p v q, []], 1000, count(0)).
+
+tests(performance_variations_test, performance,[a v b v c v d v e v f v g v h v i v j v k v l v m v n v o v p v r v s v t v u v w v z, ~p, p], 200, count(0)).
+tests(set_of_clauses_with_empty_clause, performance,[a v b v c v d v e v f v g v h v i v j v k v l v m v n v o v p v r v s v t v u v w v z, []], 200, count(0)).
+tests(set_of_clause_performance, performance, [a v b v c v d v e v f v g v h v i v j v k v l v m v n v o, ~a, ~b, ~c, ~d, ~e, ~f, ~g, ~h, ~i, ~j], 500, count(31)).
+tests(set_of_clauses_performance,performance, [a v ~b v c v ~d v e v ~f v g v ~h v i v ~j v k v ~l v m v ~n v o, b, d, f, h, j, l, n, a v ~c, e v ~g, i v ~k, m v ~o, ~a v c, ~e v g, ~i v k, ~m v o], 500, count(15)).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

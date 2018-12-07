@@ -1,0 +1,21 @@
+﻿
+
+
+
+1b)
+Cookiesy można zobaczyć w Inspectors/headers
+
+2)
+User-Agent: Fiddler
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Cookie: Budyn=Waniliowy
+Cookie: Ciast=Sernik_Staropolski
+Cookie: Czekolada=Gorzka
+Content-Length: 0
+lub
+Cookie: nazwa_ciasteczka_1=wartosc_ciasteczka_1; nazwa_ciasteczka_2=wartosc_ciasteczka_2
+
+
+3)
+F12 -> Application tab -> Storage/Cookies

@@ -1,0 +1,20 @@
+﻿0)
+HTTP (ang. Hypertext Transfer Protocol) – protokół przesyłania dokumentów hipertekstowych to protokół sieci WWW (ang. World Wide Web). Obecną definicję HTTP stanowi RFC 2616 ↓. Za pomocą protokołu HTTP przesyła się żądania udostępnienia dokumentów WWW i informacje o kliknięciu odnośnika oraz informacje z formularzy. Zadaniem stron WWW jest publikowanie informacji – natomiast protokół HTTP właśnie to umożliwia.
+
+Protokół HTTP jest użyteczny, ponieważ udostępnia znormalizowany sposób komunikowania się komputerów ze sobą. Określa on formę żądań klienta (tj. np. przeglądarki www) dotyczących danych oraz formę odpowiedzi serwera na te żądania. Jest zaliczany do protokołów bezstanowych (ang. stateless) z racji tego, że nie zachowuje żadnych informacji o poprzednich transakcjach z klientem (po zakończeniu transakcji wszystko "przepada"). Pozwala to znacznie zmniejszyć obciążenie serwera, jednak jest kłopotliwe w sytuacji, gdy np. trzeba zapamiętać konkretny stan dla użytkownika, który wcześniej łączył się już z serwerem. Najczęstszym rozwiązaniem tego problemu jest wprowadzenie mechanizmu ciasteczek. Inne podejścia to m.in. sesje po stronie serwera, ukryte parametry (gdy aktualna strona zawiera formularz) oraz parametry umieszczone w URL-u (jak np. /index.php?userid=3).
+
+
+1) Tworzenie nowego żądania
+W composer tworzyć nowe żądanie:
+http://www.google.com
+- klikać execute
+
+2) Jak sprawdzić nasze pobrane zasoby z ostatniego żądania:
+- klikamy z lewej strony na ostatnią akcję
+- widok w inspektorze i tem WebView
+
+3) accept-language
+Pod żądaniem dopisać:
+Accept-Language: de/fr/en
+
+Potem w inspektorze w WebView widać, że zmienił się język strony

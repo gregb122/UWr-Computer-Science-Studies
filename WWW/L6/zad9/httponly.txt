@@ -1,0 +1,10 @@
+﻿wyświetlenie ciastek na stronie:
+document.cookie
+
+
+httponly - ciastko jest widoczne jedynie po stronie serwera, nie jest widoczne od strony klienta przez js i inne skryptowe jezyki
+
+
+setcookie("app", "MyApp", NULL, NULL, NULL, NULL, TRUE);
+W ten oto sposób stworzyliśmy ciasteczko z flagą httpOnly. Od teraz ciasteczko to jest widoczne jedynie po stronie serwera.
+Nie jest widoczne wpisując w konsolę na stronie document.cookie

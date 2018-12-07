@@ -1,0 +1,19 @@
+﻿1)
+POST ...  http://localhost/php1/index.php?name="jestem_z_get"
+
+User-Agent: Fiddler
+Host: localhost
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 
+
+2) Request body:
+name2="jestem_z_post"
+
+3) Content-Length - to parametr, który określa ilość znaków request body
+
+4) Tablicę GET wypełniamy podając po ? kod w URLu:
+http://localhost/php1/index.php?name="jestem_z_get"
+
+5) Jeśli zmienna nazywa się tak samo, to tablica REQUEST przechowuje tylko wartosc zmiennej w żądaniu właściwym dla POST (w tym przypadku, gdy mamy POST)
+
+6) wpp. tablica Request przechowuje wszystkie wartości zarówno GET/POST

@@ -1,0 +1,66 @@
+Non-authoritative - dostajemy adres serwera, który zwrócił nam jako ostatni adres
+Authoritative - dostajemy adres serwera, który faktycznie nam odpowiedział (jest na końcu linii wywołania)
+
+adam@E470:~$ nslookup
+> www.ii.uni.wroc.pl
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+Name:	www.ii.uni.wroc.pl
+Address: 156.17.4.11
+
+> www.uj.edu.pl
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+Name:	www.uj.edu.pl
+Address: 149.156.169.67
+> 
+
+AUTHORITATIVE DNS
+> set querytype=soa
+Non-authoritative answer:
+ii.uni.wroc.pl
+	origin = swiatowit.ii.uni.wroc.pl <-- autorytatywny serwer dns
+	mail addr = rashad.swiatowit.ii.uni.wroc.pl
+	serial = 2018112101
+	refresh = 1800
+	retry = 3600
+	expire = 259200
+	minimum = 86400
+
+uj.edu.pl
+	origin = theta.uoks.uj.edu.pl <-- autorytatywny serwer dns
+	mail addr = hostmaster.theta.uoks.uj.edu.pl
+	serial = 2018072664
+	refresh = 10800
+	retry = 3600
+	expire = 2419200
+	minimum = 900
+
+SERWERY POCZTY 
+> set type=mx
+> ii.uni.wroc.pl
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+ii.uni.wroc.pl	mail exchanger = 10 ASPMX2.GOOGLEMAIL.COM.
+ii.uni.wroc.pl	mail exchanger = 5 ALT1.ASPMX.L.GOOGLE.COM.
+ii.uni.wroc.pl	mail exchanger = 20 zeus.ii.uni.wroc.pl.
+ii.uni.wroc.pl	mail exchanger = 10 ASPMX3.GOOGLEMAIL.COM.
+ii.uni.wroc.pl	mail exchanger = 5 ALT2.ASPMX.L.GOOGLE.COM.
+ii.uni.wroc.pl	mail exchanger = 1 ASPMX.L.GOOGLE.COM.
+
+Authoritative answers can be found from:
+> uj.edu.pl
+Server:		127.0.0.53
+Address:	127.0.0.53#53
+
+Non-authoritative answer:
+uj.edu.pl	mail exchanger = 1 mailin1a.srv.uj.edu.pl.
+uj.edu.pl	mail exchanger = 1 mailin1b.srv.uj.edu.pl.
+
+

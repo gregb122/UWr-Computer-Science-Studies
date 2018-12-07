@@ -1,0 +1,6 @@
+1. Za³aduj formularz (Fiddler w³¹czony)
+2. Wype³nij go jakimiœ danymi, uruchom pu³apkê w fiddlerze w rules/automatic_breakpoints - >before np.
+3. kliknij submit w formularzu
+4. PrzejdŸ do fiddlera -> inspector/web_forms 
+5. tam podmieñ dane na inne
+6. kliknij run an complextion czy cos takiego

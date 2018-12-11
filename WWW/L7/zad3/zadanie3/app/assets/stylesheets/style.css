@@ -1,0 +1,25 @@
+#slider
+{
+    width: 660px;
+    height: 380px;
+    background-color: black; 
+}
+
+img
+{
+    padding: 10px;
+    width: 640px;
+    height: 360px;
+    display: none;
+}
+
+#nav_slider
+{
+    width: 660px;
+}
+.nav_slider_description
+{
+    float: left;
+    font-size: 30px;
+    width: 162px
+}

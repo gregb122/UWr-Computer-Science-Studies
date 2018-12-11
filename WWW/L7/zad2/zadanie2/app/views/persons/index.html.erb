@@ -1,0 +1,24 @@
+<h1>Zadanie 2 lista 7</h1>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Surname</th>
+      <th scope="col">Age</th>
+      <th scope="col">Height</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @persons.each do |person| %>
+    <tr>
+      <th><%=person.id - 30  %></th>
+      <td><%= person.name %> </td>
+      <td><%=person.surname %></td>
+      <td><%=person.age %></td>
+      <td><%= person.height %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<%=paginate @persons %>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reg_number: MyString
+  date_of_first_registration: MyString
+  car_brand: MyString
+  production_year: 1
+  fuel_category: MyString
+
+two:
+  reg_number: MyString
+  date_of_first_registration: MyString
+  car_brand: MyString
+  production_year: 1
+  fuel_category: MyString

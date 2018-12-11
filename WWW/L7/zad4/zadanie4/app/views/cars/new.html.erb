@@ -1,0 +1,76 @@
+<form class="needs-validation" novalidate action="../cars#create" method="post">
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="validationCustom01">Numer rejestracyjny pojazdu</label>
+      <input type="text" name="reg_number" class="form-control" id="validationCustom01" placeholder="Np. ASI3546" required
+      pattern="^[a-zA-Z]{2,3}[0-9]{4,6}$">
+        <div class="invalid-feedback">
+            Numer rejestracyjny powinien zawierać 2-3 litery i 4-6 cyfr.
+        </div>
+
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationCustom02">Data pierwszej rejestracji</label>
+      <input type="text" name="date_of_first_registration" class="form-control" id="validationCustom02" placeholder="Np. 02.11.2018" required
+      pattern="(0[1-9]|1[0-9]|2[0-9]|3[01]).(0[1-9]|1[012]).[0-9]{4}">
+              <div class="invalid-feedback">
+            Podaj prawidłową datę w formacie dd.mm.yy.
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <label for="validationCustomUsername">Marka pojazdu</label>
+      <div class="input-group">
+        <input type="text" name="car_brand" class="form-control" id="validationCustomUsername" placeholder="Marka pojazdu" aria-describedby="inputGroupPrepend" required
+        pattern="^[a-zA-Z]+$">
+        <div class="invalid-feedback">
+          Nazwa marki pojazdu powinna składać się z samych liter.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationCustom03">Rok produkcji</label>
+      <input type="text" name="production_year" class="form-control" id="validationCustom03" placeholder="Rok produkcji" required
+      pattern="^[0-9]+$">
+      <div class="invalid-feedback">
+        Rok produkcji pojazdu nie powinien zawierać liter.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationCustom04">Rodzaj paliwa</label>
+      <input type="text" name="fuel_category"class="form-control" id="validationCustom04" placeholder="Rodzaj paliwa (podaj P, ON, LPG lub EE)" required
+      pattern="^P|ON|LPG|EE|ERROR$">
+      <div class="invalid-feedback">
+        Dopuszczalne wartości to: P, ON, LPG, EE
+      </div>
+    </div>
+</div>
+  <button class="btn btn-primary" type="submit">Dokonaj rejestracji</button>
+<%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+</form>
+
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+      
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>

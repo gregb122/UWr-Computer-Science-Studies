@@ -1,0 +1,36 @@
+<h1>Lista zarejestrowanych samochodów</h1>
+
+<%if flash[:success].present?%>
+    <div class="p-3 mb-2 bg-success text-white">
+    <%= flash[:success]%>
+    </div>
+<%end%>
+<%if flash[:error].present?%>
+    <div class="p-3 mb-2 bg-danger text-white">
+    <%= flash[:error]%>
+    </div>
+<%end%>
+
+<%= link_to "Zarejestruj nowy samochód", new_car_path%>
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Production year</th>
+      <th scope="col">Brand</th>
+      <th scope="col">Fuel category</th>
+      <th scope="col">Date of first registration</th>
+      <th scope="col">Registration number</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @cars.each do |car| %>
+    <tr>
+      <td><%= car.production_year %> </td>
+      <td><%= car.car_brand %></td>
+      <td><%= car.fuel_category %></td>
+      <td><%= car.date_of_first_registration %></td>
+      <td><%= car.reg_number %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

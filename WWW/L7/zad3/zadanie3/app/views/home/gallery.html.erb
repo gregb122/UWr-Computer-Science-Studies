@@ -1,0 +1,43 @@
+<h1>Gallery </h1>
+<%= render 'menu' %>
+<div id="slider">
+    <%= image_tag "1.jpg", :id => "1"%>
+    <%= image_tag "2.jpg", :id => "2"%>
+    <%= image_tag "3.jpg", :id => "3"%>
+    <%= image_tag "4.jpg", :id => "4"%>
+</div>
+
+<script>
+var slideshow;
+var count_img = 4;
+var num_img;
+var current_img;
+
+clearInterval(slideshow);
+initializeSlideShow();
+
+function initializeSlideShow() {
+    num_img = 1;
+    current_img = $('img').first();
+    current_img.delay(300).fadeIn(250);
+    startSlideShow();
+}  
+
+function startSlideShow() {
+    slideshow = setInterval(function(){
+        if (num_img < count_img) {
+            current_img.fadeOut(250);
+            current_img = current_img.next();
+            current_img.delay(300).fadeIn(250);
+            num_img++;
+        }
+        else {
+            current_img.fadeOut(250);
+            current_img = $('img').first();
+            current_img.delay(300).fadeIn(250);
+            num_img = 1;
+        }
+    },3000);
+}
+
+</script>

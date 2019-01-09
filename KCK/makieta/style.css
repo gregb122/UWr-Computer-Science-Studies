@@ -1,0 +1,27 @@
+body{
+    width: 70%;
+    margin: auto;
+    margin-top: 30px;
+    vertical-align: center;
+
+}
+
+.form-control-borderless {
+    border: none;
+}
+
+.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+#logo
+{
+    width: 100%;
+    padding-top: 30px;
+}
+
+.price {
+    font-size: 26px;
+    text-align: right;
+}

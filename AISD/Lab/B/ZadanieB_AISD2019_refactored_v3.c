@@ -286,4 +286,3 @@ void heapify (unsigned int i, unsigned int* heap_p, unsigned int heap_size)
         heapify(max_value, heap_p, heap_size);
     }
 }
-

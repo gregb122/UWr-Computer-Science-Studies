@@ -1,10 +1,10 @@
-#include <stdio.h>
-
 /*  Algorytmy i Struktury Danych 2019 - Pracownia
     Zadanie A
     Autor: Adam Kufel 
     Nr indeksu: 292345
 */
+
+#include <stdio.h>
 
 #define MIN(a, b) ( ( a < b) ? a : b ) 
 

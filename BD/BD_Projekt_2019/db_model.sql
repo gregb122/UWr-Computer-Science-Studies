@@ -14,6 +14,8 @@ CHECK(
     VALUE IN ('M', 'L')
     );
 
+CREATE EXTENSION pgcrypto;
+
 CREATE TABLE Index (
     index_id integer primary key
 );
@@ -49,7 +51,7 @@ CREATE TABLE Troll (
     member_id integer primary key,
     upvote integer default 0,
     downvote integer default 0,
-    active bool default false
+    active bool default true
 );
 
 

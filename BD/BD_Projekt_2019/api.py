@@ -1,4 +1,5 @@
-from validator import Validator, VERIFY_OBJECT_EXISTENCE, VERIFY_PASSWORD, VERIFY_USER_STATUS, VERIFY_OBJECT_DUPLICATION, \
+from validator import Validator, VERIFY_OBJECT_EXISTENCE, VERIFY_PASSWORD, VERIFY_USER_STATUS, \
+    VERIFY_OBJECT_DUPLICATION, \
     MEMBER_DID_NOT_VOTE_FOR_ACTION, THROW_EXCEPTION, YEAR_IN_SECONDS
 
 from db_connector import connect_with_db
@@ -19,14 +20,16 @@ class Api:
         return self.conn, self.curr
 
     def open(self, open_cmd):
-        conn, curr = (connect_with_db(dbname=open_cmd["database"], user=open_cmd["login"], password=open_cmd["password"],
-                               host='localhost'))
+        conn, curr = (
+            connect_with_db(dbname=open_cmd["database"], user=open_cmd["login"], password=open_cmd["password"],
+                            host='localhost'))
         return conn, curr
 
     def create_leader(self, params: dict):
         self.api_helper.add_new_index(params["member"])
         self.curr.execute(
-            "INSERT INTO Member(member_id, password, last_activity, member_type) VALUES ({}, '{}', {}, {})".format(
+            "INSERT INTO Member(member_id, password, last_activity, member_type) VALUES ({}, crypt('{}', "
+            "gen_salt('bf')), {}, {})".format(
                 params["member"], params["password"], params["timestamp"], "'L'")
         )
         self.curr.execute("INSERT INTO Troll(member_id) VALUES ({})".format(params["member"]))
@@ -34,7 +37,6 @@ class Api:
         self.conn.commit()
 
     def create_action(self, params, action_type):
-
         if self.api_helper.object_exists_in_db(table="Member", object="member_id", value=params["member"]):
             self.validator.validate(params, VERIFY_USER_STATUS, VERIFY_PASSWORD)
         else:
@@ -51,7 +53,6 @@ class Api:
         self.api_helper.add_new_action(params, action_type)
 
         self.api_helper.update_member_status(params["member"], params["timestamp"])
-
         self.conn.commit()
 
     def make_vote(self, params, vote_type):
@@ -150,7 +151,7 @@ class ApiHelper:
                                 VERIFY_OBJECT_DUPLICATION)
         self.add_new_index(params['member'])
         self.curr.execute(
-            "INSERT INTO Member VALUES ({member_id}, '{password}', {timestamp}, '{member_type}')".format(
+            "INSERT INTO Member VALUES ({member_id}, crypt('{password}', gen_salt('bf')), {timestamp}, '{member_type}')".format(
                 member_id=params['member'], password=params["password"],
                 timestamp=params['timestamp'], member_type="M"))
         self.curr.execute("INSERT INTO Troll(member_id) VALUES ({member_id})".format(member_id=params["member"]))
@@ -174,7 +175,8 @@ class ApiHelper:
         self.curr.execute('INSERT INTO Project VALUES ({}, {})'.format(params['project'], params["authority"]))
 
     def add_new_vote(self, params, vote_type):
-        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]}, VERIFY_OBJECT_EXISTENCE)
+        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
+                                VERIFY_OBJECT_EXISTENCE)
 
         self.curr.execute("INSERT INTO Vote VALUES ({}, {}, '{}')".format(params["member"], params["action"],
                                                                           "Y" if vote_type == "upvote"
@@ -183,19 +185,18 @@ class ApiHelper:
             "UPDATE Troll SET {vote_type} = {vote_type} + 1 WHERE member_id={member}".format(vote_type=vote_type,
                                                                                              member=params["member"]))
 
-    def update_member_status(self, user, timestamp):
+    def update_member_status(self, user, timestamp, command=""):
         self.curr.execute("SELECT last_activity FROM Member WHERE member_id={}".format(user))
-
         previous_action_timestamp = self.curr.fetchall()[0][0]
         if timestamp - previous_action_timestamp > YEAR_IN_SECONDS:
-            self.curr.execute("UPDATE Troll SET active = true WHERE member_id={}".format(user))
-
-        self.curr.execute("UPDATE Member SET last_activity={} WHERE member_id={}".format(timestamp, user))
+            self.curr.execute("UPDATE Troll SET active = false WHERE member_id={}".format(user))
+        if command != "trolls":
+            self.curr.execute("UPDATE Member SET last_activity={} WHERE member_id={}".format(timestamp, user))
 
     def update_all_members_status(self, timestamp):
         self.curr.execute("SELECT member_id FROM Member")
-        for member in self.curr.fetchall()[0]:
-            self.update_member_status(member, timestamp)
+        for member in self.curr.fetchall():
+            self.update_member_status(member[0], timestamp, command="trolls")
 
     def get_projects(self, authority="", **kwargs):
         authority = "WHERE authority_id={}".format(str(authority)) if authority else authority
@@ -209,7 +210,7 @@ class ApiHelper:
         type = "action_type='{}'".format(type) if type else type
 
         query = 'SELECT Action.action_id, Action.action_type, Action.project_id, Action.authority_id, SUM(CASE WHEN ' \
-                'Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 ' \
+                'Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 '\
                 'END) AS downvotes FROM Action JOIN Vote USING(action_id) '
 
         added_elems = 0
@@ -233,7 +234,8 @@ class ApiHelper:
         self.curr.execute(
             'SELECT Member.member_id, SUM(CASE WHEN Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, '
             'SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 '
-            'END) AS downvotes FROM Member LEFT JOIN Vote USING(member_id) LEFT JOIN Action USING(action_id) LEFT JOIN Project '
+            'END) AS downvotes FROM Member LEFT JOIN Vote USING(member_id) LEFT JOIN Action USING(action_id) LEFT '
+            'JOIN Project '
             'USING(project_id) ' + action + project + 'GROUP BY Member.member_id ORDER BY member_id;')
 
         return self.curr.fetchall()

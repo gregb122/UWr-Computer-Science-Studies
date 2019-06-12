@@ -1,5 +1,4 @@
-# niepoprawne hasło 
-{ "open": { "database": "student", "login": "init", "password": "haslo"}}
+{ "open": { "database": "student", "login": "init", "password": "haslo", "comment": "niepoprawne_haslo"}}
 
 {"leader": {"timestamp": 1557473000, "password": "abc", "member": 1}}
 {"leader": {"timestamp": 1557473004, "password": "kot", "member": 2}}

@@ -1,0 +1,5 @@
+{ "open": { "database": "student", "login": "app", "password": "qwerty"}}
+
+{ "votes": { "timestamp": 1558475715, "password": "abc", "member": 1, "action": 600 , "project": 2, "comment":  "zlamanie sygnatury action i project podane naraz"}}
+
+{ "actions": { "timestamp": 1558475715, "password": "abc", "member": 1, "project": 2, "authority": 32, "comment":  "zlamanie sygnatury authority i project podane naraz"}}

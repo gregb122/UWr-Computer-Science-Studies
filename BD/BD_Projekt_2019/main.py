@@ -3,42 +3,54 @@ import argparse
 
 from termcolor import colored
 
+from parser import ArgumentError
 from api import Api
-from db_connector import connect_with_db, load_sql_into_db, DbConnectionError
+from db_connector import connect_with_db, load_sql_into_db
 from validator import CustomException
 from parser import parse_json_object, parse_result_as_json_object_to_output, read_json_objects_from_file
 
 
 def run_init(std_in):
-    _, open_cmd = parse_json_object(std_in[0])
-
-    try:
-        api = Api(open_cmd)
-    except DbConnectionError as e:
-        print(colored(parse_result_as_json_object_to_output(result=str(e), failed=True), 'red'))
-        sys.exit(1)
+    api, result = run_open(std_in[0])
+    if api is None:
+        print(colored(result, 'red'))
+        return
+    print(result)
 
     conn, curr = api.get_connection_and_cursor()
     load_sql_into_db(conn, curr)
 
     for line in std_in[1:]:
-        command, params = parse_json_object(line)
         try:
+            command, params = parse_json_object(line)
             print(run_api_function(api, command, params))
         except CustomException as e:
             print(colored(parse_result_as_json_object_to_output(result=str(e), failed=True), 'red'))
 
 
 def run_app(std_in):
-    _, open_cmd = parse_json_object(std_in[0])
-    api = Api(open_cmd)
+    api, result = run_open(std_in[0])
 
+    if api is None:
+        print(colored(result, 'red'))
+        return
+
+    print(result)
     for api_call in std_in[1:]:
-        command, params = parse_json_object(api_call)
         try:
+            command, params = parse_json_object(api_call)
             print(run_api_function(api, command, params))
-        except CustomException as e:
+        except (CustomException, ArgumentError) as e:
             print(colored(parse_result_as_json_object_to_output(result=str(e), failed=True), 'red'))
+
+
+def run_open(line_open):
+    _, open_cmd = parse_json_object(line_open)
+    try:
+        api = Api(open_cmd)
+        return api, parse_result_as_json_object_to_output("")
+    except Exception as e:
+        return None, parse_result_as_json_object_to_output(result=str(e), failed=True)
 
 
 def run_api_function(api, command, params):
@@ -57,8 +69,6 @@ def run_api_function(api, command, params):
         api_out = api.list_trolls(params)
     if command == "leader":
         api.create_leader(params)
-    if command == "open":
-        api.open(params)
 
     return parse_result_as_json_object_to_output(api_out)
 
@@ -78,18 +88,18 @@ def reset():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--init")
+    parser.add_argument("--init", action='store_true')
     parser.add_argument("--reset", action='store_true')
     args, _ = parser.parse_known_args()
 
     if args.init:
-        std_in = read_json_objects_from_file(sys.argv[2])
-        run_init(std_in)
+        stdin = read_json_objects_from_file(sys.stdin)
+        run_init(stdin)
     elif args.reset:
         reset()
     else:
-        std_in = read_json_objects_from_file(sys.argv[1])
-        run_app(std_in)
+        stdin = read_json_objects_from_file(sys.stdin)
+        run_app(stdin)
 
 
 if __name__ == '__main__':

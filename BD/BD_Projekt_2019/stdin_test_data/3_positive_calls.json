@@ -1,0 +1,35 @@
+{ "open": { "database": "student", "login": "app", "password": "qwerty"}}
+
+{"protest": {"timestamp": 1557475700, "password": "123", "member": 3, "action": 500, "project": 5000, "authority": 10000, "comment":  "poprawne dodanie akcji"}}
+{"support": {"timestamp": 1557475701, "password": "123", "member": 3, "action": 600, "project": 5000}}
+
+{"support": {"timestamp": 1557475701, "password": "abc", "member": 1, "action": 601, "project": 5001, "authority": 10000, "comment":  "tworzymy tylko nowy projekt, authority to samo"}}
+{"support": {"timestamp": 1557475701, "password": "abc", "member": 1, "action": 602, "project": 5002, "authority": 10001}}
+
+{"support": {"timestamp": 1557475701, "password": "cztery", "member": 4, "action": 700, "project": 5000, "comment":  "uzytkownik nie istnieje, wiec dodany nowy"}}
+{"protest": {"timestamp": 1557475702, "password": "piec", "member": 5, "action": 701, "project": 5000}}
+
+{"projects": {"timestamp": 1557475703, "password": "abc", "member": 1, "authority": 10000, "comment": "poprawne, zwróci 2 projekty"}}
+
+{"projects": {"timestamp": 1557475704, "password": "abc", "member": 1, "comment":  "zwróci 3 projekty"}}
+
+{ "upvote": { "timestamp": 1557475704, "password": "kot", "member": 2, "action":500}}
+{ "downvote": { "timestamp": 1557475704, "password": "abc", "member": 1, "action":500}}
+{ "downvote": { "timestamp": 1557475705, "password": "123", "member": 3, "action":500}}
+{ "downvote": { "timestamp": 1557475705, "password": "cztery", "member": 4, "action":500}}
+{ "upvote": { "timestamp": 1557475705, "password": "cztery", "member": 4, "action":601}}
+{ "downvote": { "timestamp": 1557475706, "password": "abc", "member": 1, "action":600}}
+
+{"actions": {"timestamp": 1557475706, "password": "abc", "member": 1}}
+
+{"actions": {"timestamp": 1557475706, "password": "abc", "member": 1, "type": "support"}}
+{"actions": {"timestamp": 1557475706, "password": "abc", "member": 1, "project": 5000}}
+
+{"actions": {"timestamp": 1557475706, "password": "abc", "member": 1, "type": "support", "project": 5000}}
+
+{"actions": {"timestamp": 1557475707, "password": "abc", "member": 1, "authority": 10000}}
+
+{ "votes": { "timestamp": 1557475707, "password": "abc", "member": 1}}
+{ "votes": { "timestamp": 1557475707, "password": "abc", "member": 1, "action":500}}
+{ "votes": { "timestamp": 1557475707, "password": "abc", "member": 1, "project": 5001}}
+

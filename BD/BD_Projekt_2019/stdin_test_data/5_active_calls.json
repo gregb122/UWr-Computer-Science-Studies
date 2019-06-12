@@ -1,0 +1,5 @@
+{ "open": { "database": "student", "login": "app", "password": "qwerty"}}
+
+{"actions": {"timestamp": 1677475706, "password": "abc", "member": 1, "type": "protest", "comment":  "minal rok, uzytkownik jest nieaktywny"}}
+
+{ "trolls":  { "timestamp":  1958475715, "comment":  "minal rok, wszyscy uzytkownicy nieaktywni"}}

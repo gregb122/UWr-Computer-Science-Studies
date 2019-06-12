@@ -1,0 +1,23 @@
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK", "data": [[5000, 10000], [5001, 10000]]}
+{"status": "OK", "data": [[5000, 10000], [5001, 10000], [5002, 10001]]}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK"}
+{"status": "OK", "data": [[500, "protest", 5000, 10000, 1, 3], [600, "support", 5000, null, 0, 1], [601, "support", 5001, 10000, 1, 0]]}
+{"status": "OK", "data": [[600, "support", 5000, null, 0, 1], [601, "support", 5001, 10000, 1, 0]]}
+{"status": "OK", "data": [[500, "protest", 5000, 10000, 1, 3], [600, "support", 5000, null, 0, 1]]}
+{"status": "OK", "data": [[600, "support", 5000, null, 0, 1]]}
+{"status": "OK", "data": [[500, "protest", 5000, 10000, 1, 3], [601, "support", 5001, 10000, 1, 0]]}
+{"status": "OK", "data": [[1, 0, 2], [2, 1, 0], [3, 0, 1], [4, 1, 1], [5, 0, 0]]}
+{"status": "OK", "data": [[1, 0, 1], [2, 1, 0], [3, 0, 1], [4, 0, 1]]}
+{"status": "OK", "data": [[4, 1, 0]]}

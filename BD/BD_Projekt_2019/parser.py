@@ -1,25 +1,20 @@
 import json
 
-from typing import Tuple
 
-
-def read_json_objects_from_file(f_name):
+def read_json_objects_from_file(io_textwrapper):
     json_objects = []
-    with open(f_name, 'r') as f:
-        for line in f:
-            if line.startswith('{'):
-                json_objects.append(line.replace("\n", ""))
+    for line in io_textwrapper:
+        if line.startswith('{'):
+            json_objects.append(line.replace("\n", ""))
     return json_objects
 
 
-def parse_json_object(std_in: str) -> Tuple[str, dict]:
+def parse_json_object(std_in):
         std_in = json.loads(std_in)
-        try:
-            command = list(std_in.keys())[0]
-            return command, std_in[command]
-        except (KeyError, IndexError) as e:
-            print("Wrong input json format: {}".format(e))
-            return "", {}
+        command = list(std_in.keys())[0]
+        params = std_in[command]
+        validate_signature(command, params)
+        return command, params
 
 
 def parse_result_as_json_object_to_output(result, failed=False):
@@ -30,4 +25,14 @@ def parse_result_as_json_object_to_output(result, failed=False):
 
 
 def validate_signature(command, params):
-    pass
+    if command == "votes":
+        if params.get("action", None) and params.get("project", None):
+            raise ArgumentError("Too many arguments: action, project were provided")
+    elif command == "actions":
+        if params.get("authority", None) and params.get("project", None):
+            raise ArgumentError("Too many arguments: action, authority were provided")
+
+
+class ArgumentError(Exception):
+    def __init__(self, msg):
+        self.msg = msg

@@ -1,0 +1,11 @@
+{"status": "OK"}
+{"status": "ERROR", "debug": "WRONG PASWORD: for 3, authentication failed!"}
+{"status": "ERROR", "debug": "index_id already exists in Index table!"}
+{"status": "ERROR", "debug": "index_id already exists in Index table!"}
+{"status": "ERROR", "debug": "action_id already exists in Action table!"}
+{"status": "ERROR", "debug": "Authority value must be passed!"}
+{"status": "ERROR", "debug": "authority_id is not exists in Project table!"}
+{"status": "ERROR", "debug": "You cannot vote for the same action twice!"}
+{"status": "ERROR", "debug": "action_id is not exists in Action table!"}
+{"status": "ERROR", "debug": "authority_id is not exists in Project table!"}
+{"status": "ERROR", "debug": "project_id is not exists in Project table!"}

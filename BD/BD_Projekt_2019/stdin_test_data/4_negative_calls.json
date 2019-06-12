@@ -1,0 +1,21 @@
+{ "open": { "database": "student", "login": "app", "password": "qwerty"}}
+
+{"support": {"timestamp": 1558475701, "password": "456", "member": 3, "action": 700, "project": 5000, "comment":  "zle haslo"}}
+
+{"support": {"timestamp": 1558475701, "password": "456", "member": 700, "action": 1000, "project": 5000, "comment":  "użytkownik ma numer, ktorego nie ma w tabeli Member, ale jest w Action"}}
+
+{"support": {"timestamp": 1558475701, "password": "456", "member": 8, "action": 5000, "project": 5001, "comment":  "akcja ma numer, ktorej nie ma w tabeli Action, ale jest w Project"}}
+
+{"support": {"timestamp": 1558475701, "password": "cztery", "member": 4, "action": 600, "project": 5000, "comment":  "id akcji zajete"}}
+
+{"support": {"timestamp": 1558475701, "password": "cztery", "member": 12, "action": 600, "project": 6000, "comment":  "wymagane authority, bo trzba stworzyć projekt"}}
+
+{"projects": {"timestamp": 1558475795, "password": "abc", "member": 1, "authority": 2, "comment": "nie ma takiego authority " }}
+
+{ "upvote": { "timestamp": 1558475714, "password": "abc", "member": 1, "action":600, "comment":  "member juz oddał inny głos na tę akcję"}}
+
+{ "upvote": { "timestamp": 1558475715, "password": "123", "member": 3, "action":699, "comment":  "taka akcja nie istnieje"}}
+
+{"actions": {"timestamp": 1558475796, "password": "abc", "member": 1, "authority": 2, "comment":  "authorityId nie nalezy do authority"}}
+
+{ "votes": { "timestamp": 1558475715, "password": "abc", "member": 1, "project": 2, "comment":  "próba filtrowania głosów po nieistniejacym id projektu"}}

@@ -1,18 +1,33 @@
-from validator import *
+from validator import Validator, VERIFY_OBJECT_EXISTENCE, VERIFY_PASSWORD, VERIFY_USER_STATUS, VERIFY_OBJECT_DUPLICATION, \
+    MEMBER_DID_NOT_VOTE_FOR_ACTION, THROW_EXCEPTION, YEAR_IN_SECONDS
+
+from db_connector import connect_with_db
 
 
 class Api:
-    def __init__(self, conn, curr):
-        self.conn = conn
-        self.curr = curr
-        self.validator = Validator(conn=self.conn, curr=self.curr)
-        self.api_helper = ApiHelper(conn= self.conn, curr=self.curr)
+    """
+    This class is responsible for performing API function calls
+    """
 
-    def create_leader(self, params):
+    def __init__(self, open_cmd):
+        self.conn, self.curr = self.open(open_cmd)
+
+        self.validator = Validator(conn=self.conn, curr=self.curr)
+        self.api_helper = ApiHelper(conn=self.conn, curr=self.curr)
+
+    def get_connection_and_cursor(self):
+        return self.conn, self.curr
+
+    def open(self, open_cmd):
+        conn, curr = (connect_with_db(dbname=open_cmd["database"], user=open_cmd["login"], password=open_cmd["password"],
+                               host='localhost'))
+        return conn, curr
+
+    def create_leader(self, params: dict):
         self.api_helper.add_new_index(params["member"])
         self.curr.execute(
             "INSERT INTO Member(member_id, password, last_activity, member_type) VALUES ({}, '{}', {}, {})".format(
-            params["member"], params["password"], params["timestamp"], "'L'")
+                params["member"], params["password"], params["timestamp"], "'L'")
         )
         self.curr.execute("INSERT INTO Troll(member_id) VALUES ({})".format(params["member"]))
 
@@ -26,7 +41,8 @@ class Api:
             self.api_helper.add_new_member(params)
 
         if params.get('authority', None):
-            if not self.api_helper.object_exists_in_db(table="Project", object="authority_id", value=params["authority"]):
+            if not self.api_helper.object_exists_in_db(table="Project", object="authority_id",
+                                                       value=params["authority"]):
                 self.api_helper.add_new_index(params["authority"])
 
         if not self.api_helper.object_exists_in_db(table="Project", object="project_id", value=params["project"]):
@@ -51,7 +67,8 @@ class Api:
         self.validator.validate(params, VERIFY_USER_STATUS, VERIFY_PASSWORD)
 
         if params.get('authority', None):
-            self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]}, VERIFY_OBJECT)
+            self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]},
+                                    VERIFY_OBJECT_EXISTENCE)
 
         result = self.api_helper.get_projects(**params)
 
@@ -64,10 +81,12 @@ class Api:
         self.validator.validate(params, VERIFY_USER_STATUS, VERIFY_PASSWORD)
 
         if params.get('authority', None):
-            self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]}, VERIFY_OBJECT)
+            self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]},
+                                    VERIFY_OBJECT_EXISTENCE)
 
         if params.get('project', None):
-            self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]}, VERIFY_OBJECT)
+            self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]},
+                                    VERIFY_OBJECT_EXISTENCE)
 
         result = self.api_helper.get_actions(**params)
 
@@ -80,11 +99,13 @@ class Api:
         self.validator.validate(params, VERIFY_PASSWORD, VERIFY_USER_STATUS)
 
         if params.get('action', None):
-            self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]}, VERIFY_OBJECT)
+            self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
+                                    VERIFY_OBJECT_EXISTENCE)
 
         # check if project was provided
         if params.get('project', None):
-            self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]}, VERIFY_OBJECT)
+            self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]},
+                                    VERIFY_OBJECT_EXISTENCE)
 
         result = self.api_helper.get_votes(**params)
 
@@ -104,13 +125,18 @@ class Api:
 
 
 class ApiHelper:
+    """
+    This class contains all operations used by Api class
+    """
+
     def __init__(self, conn, curr):
         self.conn = conn
         self.curr = curr
         self.validator = Validator(conn=conn, curr=curr)
 
     def object_exists_in_db(self, table, object, value):
-        self.curr.execute('SELECT * FROM {table} WHERE {object}={value}'.format(table=table, object=object, value=value))
+        self.curr.execute(
+            'SELECT * FROM {table} WHERE {object}={value}'.format(table=table, object=object, value=value))
         if not self.curr.fetchall():
             return False
         return True
@@ -120,15 +146,18 @@ class ApiHelper:
         self.curr.execute('INSERT INTO Index VALUES ({index_id})'.format(index_id=index_id))
 
     def add_new_member(self, params):
-        self.validator.validate({"table": "Member", "object": "member_id", "value": params["member"]}, VERIFY_OBJECT_DUPLICATION)
+        self.validator.validate({"table": "Member", "object": "member_id", "value": params["member"]},
+                                VERIFY_OBJECT_DUPLICATION)
         self.add_new_index(params['member'])
         self.curr.execute(
-            "INSERT INTO Member VALUES ({member_id}, '{password}', {timestamp}, '{member_type}')".format(member_id=params['member'], password=params["password"],
-                                                                  timestamp=params['timestamp'], member_type="M"))
+            "INSERT INTO Member VALUES ({member_id}, '{password}', {timestamp}, '{member_type}')".format(
+                member_id=params['member'], password=params["password"],
+                timestamp=params['timestamp'], member_type="M"))
         self.curr.execute("INSERT INTO Troll(member_id) VALUES ({member_id})".format(member_id=params["member"]))
 
     def add_new_action(self, params, action_type):
-        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]}, VERIFY_OBJECT_DUPLICATION)
+        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
+                                VERIFY_OBJECT_DUPLICATION)
         self.add_new_index(params["action"])
         self.curr.execute("INSERT INTO Action VALUES ({}, {}, {}, '{}', {})".format(
             params['action'], params.get('authority', 'NULL'), params['project'], action_type, params['member']))
@@ -137,19 +166,22 @@ class ApiHelper:
         if not params.get('authority', None):
             self.validator.validate({"msg": "Authority value must be passed!"}, THROW_EXCEPTION)
 
-        self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]}, VERIFY_OBJECT_DUPLICATION)
+        self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]},
+                                VERIFY_OBJECT_DUPLICATION)
 
         self.add_new_index(params['project'])
 
         self.curr.execute('INSERT INTO Project VALUES ({}, {})'.format(params['project'], params["authority"]))
 
     def add_new_vote(self, params, vote_type):
-        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]}, VERIFY_OBJECT)
+        self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]}, VERIFY_OBJECT_EXISTENCE)
 
         self.curr.execute("INSERT INTO Vote VALUES ({}, {}, '{}')".format(params["member"], params["action"],
-                                                                              "Y" if vote_type == "upvote"
-                                                                              else "N"))
-        self.curr.execute("UPDATE Troll SET {vote_type} = {vote_type} + 1 WHERE member_id={member}".format(vote_type=vote_type, member=params["member"]))
+                                                                          "Y" if vote_type == "upvote"
+                                                                          else "N"))
+        self.curr.execute(
+            "UPDATE Troll SET {vote_type} = {vote_type} + 1 WHERE member_id={member}".format(vote_type=vote_type,
+                                                                                             member=params["member"]))
 
     def update_member_status(self, user, timestamp):
         self.curr.execute("SELECT last_activity FROM Member WHERE member_id={}".format(user))
@@ -177,7 +209,7 @@ class ApiHelper:
         type = "action_type='{}'".format(type) if type else type
 
         query = 'SELECT Action.action_id, Action.action_type, Action.project_id, Action.authority_id, SUM(CASE WHEN ' \
-                'Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 '\
+                'Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 ' \
                 'END) AS downvotes FROM Action JOIN Vote USING(action_id) '
 
         added_elems = 0
@@ -199,10 +231,9 @@ class ApiHelper:
         action = "WHERE action_id={}".format(str(action)) if action else action
         project = "WHERE project_id={}".format(str(project)) if project else project
         self.curr.execute(
-                'SELECT Member.member_id, SUM(CASE WHEN Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, '
-                'SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 '
-                'END) AS downvotes FROM Member JOIN Vote USING(member_id) JOIN Action USING(action_id) JOIN Project '
-                'USING(project_id) ' + action + project + 'GROUP BY Member.member_id ORDER BY member_id;')
+            'SELECT Member.member_id, SUM(CASE WHEN Vote.vote_type=\'Y\' THEN 1 ELSE 0 END) AS upvotes, '
+            'SUM(CASE WHEN Vote.vote_type=\'N\' THEN 1 ELSE 0 '
+            'END) AS downvotes FROM Member LEFT JOIN Vote USING(member_id) LEFT JOIN Action USING(action_id) LEFT JOIN Project '
+            'USING(project_id) ' + action + project + 'GROUP BY Member.member_id ORDER BY member_id;')
 
         return self.curr.fetchall()
-

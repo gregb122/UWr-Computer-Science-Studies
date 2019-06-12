@@ -1,3 +1,4 @@
+
 INIT = [
     '{"open": {"database": "student", "login": "init", "password": "qwerty"}}',
     '{"leader": {"timestamp": 1557473000, "password": "abc", "member": 1}}',
@@ -89,5 +90,5 @@ APP = ['{"open": {"database": "student", "login": "app", "password": "qwerty"}}'
        '{"downvote": {"timestamp": 1595475715, "password": "abc", "member": 1, "action": 500}}',
        '{"support": {"timestamp": 1695475715, "password": "cztery", "member": 4, "action": 837}}',
 
-       '{"trolls": {"timestamp": 1557477055}}',
+       '{"trolls": {"timestamp": 1717477055}}',
        ]

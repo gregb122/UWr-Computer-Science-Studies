@@ -1,19 +1,16 @@
-import psycopg2
-
-YEAR_IN_SECONDS = 3600 * 24 * 365 + 3600 * 5 + 48 * 60  # 31556880
-
 VERIFY_PASSWORD = 'verify_password'
 VERIFY_USER_STATUS = 'verify_user_status'
 MEMBER_DID_NOT_VOTE_FOR_ACTION = 'member_did_not_vote_for_action'
 VERIFY_OBJECT_DUPLICATION = 'verify_object_duplication'
-VERIFY_OBJECT = 'verify_object'
+VERIFY_OBJECT_EXISTENCE = 'verify_object_existence'
 THROW_EXCEPTION = 'throw_exception'
+
+YEAR_IN_SECONDS = 31556880  # 3600 * 24 * 365 + 3600 * 5 + 48 * 60
 
 
 class Validator:
     """
-    Possible commands:
-    1. verify_password
+    This class is responsible for handling exceptions of illegal usecases
     """
     def __init__(self, conn, curr):
         self.conn = conn
@@ -35,7 +32,7 @@ class Validator:
         if params["timestamp"] - previous_action_timestamp > YEAR_IN_SECONDS:
             raise CustomException("User {} cannot perform any operations!".format(params["member"]))
 
-    def verify_object(self, params):
+    def verify_object_existence(self, params):
         self.curr.execute('SELECT * FROM {table} WHERE {object}={value}'.format(table=params["table"], object=params["object"], value=params["value"]))
         if not self.curr.fetchall():
             raise CustomException("{object} is not exists in {table} table!".format(object=params["object"], table=params["table"]))

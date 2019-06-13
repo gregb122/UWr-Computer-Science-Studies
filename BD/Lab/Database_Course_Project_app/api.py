@@ -1,6 +1,4 @@
-from validator import Validator, VERIFY_OBJECT_EXISTENCE, VERIFY_PASSWORD, VERIFY_USER_STATUS, \
-    VERIFY_OBJECT_DUPLICATION, \
-    MEMBER_DID_NOT_VOTE_FOR_ACTION, THROW_EXCEPTION, YEAR_IN_SECONDS
+from validator import *
 
 from db_connector import connect_with_db
 
@@ -26,13 +24,7 @@ class Api:
         return conn, curr
 
     def create_leader(self, params: dict):
-        self.api_helper.add_new_index(params["member"])
-        self.curr.execute(
-            "INSERT INTO Member(member_id, password, last_activity, member_type) VALUES ({}, crypt('{}', "
-            "gen_salt('bf')), {}, {})".format(
-                params["member"], params["password"], params["timestamp"], "'L'")
-        )
-        self.curr.execute("INSERT INTO Troll(member_id) VALUES ({})".format(params["member"]))
+        self.api_helper.add_new_member(params, member_type="L")
 
         self.conn.commit()
 
@@ -65,7 +57,7 @@ class Api:
         self.conn.commit()
 
     def list_projects(self, params):
-        self.validator.validate(params, VERIFY_USER_STATUS, VERIFY_PASSWORD)
+        self.validator.validate(params, VERIFY_MEMBER_TYPE, VERIFY_USER_STATUS, VERIFY_PASSWORD)
 
         if params.get('authority', None):
             self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]},
@@ -79,7 +71,7 @@ class Api:
         return result
 
     def list_actions(self, params):
-        self.validator.validate(params, VERIFY_USER_STATUS, VERIFY_PASSWORD)
+        self.validator.validate(params, VERIFY_MEMBER_TYPE, VERIFY_USER_STATUS, VERIFY_PASSWORD)
 
         if params.get('authority', None):
             self.validator.validate({"table": "Project", "object": "authority_id", "value": params["authority"]},
@@ -97,7 +89,7 @@ class Api:
         return result
 
     def list_votes(self, params):
-        self.validator.validate(params, VERIFY_PASSWORD, VERIFY_USER_STATUS)
+        self.validator.validate(params, VERIFY_MEMBER_TYPE, VERIFY_PASSWORD, VERIFY_USER_STATUS)
 
         if params.get('action', None):
             self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
@@ -144,17 +136,17 @@ class ApiHelper:
 
     def add_new_index(self, index_id):
         self.validator.validate({"table": "Index", "object": "index_id", "value": index_id}, VERIFY_OBJECT_DUPLICATION)
-        self.curr.execute('INSERT INTO Index VALUES ({index_id})'.format(index_id=index_id))
+        self.curr.execute('INSERT INTO Index VALUES (%s)', (index_id,))
 
-    def add_new_member(self, params):
-        self.validator.validate({"table": "Member", "object": "member_id", "value": params["member"]},
+    def add_new_member(self, params, member_type="M"):
+        self.validator.validate({"table": 'Member', "object": "member_id", "value": params["member"]},
                                 VERIFY_OBJECT_DUPLICATION)
         self.add_new_index(params['member'])
         self.curr.execute(
-            "INSERT INTO Member VALUES ({member_id}, crypt('{password}', gen_salt('bf')), {timestamp}, '{member_type}')".format(
-                member_id=params['member'], password=params["password"],
-                timestamp=params['timestamp'], member_type="M"))
-        self.curr.execute("INSERT INTO Troll(member_id) VALUES ({member_id})".format(member_id=params["member"]))
+            "INSERT INTO Member VALUES (%s, crypt(%s, gen_salt('bf')), %s, %s)", (params['member'], params["password"],
+                                                                                  params['timestamp'], member_type)
+        )
+        self.curr.execute("INSERT INTO Troll(member_id) VALUES (%s)", (params["member"], ))
 
     def add_new_action(self, params, action_type):
         self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
@@ -167,18 +159,18 @@ class ApiHelper:
         if not params.get('authority', None):
             self.validator.validate({"msg": "Authority value must be passed!"}, THROW_EXCEPTION)
 
-        self.validator.validate({"table": "Project", "object": "project_id", "value": params["project"]},
+        self.validator.validate({"table": 'Project', "object": "project_id", "value": params["project"]},
                                 VERIFY_OBJECT_DUPLICATION)
 
         self.add_new_index(params['project'])
 
-        self.curr.execute('INSERT INTO Project VALUES ({}, {})'.format(params['project'], params["authority"]))
+        self.curr.execute('INSERT INTO Project VALUES (%s, %s)', (params['project'], params["authority"], ))
 
     def add_new_vote(self, params, vote_type):
         self.validator.validate({"table": "Action", "object": "action_id", "value": params["action"]},
                                 VERIFY_OBJECT_EXISTENCE)
 
-        self.curr.execute("INSERT INTO Vote VALUES ({}, {}, '{}')".format(params["member"], params["action"],
+        self.curr.execute("INSERT INTO Vote VALUES (%s, %s, %s)", (params["member"], params["action"],
                                                                           "Y" if vote_type == "upvote"
                                                                           else "N"))
         self.curr.execute(
@@ -186,12 +178,12 @@ class ApiHelper:
                                                                                              member=params["member"]))
 
     def update_member_status(self, user, timestamp, command=""):
-        self.curr.execute("SELECT last_activity FROM Member WHERE member_id={}".format(user))
+        self.curr.execute("SELECT last_activity FROM Member WHERE member_id=%s", (user, ))
         previous_action_timestamp = self.curr.fetchall()[0][0]
         if timestamp - previous_action_timestamp > YEAR_IN_SECONDS:
-            self.curr.execute("UPDATE Troll SET active = false WHERE member_id={}".format(user))
+            self.curr.execute("UPDATE Troll SET active = false WHERE member_id=%s", (user, ))
         if command != "trolls":
-            self.curr.execute("UPDATE Member SET last_activity={} WHERE member_id={}".format(timestamp, user))
+            self.curr.execute("UPDATE Member SET last_activity=%s WHERE member_id=%s", (timestamp, user, ))
 
     def update_all_members_status(self, timestamp):
         self.curr.execute("SELECT member_id FROM Member")

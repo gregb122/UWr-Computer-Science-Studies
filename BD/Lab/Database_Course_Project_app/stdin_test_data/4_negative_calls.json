@@ -18,4 +18,10 @@
 
 {"actions": {"timestamp": 1558475796, "password": "abc", "member": 1, "authority": 2, "comment":  "authorityId nie nalezy do authority"}}
 
-{ "votes": { "timestamp": 1558475715, "password": "abc", "member": 1, "project": 2, "comment":  "próba filtrowania głosów po nieistniejacym id projektu"}}
+{ "votes": { "timestamp": 1558475797, "password": "abc", "member": 1, "project": 2, "comment":  "próba filtrowania głosów po nieistniejacym id projektu"}}
+
+{ "votes": { "timestamp": 1558475798, "password": "piec", "member": 5, "project": 5000, "comment":  "Uzytkownik 5 istnieje w bazie, ale nie ma uprawnien lidera"}}
+
+{ "actions": { "timestamp": 1558475798, "password": "osiem", "member": 8, "project": 2, "comment":  "Uzytkownik 8 nie istnieje w bazie, wiec tym bardziej nie ma uprawnien lidera"}}
+
+{ "projects": { "timestamp": 1558475799, "password": "piec", "member": 4, "project": 5001, "comment":  "Uzytkownik 4 istnieje w bazie, ale nie ma uprawnien lidera"}}

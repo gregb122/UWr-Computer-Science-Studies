@@ -1,7 +1,0 @@
-cat stdin_example/negative_init.json | python main.py --init
-cat stdin_example/positive_init.json | python main.py --init
-
-cat stdin_example/positive_calls.json | python main.py
-cat stdin_example/negative_calls.json | python main.py
-
-python main.py --reset

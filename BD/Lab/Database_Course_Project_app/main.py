@@ -10,41 +10,62 @@ from validator import CustomException
 from parser import parse_json_object, parse_result_as_json_object_to_output, read_json_objects_from_file
 
 
-def run_init(std_in):
-    api, result = run_open(std_in[0])
+def main():
+    """
+    Main function responsible for capture stdin and running program with following terminal switches:
+    --reset - Clears database schema and content
+    --init - Initialization mode - Creates database structure (tables, constraints, etc.) and app user with granting
+    privileges. Loads also leaders into database
+    (--)default, with no switches: Execute list of api calls JSON lists
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--init", action='store_true')
+    parser.add_argument("--reset", action='store_true')
+    args, _ = parser.parse_known_args()
+
+    if args.reset:
+        reset()
+    else:
+        stdin = read_json_objects_from_file(sys.stdin)
+        if args.init:
+            run(stdin, init=True)
+        else:
+            run(stdin)
+
+
+def run(std_in, init=False):
+    """
+    Execute all queries except first (with open) from stdin
+    :param std_in: json objects separated by line ending symbol
+    :param init: switch for disable/enable initialization mode
+    """
+    api, result = connect(std_in[0])
     if api is None:
         print(colored(result, 'red'))
         return
     print(result)
+    if init:
+        conn, curr = api.get_connection_and_cursor()
+        load_sql_into_db(conn, curr)
 
-    conn, curr = api.get_connection_and_cursor()
-    load_sql_into_db(conn, curr)
-
-    for line in std_in[1:]:
-        try:
-            command, params = parse_json_object(line)
-            print(run_api_function(api, command, params))
-        except CustomException as e:
-            print(colored(parse_result_as_json_object_to_output(result=str(e), failed=True), 'red'))
-
-
-def run_app(std_in):
-    api, result = run_open(std_in[0])
-
-    if api is None:
-        print(colored(result, 'red'))
-        return
-
-    print(result)
     for api_call in std_in[1:]:
         try:
             command, params = parse_json_object(api_call)
             print(run_api_function(api, command, params))
-        except (CustomException, ArgumentError) as e:
+        except CustomException if init else (CustomException, ArgumentError) as e:
             print(colored(parse_result_as_json_object_to_output(result=str(e), failed=True), 'red'))
 
+    conn, curr = api.get_connection_and_cursor()
+    curr.close()
+    conn.close()
 
-def run_open(line_open):
+
+def connect(line_open):
+    """
+    Open connection with database
+    :param line_open: first line of stdin (query with 'open' command)
+    :return: Api object with open connection if success, None if failed
+    """
     _, open_cmd = parse_json_object(line_open)
     try:
         api = Api(open_cmd)
@@ -54,6 +75,13 @@ def run_open(line_open):
 
 
 def run_api_function(api, command, params):
+    """
+    Execute single query parsed from stdin
+    :param api: object with open connection, responsible for performing action query
+    :param command: name of the action query
+    :param params: parameters for the action query
+    :return: JSON object with data results
+    """
     api_out = ""
     if command in ('support', 'protest'):
         api.create_action(params, command)
@@ -74,6 +102,9 @@ def run_api_function(api, command, params):
 
 
 def reset():
+    """
+    Reset database: recreate schema and drop user
+    """
     conn, curr = connect_with_db(dbname="student", user="init", password="qwerty", host='localhost')
     curr.execute('DROP SCHEMA public CASCADE')
     curr.execute('CREATE SCHEMA public')
@@ -84,22 +115,6 @@ def reset():
     conn.commit()
     curr.close()
     conn.close()
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--init", action='store_true')
-    parser.add_argument("--reset", action='store_true')
-    args, _ = parser.parse_known_args()
-
-    if args.init:
-        stdin = read_json_objects_from_file(sys.stdin)
-        run_init(stdin)
-    elif args.reset:
-        reset()
-    else:
-        stdin = read_json_objects_from_file(sys.stdin)
-        run_app(stdin)
 
 
 if __name__ == '__main__':

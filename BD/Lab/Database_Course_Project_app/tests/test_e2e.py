@@ -2,10 +2,10 @@ import pytest
 import os
 
 from main import *
-from parser import validate_signature
 
 INPUT_DATA = "stdin_test_data"
 RESULTS = "stdout_test_results"
+SQL_TEST_FILE_NAME = 'db_model_test.sql'
 
 
 def load_test_data(f_name, input_data):
@@ -21,25 +21,46 @@ def load_test_data(f_name, input_data):
 NEGATIVE_INIT = load_test_data('1_negative_init.json', INPUT_DATA), load_test_data('1.json', RESULTS)
 POSITIVE_INIT = list(zip(load_test_data('2_positive_init.json', INPUT_DATA)[1:], load_test_data('2.json', RESULTS)[1:]))
 CALLS = list(zip(load_test_data('3_positive_calls.json', INPUT_DATA)[1:], load_test_data('3.json', RESULTS)[1:])) \
-      + list(zip(load_test_data('4_negative_calls.json', INPUT_DATA)[1:], load_test_data('4.json', RESULTS)[1:])) \
-      + list(zip(load_test_data('5_active_calls.json', INPUT_DATA)[1:], load_test_data('5.json', RESULTS)[1:]))
+        + list(zip(load_test_data('4_negative_calls.json', INPUT_DATA)[1:], load_test_data('4.json', RESULTS)[1:])) \
+        + list(zip(load_test_data('5_active_calls.json', INPUT_DATA)[1:], load_test_data('5.json', RESULTS)[1:]))
 
-ARGUMENTS = list(zip(load_test_data('6_argument_wrong_number.json', INPUT_DATA)[1:], load_test_data('6.json', RESULTS)[1:]))
+ARGUMENTS = list(
+    zip(load_test_data('6_argument_wrong_number.json', INPUT_DATA)[1:], load_test_data('6.json', RESULTS)[1:]))
+
+
+def reset_test():
+    conn, curr = connect_with_db(dbname="test_student", user="test_init", password="qwerty", host='localhost')
+    curr.execute('DROP SCHEMA public CASCADE')
+    curr.execute('CREATE SCHEMA public')
+    curr.execute('GRANT ALL ON SCHEMA public TO postgres')
+    curr.execute('GRANT ALL ON SCHEMA public TO public')
+    curr.execute('DROP OWNED BY test_app')
+    curr.execute('DROP ROLE test_app')
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
+def load_sql_into_db_test(conn, curr):
+    with open(SQL_TEST_FILE_NAME, 'r') as f:
+        curr.execute(f.read())
+        conn.commit()
+
 
 def test_negative_init():
-    reset()
-    _, result = run_open(NEGATIVE_INIT[0][0])
+    reset_test()
+    _, result = connect(NEGATIVE_INIT[0][0])
     assert result == NEGATIVE_INIT[1][0]
 
 
 @pytest.mark.parametrize('tcs', POSITIVE_INIT)
 def test_positive_init(tcs):
-    api = Api({"database": "student", "login": "init", "password": "qwerty"})
+    api = Api({"database": "test_student", "login": "test_init", "password": "qwerty"})
     conn, curr = api.get_connection_and_cursor()
-    load_sql_into_db(conn, curr)
+    load_sql_into_db_test(conn, curr)
     command, params = parse_json_object(tcs[0])
     result = run_api_function(api, command=command, params=params)
-    reset()
+    reset_test()
     assert result == tcs[1]
 
 
@@ -56,7 +77,7 @@ def test_calls(prepare_database, tcs):
 @pytest.mark.parametrize('tcs', ARGUMENTS)
 def test_argument_wrong_number(tcs):
     try:
-        command, params = parse_json_object(tcs[0])
+        parse_json_object(tcs[0])
         assert False
     except ArgumentError as e:
         assert '{' + '"status": "ERROR", "debug": "{msg}"'.format(msg=e.msg) + '}' == tcs[1]
@@ -64,12 +85,11 @@ def test_argument_wrong_number(tcs):
 
 @pytest.fixture(scope="module")
 def prepare_database():
-    api = Api({"database": "student", "login": "init", "password": "qwerty"})
+    api = Api({"database": "test_student", "login": "test_init", "password": "qwerty"})
     conn, curr = api.get_connection_and_cursor()
-    load_sql_into_db(conn, curr)
+    load_sql_into_db_test(conn, curr)
     for tcs in POSITIVE_INIT:
         command, params = parse_json_object(tcs[0])
         _ = run_api_function(api, command=command, params=params)
-    api = Api({"database": "student", "login": "init", "password": "qwerty"})
+    api = Api({"database": "test_student", "login": "test_app", "password": "qwerty"})
     return api
-

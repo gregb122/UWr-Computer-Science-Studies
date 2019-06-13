@@ -9,3 +9,6 @@
 {"status": "ERROR", "debug": "action_id is not exists in Action table!"}
 {"status": "ERROR", "debug": "authority_id is not exists in Project table!"}
 {"status": "ERROR", "debug": "project_id is not exists in Project table!"}
+{"status": "ERROR", "debug": "Only leader can perform this action!"}
+{"status": "ERROR", "debug": "Only leader can perform this action!"}
+{"status": "ERROR", "debug": "Only leader can perform this action!"}

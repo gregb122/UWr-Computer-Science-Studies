@@ -1,0 +1,4 @@
+#  Dla operacji wejscia wyjscia wygodnie jest skorzystac z wielowatkowosci. W przypadku tych operacji
+#  GIL jest zwalniany. Np. GIL jest zwalniany, jak jeden watek czeka na odpowiedz żądania. W tym czasie
+# inny watek moze wyslac zapytanie.
+

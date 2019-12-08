@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Twoje wypożyczone książki: </h1>
+<br>
+<ul></ul>
+{% for book in books %}
+    <li>Tytuł: {{ book.title }} <a href="{% url "books:book_return" book.id %}">Oddaj książkę</a></li>
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Autor</th>
+      <th scope="col">Tytuł książki</th>
+      <th scope="col">Rok wydania</th>
+        <th scope="col">Liczba dostępnych sztuk</th>
+        <th scope="col">Wypożycz książkę</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <th scope="row"> {{ book.author.first_name }} {{ book.author.last_name }}</th>
+      <td> {{ book.title }}</td>
+      <td> {{ book.publication_year }}</td>
+      <td> {{ book.number_of_available_instances }}</td>
+        {% if book.number_of_available_instances > 0%}
+            <td><a href="{% url "books:book_add" book.id %}">Wypożycz książkę</a></td>
+            {% else %}
+            <td>Brak dostępnych egzemplarzy</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+{% endblock content %}

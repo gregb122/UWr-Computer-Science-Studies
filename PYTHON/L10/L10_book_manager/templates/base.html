@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book manager app</title>
+    {% load bootstrap3 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    {% bootstrap_messages %}
+</head>
+<body>
+<header>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+          <li><a href="{% url 'books:book_new' %}">Dodaj nową książkę</a></li>
+          {% if user.is_authenticated %}
+              <li><a href="{% url 'books:book_rent' %}">Wypożycz książkę</a></li>
+              <li><a href="{% url 'books:list_books' %}">Twoje książki</a></li>
+          {% endif %}
+      </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Wyloguj się</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}">Zaloguj się</a></li>
+            {% endif %}
+      </ul>
+
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+</header>
+  <div class="panel-body">
+
+    {% block content %}
+        Base html boilerplate
+    {% endblock content %}
+  </div>
+
+<footer>
+  <div class="panel-footer">
+      Footer
+</div>
+</footer>
+
+</body>
+</html>

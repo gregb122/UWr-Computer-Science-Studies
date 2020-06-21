@@ -1,0 +1,24 @@
+1. Konfiguracja:
+vs code + psql cmdline:
+- Uruchamianie skryptow:
+\i example.sql
+
+2. Komendy:
+\du, \du+ - lista wszystkich użytkowników
+
+\l - lista dostepnych baz danych. mozna tez napisac:
+SELECT datname FROM pg_database;
+
+\d - lista dostepnych relacji w bazie danych
+
+\c <baza_danych> - laczenie sie z baza danych
+
+\d <nazwa_relacji> describe table - pokazuje scheme dla tabeli
+
+3. Ladowanie dumpa:
+- utworzyc pusta baze danych
+- zaladowac skrypt \i baza.dmp
+- przelaczyc sie na domyslna baze postgres
+- wrocic na nasza baze danych
+
+

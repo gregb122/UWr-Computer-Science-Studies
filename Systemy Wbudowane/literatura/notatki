@@ -1,0 +1,18 @@
+ADC teoria:
+Piny od PC0 do PC5 są dostępne jako ADC inputs. W danej jednostce czasu tylko z jednego z nich możesz odczytać dane (potrzeba multipleksowania).
+succesive approximation - metoda pozwalająca ustalić jakie jest napięcie na wejściu analogowym:
+Algorytm oparty na binsearch: 
+1. Weź wartością początkową jako wartość napięcia referencyjnego z pinu AREF.
+2. Następnie podziel ją na pół za pomocą wewnętrznego DAC. 
+3. Porównaj otrzymaną wartość DAC z wartością wejścia analogowego
+ADC wykonuje pętlę 10 razy, co daje wynik z określoną dokładnością.
+
+Sample and hold - przytrzymaj wartość i zbuforuj kolejne, dopóki nie zostanie wyznaczona przez algorytm.
+
+Co trzeba ustawić w praktyce:
+- ADC clock prescaler - domyślnie disabled == no conversions
+- napięcie referencyjne
+- źródło analogowego sygnału wejściowego (domyślnie pin PC0)
+- sposób komunikacji z ADC - domyślnie jest free-run, który wymaga przerwań od procesora. Lepiej wybrać tryb komunikacji on-demand - ADC wykonuje pracę tylko wtedy, gdy go o to poprosimy.
+
+

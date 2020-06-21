@@ -1,0 +1,63 @@
+Koszyk a zamowienie.
+Asocjacje polimofriczne.
+
+Metody w kontrolerach, ktore nie sa akcjami
+cookies sa tylko dostepne w kontrolerze, powiazane z requestem. Poza requestem nie jest mozliwe dostac
+sie do cookies.
+
+Dodawanie ceny do zamówienia - trzeba przepisać cenę, bo ceny ulegają zmianom w danych momentach(przeceny)
+gem money - obiekt typu price, mozna dodac cene w postaci typu price do tabeli
+
+produkt dodaje się do koszyka raczej nie na odwrót.
+
+git rebase niz git merge
+
+Koszyk i zamówienia. Testy automatyczne.
+
+testy automatyczne sa dla programistow, gdy w sytuacji, gdy naprawiamy jedna rzecz, to czesto psuja sie inne.
+Testy automatyczne nam pokazuja co sie psuje, inne bledy.
+Rodzaje testów automatycznych:
+- jednostkowe
+- funkcjonalne
+- behawioralne (scenariusze klienckie realizowane w projekcie)
+Narzędzia w rails:
+RSpec - bardziej popularny niz domyslne testy railsowe. Testy modeli, kontrolerow
+Selenium, Cucumber - fizycznie uruchamia przegladarke i robi klikanie (taki bot testowy)
+
+Podział z punktu widzenia railsów:
+unit testy - testy modeli, kontrolerow, 
+TDD - unikamy pisania testow pod funkcje, piszac funkcje wiemy kiedy sie wywali.
+Utrzymywanie testow kosztuje, nie moze byc ich za duzo
+Rozsadna ilosc testow: 1 akcja w kontrolerze - 1 test
+Czasem wykorzystuje sie SI do decydowania, ktore testy warto puscic
+
+RSpec.
+Testy jednostkowe w ruby
+(czesto zastepuje wbudowany mechanizm testow w Rails --skip-test-unit)
+
+Struktura testu
+Rspec.describe <nazwa_klasy> do
+  describe <"#testowanametoda"> do
+#pojedynczy test  it "
+
+1. testujemy jedna metode w 1 tescie 
+2. Rozdzielamy niepowiązane scenariusze na osobne teksty (bo wtedy nie wiemy co sie wywalilo)
+3. context - do łączenia powiązanych scenariuszy ze sobą
+4. let(:object) - eliminacja duplikacji
+5. subject i described_class - jeszcze mniej duplikacji
+
+is_expected.to - 
+is_expected.to_not - negacja
+
+z kropką - metoda statyczna/klasowa
+z # - metoda instancyjna
+
+User.create! - zwroci nam pelen blad na temat niepowodzenia transakcji
+User.create - zwroci tylko false, gdy nie pojdzie do bazy danych zapis
+tak samo jest z .save i .save!
+UWAGA!!!
+Rspec za kazdym razem stworzy nowego Usera do testu, a jest walidacja, ktora nie pozwoli tego zrobic.
+Rozwiazaniem jest tutaj factory bot gem, ktory poda nam sekwencje, np unikalne adresy email
+Aplikacja ma osobną bazę danych do testów w rspecu, zeby nie kłóciło się to z developerską bazą danych
+
+

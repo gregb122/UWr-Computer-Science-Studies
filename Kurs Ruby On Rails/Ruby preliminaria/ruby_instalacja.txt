@@ -1,0 +1,5 @@
+pod tym adresem:
+https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/digital_ocean/nginx/enterprise/install_language_runtime.html
+rvm po instalacji wymaga ponownego uruchomienia komputera
+
+trzeba tez ustawic run as a command shell w opcjach terminala terminal. zrestartowac terminal

@@ -1,0 +1,8 @@
+Koszyk z zamówieniami:
+- do każdego produktu musi być link "dodaj do koszyka",link wywoła akcje w kontrolerze
+własciwym dla koszyka - więc byłby model Cart - ale w pewnym momencie przechodzi on w model
+Order, więc jest Order
+
+1. Model Order- 
+2. Model Order_item - 
+3. Model User - ma wiele orderów (has_many :orders, as :owner) po owner_id

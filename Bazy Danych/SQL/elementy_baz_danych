@@ -1,0 +1,132 @@
+I. Dziedziny.
+1. Dziedzina to własny typ danych w SQL, który można modelować za pomocą takich parametrów, jak ustawianie wartości domyślnej, określenie dziedziny (dopuszczalnych wartości), itp.
+
+2. Przyklad:
+CREATE DOMAIN zajecia_domain AS char -- tu tworzymy symbol oznaczajacy typ danych rodzaj_zajec
+DEFAULT 'w' NOT NULL --domyslna wartosc 'w' niepusta
+CHECK (VALUE IN ('w', 'c', 'p', 'r', 'e')) -- wartosc musi byc w podanym zbiorze
+
+CREATE TABLE test (init integer);
+ALTER TABLE test ADD COLUMN rodzaj_zajec zajecia_domain;
+
+ALTER COLUMN init
+SET DATA TYPE zajecia_domain; --zmiana typu danych kolumny
+
+3. Uwaga, jesli w definicji dziedziny mamy:
+CHECK (VALUE IN ('W', 'C', NULL)) 
+TO WARTOSC NULL AKCEPTUJE WSZYSTKO (WSZYSTKIE ELEMENTY NALEZA DO TEGO ZBIORU)
+
+4. CASCADE
+- usuwa obiekty zależne DROP DOMAIN zajecia_dom CASCADE; 
+
+5. Warunek dziedziny jest sprawdzany w czasie INSERT/UPDATE:
+CREATE DOMAIN dobra_data AS timestamp
+	CHECK (VALUE >= CURRENT_TIMESTAMP);
+CREATE TABLE test (a dobra_data);
+INSERT INTO test VALUES(CURRENT_TIMESTAMP);
+SELECT * FROM test WHERE a < CURRENT_TIMESTAMP;
+-- jest OK
+ALTER DOMAIN dobra_data ADD CONSTRAINT c2 CHECK
+(VALUE>CURRENT_TIMESTAMP);
+ERROR: column "a" of table "test" contains values
+that violate the new constraint.
+
+6. typ wyliczeniowy
+CREATE TYPE typ_zajec AS ENUM('w', 'c', 'p');
+ALTER TABLE ADD COLUMN zajecia
+
+7. CAST lub :: 
+do porownan lepiej rzutowac customowy typ danych do tego samego typu co prostszy:
+select * from grupa where rodzaj_zajec::char(1)=;w;
+
+II. Struktura serwera bazy danych:
+
+1. CREATE DATABASE db;
+DROP DATABASE db;
+CREATE DATABASE db OWNER adam; --przypisanie wlasciciela
+- potrzebne jest uprawnienie createdb do tworzenia bazy danych
+
+CREATE SCHEMA schemat - nowy schemat bedacy tylko przestrzenia nazw
+SELECT current_schema --sprawdzenie biezacego schematu
+
+2. uzytkownik - ma identyfikator, haslo, zakres uprawnien i prawa do :
+- tworzenia obiektow/uzytkowania obiektow
+rola - to zakres uprawnien uzytkownika
+
+CREATE ROLE adam WITH (jedna z opcji):
+- SUPERUSER - moze prawie wszystko
+- CREATEDB - ma prawo do towrzenia db
+- CREATEROLE - do tworzenia innych rol
+- createuser - innych uzytkownikow
+
+3. Rodzaje praw do obiektow bazy:
+TABLE, VIEW — SELECT | INSERT | UPDATE | DELETE | TRUNCATE | REFERENCES |
+TRIGGER
+column TABLE, VIEW — SELECT | INSERT | UPDATE | REFERENCES
+SEQUENCE — USAGE | SELECT | UPDATE
+DATABASE — CREATE | CONNECT | TEMPORARY | TEMP
+FUNCTION — EXECUTE | ALL
+LANGUAGE — USAGE | ALL
+SCHEMA — CREATE | USAGE
+DOMAIN, TYPE — USAGE
+
+4. Nadawanie praw: GRANT
+GRANT <lista_praw> ON <obiekt> TO <uprawniony> [WITH GRANT OPTION];
+- prawa są sygnowane - obdarowujacy podpisuje się pod udzielonym prawem (licencją) i system to zapamiętuje
+- wiele licencji - jeden użytkownik moze otrzymac to samo prawo od wielu uzytkownikow
+- w przypadku nadawania praw dalej with gran option zapamietywana jest sciekza otrzymania prawa
+
+5. odbieranie praw: REVOKE
+REVOKE [GRANT OPTION FOR] lista_praw ON obiekt
+FROM uprawiony [RESTRICT|CASCADE];
+
+- Wycofanie kaskadowe - wycofanie wszystkich praw przekazanych dalej w oparciu o prawo, ktore chcemy wycofac
+- wycofanie GRANT OPTION - wycofanie z ta flaga powoduje wycofanie praw nadanych dalej ale zachowuje prawo obdarowanego bezposrednio licencja
+
+III. INDEX - narzedzie optymalizacji
+przyspiesza: wyszukiwanie, zlaczenia, kontrole unikalnosci i innych warunkow
+spowalnia: wstawianie, usuwanie i modyfikacje indeksowanych krotek
+
+IV. Sekwencja - służy do automatycznego generowania unikalnych wartości
+Dla typu SERIAL automatycznie jest tworzona sekwencja
+
+- create sequence numer_semestru;
+
+
+
+
+V. View - perspektywa. MOzna o tym myslec jako abstrakt, w ktorym przechowujemy queries
+CREATE VIEW name AS query
+
+VI. Wyzwalacze (TRIGGER)
+CREATE TRIGGER nazwa { BEFORE | AFTER }
+{ zdarzenie [ OR ... ] }
+{ NOT DEFERRABLE | [ DEFERRABLE ]
+{ INITIALLY IMMEDIATE | INITIALLY DEFERRED } }
+ON tabela [ FOR [ EACH ] { ROW | STATEMENT } ]
+EXECUTE PROCEDURE nazwa_funkcji(argumenty)
+
+
+
+
+
+VII. ROZNE
+
+1.tworzenie tabel i wiezów z kluczem glownym i obcym
+CREATE TABLE student LIKE uzytkownik;
+ALTER TABLE student ADD CONSTRAINT pk_student
+	PRIMARY KEY (kod_uz);
+
+CREATE TABLE wybor2 LIKE wybor;
+aLTER TABLE wybor2 DROP CONSTRAINT fk_wybor_uz;
+alter table wybor2 add constraint fk_wybor_st
+	FOREIGN KEY (kod_uz) REFERENCES studen(kod_uz) DEFERRABLE;
+
+2.Wstawianie krotek:
+INSERT INTO student(kod_uz, imie, nazwisko)
+SELECT kod_uz, imie, nazwisko FROM uzytkownik
+	WHERE kod_uz IN (SELECT kod_uz FROM wybor);
+
+
+
+

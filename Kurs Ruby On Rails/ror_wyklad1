@@ -1,0 +1,13 @@
+rubykoans.com
+
+rvm.io
+
+bin/setup - przygotowuje bazy danych, czysci logi, restartuje serwer
+
+Dziedziczenie z applicationcontroller zapewnia dodatkowe rzeczy zwiazane z bezpieczenstwem, itp.
+
+-gem slim-rails 
+
+heroku
+- rvm
+

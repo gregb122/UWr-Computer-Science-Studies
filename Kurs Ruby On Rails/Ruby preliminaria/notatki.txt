@@ -1,0 +1,299 @@
+I. Instalacja
+- sprawdz czy system jest aktualny: sudo apt-get update
+- zainstaluj zaleznosci dla ruby - to nie wiem, czy aktualne
+- instalacja rbenva:
+
+cd
+git clone git://github.com/sstephenson/rbenv.git .rbenv
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+exec $SHELL
+
+git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
+exec $SHELL
+
+rbenv install 2.2.2
+rbenv global 2.2.2
+
+
+- instalacja ruby: sudo apt-get install ruby
+
+II. Podstawowe info:
+- w edytorze atom zainstalowac dodatkowy skrypt runner - ctrl+shift-P
+i packages - i tam w settings wybrac
+potem skrypt runner odpala sie alt-r
+lub jesli mamy interakcje z uzytkownikiem z wejsciem, to po prostu w terminalu
+
+irb - tryb interaktywny
+irb --simple-prompt
+znak podkreslnika - zachowuje w irbie ostatnia zwrocona wartosc
+
+III. Ruby - fundamenty
+wszystko w ruby jest obiektem - jak w Pythonie. Obiekt to struktura, ktora
+przechowuje dane i zawiera metody, ktore wykonujemy na tym obiekcie.
+Co robia metody? Moga tworzyc nowe obiekty, operowac na danych obiektu, modyfikowac go, pytac o stan danych itp
+W rubym nie ma typow prostych!!!
+zmienna - to po prostu referencja do obiektu
+
+W Rubym napisy sa mutowalne - mozna tak np. text = "hej"
+text[1] = "c"
+text >> "hcj"
+
+Zasady dobrych nazw ziennych - 
+- nie moze byc krotka 
+- nie moze wprowadzac w blad
+- zasada snake_case_name - male litery i po podkreslniku
+- informuja o przeznaczeniu
+- tylko po angielsku!!
+
+zasieg zmiennych - 
+- zmienna lokalna/blokowa - zmienna
+- zmienna globalna $zmienna
+- zmienna klasy - @@zmienna
+- zmienna instancji - @zmienna - widoczna w pojedynczym obiekcie
+
+obiekty sa przekazywane przez "referencje"
+w rubym nie ma problemu przepelnienia nadmiaru - sam dopasowuje typ
+
+Niejawne konwersje - float + int  -> float
+
+konwertowanie - to_i, to_s, to_f
+rzutowanie - Float(...), Integer(...)
+
+Ciekawostka - zaden bank nie pracuje na liczbach zmiennoprzecinkowych
+
+tablice - podobnie jak w pythonie listy, tylko wycinanie tak:
+a = [1,2,3]
+a[0..1] = [1,2]
+
+nil - jest zwyczajnym obiektem, ktory modeluje wartosc pusta
+jesli odwolamy sie do indeksu tablicy nieisniejacego, to wtedy nil
+
+metody bez wykrzyknika na ogol zwracaja nowy obiekt, a z wykrzyknikiem
+modyfikuja biezacy
+
+usuwanie elementow z tablic - a.delete_at(2) #nr indeksu
+
+doklejanie elementu do tablicy a << "d"
+doklejanie na poczatek a.unshift("z")
+wstawianie na indeks a.insert(#indeks, wartosc)
+shift - usuwa pierwszy element tablicy i go zwraca
+pop - usuwa z konca
+
+a.delete("nazwa_obiektu") - usuwamy wszystkie obiekty o tej nazwie z tablicy
+
+a.uniq - nowa tablica bez duplikatow
+
+III. BLOKI
+
+metoda z blokiem - wszystko to, co jest miedzy do, a end
+ lub miedzy klamrami - zapis klamrowy jest preferowany w jednolinijkowcach
+
+nazwe zmiennej uzywanej w bloku podajemy po do zaraz w pionowych kreskach
+
+metody blokowe listy:
+select - zwraca liste tych elementow, ktore spelniaja zadany warunek
+find - zwraca pierwszy element, ktory spelnia zadany warunek
+any - jak kwantyfikator istnieje - predykat
+all - dla kazdego
+partition - zwraca dwie tablice - pierwsza ktore spelniaja i te ktore nie spelniaja
+
+IV. NAPISY
+
+"" podwojny cudzyslow reaguje na znaki specjalne i wylicza wartosci
+ pojedynczy nie
+- znaki specjalne jak w pythonie
+- konkatenacja, mnozenie - jak w pythonie
+ - podawanie napisow po przecinku w puts wyzwala znak nowej linii
+- upcase, downcase - kapitalizacja, dekapitalizacja
+-mozna wywolywac metody po kropce w chainie
+
+V. Symbole
+
+to napisy, ktore jak raz utworzymy, to sa w tym samym miejscu pamieci
+piszemy je po dwukropku:
+:test - napis test
+symbole nie moga zawierac nazw spacji,
+do opisywania statusow zamowienia, do tworzenia indeksow w hashah
+
+
+VI. Hashe
+zamiast in jest metoda include? i po spacji podajemy wartosc
+tak samo jak w pythonie w slowniku, tylko sa strzalki a nie :
+a jak mamy slownik, gdzie kluczami sa symbole, to jest skrocony suntax:
+{name: "adam", age: 24}, itd. spoko :)
+
+metoda key(wartosc) - pokazuje pod jakim kluczem znajduje sie szukana wartosc
+
+size - ile jest rzeczy
+to_a dostaniemy liste list dwuelementowych [[klucz,wartosc],...]
+keys - lista wszystkich kluczy
+values - lista wszystkich wartosci
+
+Wartosci true/false
+to tez sa obiekty
+Uwaga: w rubym wszystko jest prawda, poza wartosciamni false i nil!!!
+
+Stale
+z wielkich liter. Jesli pierwsza jest z wielkiej, to jest to klasa - tez stala
+stale mozna zmienic, ale ruby wygeneruje ostrzezenie, ze zmieniamy stala
+
+Przedzialy
+to struktura, ktora przechowuje zbior wartosci, np
+1..10 - przechowuje liczby od 1 do 10
+naleza do klasy range, i teraz wywolanie czegos takiego:
+1..10.class - wygeneruje blad, bo operator . kropki ma wyzszy priorytet
+niz 2 kropki, trzeba nawias
+(1..10).class
+--- metody:
+begin - poczatek przedzialu
+end - koniec przedzialu
+include? czy cos nalezy do przedzialu
+
+Istnieje mozliwosc zdefiniowania przedzialu prawostronnie otwartego za pomoca trzech kropek:
+1...10 - tu 10 nie nalezy do przedzialu juz
+
+Do przedzialu naleza tez liczby float
+- to_a - konwersja na tablice przedzialu
+- .each {|e| puts e}
+przedzial moga tez tworzyc litery:
+"a".."z" - i mamy po konwersji to_a tablice wszystkich znakow ascii ;)
+"aa".."zz" - wygeneruje wszystkie dwuliterowe kombinacje liter od a do z
+
+Wyrazenia
+mozna przypisywac: a = b = 2
+a, b = 2, 4 albo tak
+mozna tak: a = [1,2,3,4,5] i jesli b, c, *d = a
+wtedy b = 1 c = 2 i d = [3,4,5] * to operator splat, dokonuje ekspanji do reszty
+mozna konwertowac przedzial na tablice tez tak: [*a] - co jest dosc logiczne
+
+Wyrazenia regularne - sprawdzenie, czy tekst zawarty w napisie pasuje do schematu - np, czy zawiera poprawny adres email, albo czy zawiera poprawny nr telefonu
+
+strona rubular - testowanie wyrazen regularnych
+wyrazenie regularne - tworzymy miedzy ukosnikami
+/test/ czyli przypisujemy do zmiennej np:
+r = /\((\d+)\)/ nasze wyrazenie reguarlne stworzone na stronie
+i mamy tekst testowy 
+text = "test cos 44 bo to (343) i jest (0)"
+i teraz:
+text =~r 
+zwroci nam numer znaku, w ktorym wystepuje po raz pierwszy dopasowanie
+
+text.scan(r) - wyluskuje nam wszystkie wyrazenia dopasowane do wyrazenia reg.
+
+- unikac zbyt duzej liczby instrukcji warunkowych
+- ruby wspiera skladnie operatora warunkowego: warunek ? prawda : falsz
+- unless - if not
+- bardzo czesto korzystamy ze skladni jednolinijkowej if : warunek
+
+- w ruby mozemy przypisac do zmiennej wynik z bloku warunkowego za pomoca skladni:
+wynik = if x < 0
+	- 1
+elsif x == 0
+	0
+elsif x > 0
+	1
+end
+
+i wtedy w zmiennej wynik bedzie wynik tego co trzeba
+instrukcja case.
+mozna tak, ze case jest pusty, a potem w when sprawdzamy pelne warunki
+albo tak, jak w c++: w case okreslamy co sprawdzamy, a w when przypadki
+np.
+case x
+when 1
+	puts "x = 1
+when 2,4,6,8
+	puts " x jest parzysty miedzy 2 a 8
+when 10..20
+	puts "x nalezy do przedzialu 10 do 20 wlacznie
+when 10...20
+	puts " x nalezy do przedzialu 10, 20 bez 20
+when 2
+	puts " x jest 2" (##)to sie nie wykona nigdy, bo jak x = 2 to wejdzie u gory
+else
+	puts "wpp"
+
+(##)UWAGA! CASE szuka tylko 1 napotkanego warunku spelnionego i go wykonuje
+jesli jest jeszcze inne prawdziwy, nie wykona go
+
+mozna tak samo jak w przypadku if else przypisac zmienna do wyrazenia case
+#petle
+loop do ... end - petla nieskonczona
+break - wyjscie z petli
+next - continue
+retry - przerwij iteracje i ponow jej wykonanie
+redo - powtorz cala petle od nowa
+until - zaprzeczenie while
+x = 5 - to nie tylko przypisanie, ale to wyrazenie zwraca 5  
+mozna to wykorzystac przykladowo:
+pobieramy dane wejsciowe i w zaleznosci od nich chcemy cos wykonac np
+until (text = gets.chomp) == exit do
+cos tam
+end
+
+IX. ITERATORY - w ruby pisze sie tak
+
+iterator times - najpopularniejszy
+kazdy obiekt ma metode times
+jako argument - dodaj do bloku
+
+ITERACJA po kolekcji :
+each do |element_kolekcji|
+iteracja po kolekcji z indeksem - 
+each_with_index
+
+upto i down to - iterator w gore i w dol
+3.upto(8) { |i| puts i}
+ze zmiennym krokiem - step
+3.step(20,4) - co 4 do 20
+
+WYJATKI - do obslugi bledow
+begin - try
+rescue - catch
+rescue mozna kaskadowo laczyc
+elsif - wykona sie, gdy wyjatek zajcdzie
+ensure - wykona sie zawsze
+
+METODY
+nie trzeba pisac na koncu return - w ruby wszystko jest wyrazeniem i metoda
+zwroci ostatnie wyrazenie
+argumenty domyslne - maja po prostu wartosc domyslna
+argumenty nazwane - nazwa: "domyslny_stan" 
+dynamiczna liczba argumentow - z splat *
+def test(a,*rest) - rest to typ listy
+
+BLOKI - slowko yield jest podobne do c# yielda - wymusza na metodzie zwrocenie wykonania bloku, np.
+def twice
+	yield
+	yield
+end
+wymaga podania jako argumentu bloku w sposob niejawny
+ale dzieki block_given? mozemy okreslic, ze w sytuacji, gdy ten blok
+jest podany, uzywamy yielda
+def twice2
+	if block_given?
+		yield
+		yield
+	else
+		puts "nie ma bloku"
+end
+YIELD jest wtedy, gdy przekazujemy w sposob niejawny do metody blok
+w sposob jawny
+def twice3(&blok)
+	puts blok
+end
+
+bloki mozemy przekazywac jawnie do funkcji za pomoca &, np.
+w zasadzie blok mozna rozumiec jako ekwiwalent typu funkcyjnego
+
+Obiekty proceduralne - proc. Lambda jako szczegolny podtyp proca
+square = proc {|x| x * x}
+[1,2,3].map(&square) #[1,4,9]
+lambda to proc, ktory pilnuje liczby argumentow
+proci przechowuja nie tylko kod bloku, ale tez kontekst, zmienne lokalne dookola
+
+
+
+

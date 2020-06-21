@@ -1,0 +1,32 @@
+Dotychczas wykorzystywaliśmy aktywne czekanie podczas pracy mikrokontrolera.
+
+Wypełnienie sygnału prostokątnego:
+Czas zapalenia 1/czas okresu
+
+W ten sposób można regulować natężenie świecenia diody. Jest to tak zwana modulacja PWM
+PWM - Pulse Width Modulation (modulacja szerokości impulsu)
+
+Sposób generowania fali prostokątnej.
+
+Licznik plus rejestr przechowujący wartość podziału wchodzi na komparator.
+W efekcie produkujemy falę prostokątną o różnym wypełnieniu w zależności od wartości podziału
+
+Fala ta ma stałą częstotliwość. Zmieniając wartość Preskalera można zmieniać wartość częstotliwości - wtedy czas odliczania licznika się zmienia, bo on liczy w zależności od preskalera.
+- plus dodatkowy rejestr z układem porównującym do resetowania licznika.
+
+W atmega są już gotowe takie układy do generowania fal prostokątnych o różnych poziomach
+wypełnienia i częstotliwości
+Datasheet str. 125
+
+Na arduino nano pinout piny które mają falki przy nóżkach, to możemy na tych pinach sterować urządzeniami za pomocą liczników odpowiednio nr 1, 2, 3. Każdy licznik ma swoje odpowiednie wyjścia zmapowane do tych poszczególnych pinów z falką.
+Przykład:
+OC1A - to jest nóżka sterowana licznikiem nr 1 z wyjściem A -> PB1 - ustawiamy, że jest wyjściem
+
+Dioda - krótszy koniec to -, dłuższy to +. Zawsze z rezystorem 220 ohm
+
+Tryby pracy licznika:
+CTC mode - zmienia się wyjście licznika - działa dwa razy wolniej od fast pwm. Po doliczeniu sie skrajnej wartosci wartosc fali prostokatnej zmienia sie na przeciwna. Daje zawsze wypelnienie 50% i sygnal o stalej czestotliwosci. Przydatne do grania dźwięków - ton zależy tylko od częstotliwości, a nie wypełnienia. 
+
+Licznik jako narzędzie do pomiaru czasu
+
+

@@ -1,0 +1,35 @@
+Active storage:
+
+purge - usuwa obrazek, referencje i z bazy danych storage
+detach - tylko tracimy referencje
+
+Jak sie mozna dostac z poziomu activeadmina do obiektu active storage
+helpery
+
+- ustalanie wielkości obrazka:
+post.thumbnail.variant.resize("100, 100")
+
+- z cropowaniem:
+post.thumbnail.variant(combine_options: {resize: '100x100^', crop: '100x100+0+0'})
+
+SLIM zasady:
+<% -> -
+<%= -> =
+plus wcięcia
+
+
+
+ip tables 
+amazon plus backup w chmurze
+
+- skrypt w bashu, który stawia bazę danych, a potem stawia
+
+zamiast postgresql na windowsie lepiej mysql.
+
+
+
+15.01.2019
+
+þłatności: Stripe
+konta testowe sandbox 
+

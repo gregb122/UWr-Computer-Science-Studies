@@ -1,0 +1,34 @@
+Kwestie zasilania urządze/układów analogowo-cyfrowych.
+
+Zasilanie zewnętrzne układu:
+- baterie - 1,5V
+Akumulatory litowo-jonowe i litowo-polimerowe:
+3,7V (naładowane 4,2V)
+
+Zasilanie z sieci:
+- zasilacz sieciowy (również zintegrowane zasilacze na płytce drukowanej)
+
+
+Kiedyś zasilacze wyglądały tak:
+1. Transformator: 
+dwie cewki które współdzielą rdzeń:
+- stosunek liczby uzwojeń pierwotnych do uzwojeń wtórnych decyduje jakie napięcie będzie na uzwojeniu wtórnym (wyjściu)
+
+Napięcie skuteczne - to takie napięcie prądu przemiennego, któ©e jest ekwiwalentne do hipotetycznego napięcia z prądu stałego (napięcie szczytowe po stronie
+wtórnej będzie nieco większe niż 230 V)
+
+2. mostek Graetza (układ prostowniczy)
+3. za mostkiem kondensator
+
+Zasilacze współczesne:
+1. Prostuje napięcie wejściowe - prąd 230 V DC wchodzi na mostek prostowniczy. Za mostkiem kondensator i na wyjściu dostajemy prąd stały.
+2. Następnie jest transformator, który jest przełączany sygnałem PWM z układu scalonego (o częstotliwości 10k-100kHz). Układ scalony ma swój tranzystor, który potrafi się dostosować do różnych napięć prądu na wejściu (230 V, czy 115V)
+3. Regulator napięcia - z napięcia, które może się lekko wahać, stabilizuje jego wartość kosztem obniżenia jego wartości. Przykład:
+Wejście: napięcie 6-20V -> napięcie stabilne 5V
+	- regulator liniowy - używają elementu aktywnego (np. tranzystor bipolarny) aby obniżyć napięćie zasilające - wypalają różnice napięć. To tranzystor 
+			      wypala tę różnicę napięć, co powoduje grzanie - odpowiednie obudowy TO20 z odprowadzaniem ciepła. W środku znajduje się układ 				      Darlingtona (NPN). Regulator LDO różni się tym, że zamiast tranzystorów NPN używa PNP - zmniejsza różnicę napięć wewnątrz układu
+			      kosztem stabilności - regulujemy napięcie prądem, co powoduje efekty uboczne. Musi być użyty kondensator wyjściowy o określonej 					pojemności i rodzaju (np. tantalowy, ceramiczny) wynikający ze specyfikacji danego regulatora LDO. Regulator liniowy klasyczny
+				nie LDO 7805 takich problemów nie ma. 
+				Ogólnie są Tanie, proste, nie generują zakłóceń, ale są nieefektywne (szczególnie przy małych prądach)
+	- regulator impulsowy - Są efektywne (90-95% sprawność), potrafią podnosić i odwracać napięcie (nie palą nadmiaru energii jak liniowe). Generują zakłócenia, skomplikowane. Obecne w laptopach, tabletach, telefonach. 3 nóżki: wejście, wyjście, masa. Układ typu buck: obniża napięcie: kondensator na wejściu, drugi na wyjści, a w środku cewka z diodą plus podłączony generator sygnału prostokątnego. 
+

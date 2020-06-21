@@ -1,0 +1,97 @@
+GIT:
+- pobieranie repozytorium z konkretnego brancha:
+git clone --branch week_1 https://github.com/adam91091/online_shop
+
+W Rails robie:
+rake db:migrate
+rake db:seed
+
+heroku konto do deploy aplikacji:
+
+skrzynka gmail:
+login: rubyonrails2018zima@gmail.com
+haslo: rubyonrails2018
+
+heroku:
+login : rubyonrails2018zima
+haslo: rubyonrails2018!
+
+app name:
+online-shop-ror
+
+
+laczenie z repozytorium na heroku:
+heroku git:remote -a online-shop-ror
+
+łączenie z githubem:
+git remote add origin https://github.com/adam91091/K_RoR_sklepinternetowy.git
+
+praca z repozytorium:
+0.git init 
+1a.lacze sie z repozytorium na git:
+git remote add origin https://github.com/adam91091/online_shop
+1b.klonuje repozytorium:
+- git clone https://github.com/adam91091/online_shop
+2.przechodze na branch number-week
+- git checkout number-week
+
+
+Naprawa gem devise:
+sudo apt-get install libgmp-dev
+
+
+dodanie do bazy danych:
+AdminUser.create!(:email => 'admin@example.com', :password => 'password', :password_confirmation => 'password')
+
+defaultowe logowanie do activeadmin:
+admin@example.com
+password
+
+Opis zadan:
+na stronie /products:
+1. sortowanie produktów po stronie klienta/goscia
+- po ocenie, nazwach i cenach produktu
+2. dodawanie ocen do produktu przez klienta/gościa
+
+Notatki:
+1. Migracja z dodaniem kolumny do tabeli produkt w bazie danych
+rails generate migration add_rating_column_to_products
+- w def change potem:
+add_column :products, :rating, :Integer
+ActiveRecord - updateowane wpisu w bazie danych:
+p.update_attribute(:nazwa_atrybutu, wartosc do nadpisania)
+
+
+Jak zrobić dodawanie oceny do produktu przez klienta?
+1. trzeba dodac migracje z add_column :products, :rating, :integer
+2. trzeba dodac akcje w kontrolerze, ktora bedzie robila
+@products.update_attribute(:nazwa_atrybutu, wartosc do nadpisania)
+3. trzeba zrobic formularz w widoku klienta, ktory przekaze wartosc 
+do akcji w kontrolerze - restowy formularz, ktory przekaze
+do odpowiednich akcji rzeczy
+
+
+
+Jak zrobić sortowanie produktów po stronie klienta/gościa?
+
+NOTATKI_ZE_SPOTKANIA_29.10:
+1. rubocop : rubocop -a
+Walidacja rubocopem
+2. Staging na Heroku:
+ - heroku git:remote -a online-shop-ror
+ - heroku create --remote staging #tworzy nowy kontener na heroku
+ - git push staging week1:master #wysle kod z brancha week1 do wersji staging na heroku
+- heroku run rake db:migrate --remote staging #migracja na heroku
+(git remote remove staging)
+
+praca w konsoli na serwerze:
+heroku run rails console --remote staging #nazwa kontenera
+
+
+Procedura branchy na git:
+Z BRANCHA MASTER ROBIE NOWEGO BRANCHA WEEK_3
+
+czemu nie działa na heroku:
+bo jest w production
+
+

@@ -1,0 +1,25 @@
+link_to działa tylko dla metody get.
+metody inne niż get wysyła się:
+- formularz, button
+
+
+Testy kontrolerów:
+- jak dostać się do zmiennych w akcjach:
+assigns(:<nazwazmiennej>), ale zeby one sie pojawily, trzeba wykonac dana akcje w kontrolerze za pomoca
+subject:
+
+subject {get :show, params {:id: post.id}}
+
+it do
+  subject
+  expect(assigns(:comments)).to eq() )
+end
+
+
+W przypadku izolacji interaktora od akcji kontrolera sprawdza sie jego stan koncowy
+(true/false), zakladajac, ze sam w sobie dziala lub jest przetestowany we wlasciwej dla siebie lokacji
+
+get dominant color of image ruby
+
+color difference wikipedia
+

@@ -1,0 +1,130 @@
+modele w sklepie internetowym:
+rails c - konsola
+koszyk, produkty, administrator, posty, autorzy, komentarze
+sa generatory modeli 
+migracja do bazy danych - to osobna klasa, ktora generuje zapytanie 
+w db/migrate sa przechowywane wszystkie migracje
+uruchamianie migracji:
+rake db:migrate
+schema.rb - schemat całej bazy danych projektu
+
+rake db:rollback - cofniecie migracji (jak jest gdzies blad)
+
+dodanie komentarzy i autorow:
+rails g author name:string
+rails g model comment content:text
+
+MissingAtributeError - brak kolumny w tabeli reprezentujacej autora
+rails g migration add_author_id_to_posts author_id:integer
+
+rails g model post title:string content:text (text nieograniczony, string do 256 znakow)
+
+trello - jak rozpisywac zadania
+
+post.all - zwraca wszystkie posty z bazy danych
+has_many :posts 
+belongs_to
+korzystamy jak w jezyku naturalnym 
+author.posts - wszystkie posty autora
+
+konsole trzeba odswiezac - reload!
+
+Validacja.
+class Post <applicationRecord
+
+belongs_to :author
+has_many :comments
+
+validates_presences_of :title
+validates_presences_of :content
+end
+
+post.validate?
+post.errors.full_messages
+aby zapisac post
+KOnwencja - kontrolery piszemy w liczbie mnogiej, modele w liczbie pojedynczej
+
+Dodawanie sciezki do kontrolera
+
+get 'posts' => 'posts#index'
+
+rake routes
+
+bundle install - odswiezenie activeadmin - 
+install gem activeadmin
+gem devise - gem odpowiedzialny za logowanie
+
+rails generate active_admin:install
+
+rails generate active_admin:resource Post
+
+moze byc komenda rails zamiast rake w rails 5
+
+jak wyswietlac na stronie posta tylko jego tytul, a niekoniecznie zawartosc
+
+korzystamy z resources w route
+sprawdzamy rake routes
+
+robienie formularzy
+w slimie
+
+= form_for @comment do |f|
+	= f.text_input :content
+	= f.submit
+
+
+pry - do debugowania 
+
+redirect_to
+
+flash_messages i metody zwiazane z walidacjami
+w kontrolerze comment sprawdzamy czy spelnia walidacje
+def create 
+	@comment = Comment.new(params.require(:comment).pe
+	if @comment.save
+		flash[:notice]
+- informacje komentarz zostal dodany
+
+Jak rozpisywać zadania?
+trello.com
+
+Notatki odnosnie sklepu internetowego:
+
+tworzymy feature brancha
+tworzymy pull requesta
+trello board - rozpisujemy zadania na nastepny tydzien
+jest ich troche wiecej
+
+przykladowe pomysly na zadania 
+- dodawanie komentarzy do produktow
+- dodajemy ocene do produktu od 0-5
+- na liscie produktow mozemy sortowac je po cenie produktu, dacie dodania
+- relacje - rails for zombies
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+Komunikacja z urządzeniami zewnętrznymi.
+Urządzenia przełaczające
+
+
+Wyświetlacz znakowy - wszechobecne, w automatach, kasy fiskalne, domofony, etc.
+
+Wyświetlacz znakowy HD44780.
+Używa tego samego protokołu komunikacyjnego, co inne wyświetlacze.
+
+piny:
+1 - masa
+2 - zasilanie (może być 5V, ale też inne, np. 3V)
+3 - napięcie kontrastu - podłącza się potencjometr, który można dopasować i potem już nie ruszać (potencjometr 10k do nastawienia kontrastu)
+UWAGA: program moze dzialac, ale jesli nie ustawimy kontrastu, to nic nie bedzie widac (wysoki - czarne kwadraciki, niski - bialy ekran)
+4, 5, 6 - piny komunikacyjne: 4 - wybór rejestru (sa 2 rejestry), 5 - read/write, 6 - enable. 
+<<<<< UWAGA: operacje zapisywania w wyświetlaczu trwaja istotnie wolniej niz czas dzialania arduino - potrzeba czekania na odczyt, lub przyjecie pesymistycznego interwalu czasowego w przypadku write only >>>>>
+7-14 - data pins 0-7 - sa dwa tryby pracy: albo wszystkie 8 naraz podlaczamy do kontrolera (1B naraz), albo tylko 4 (0.5B naraz).
+
+<<<<<< Sterownik led: on tylko zapewniał odpowiednie źródła prądowe dla wyświetlacza LED >>>>>>>>>
+
+15, 16 - nóżki LED (Positive/Negative) - podlaczone tylko do diody podswietlajacej caly wyswietlacz, a nie bezposrednio do wyswietlacza.
+Wystarczy włączyć podświetlenie i tyle (potrzebne, gdy nie dostarczamy do ukladu odpowiedniego napiecia, a on potrzebuje na stale 5V. Mozna tez
+sterowac jasnoscia podswietlenia)
+
+Sygnał enable z pinu 6 pełni rolę pinu zegarowego
+
+On ma tylko 2MHz a my 13Mhz czestotliwosci pracy, wiec dlatego sa potrzebne opoznienia od naszej strony.
+
+Do komunikacji wysokie bity portu DB
+
+Instrukcje wyswietlacza:
+- jest podany maksymalny czas wykonania instrukcji 
+- jest mozliwosc ustawienia kursora wyswietlacza do wprowadzania danych
+- function set DL na 5 pozycji do przestawienia pracy wyswietlacza w tryb 4 bitowy
+- bity RS i RW tak samo jak w przypadku pamieci eeprom 1 zadania 
+
+Przykladowe funkcje:
+WriteText (char* text ) ciag bajtow do zapisania
+GoTo (DDRAMSET jest najstarszym bitem ustawionym na 1, reszta to adres - przejscie pod dany adres
+
+Przestawic go w tryb 8 bitowy - nie ma stanu -> wtedy wiemy, czy bedziemy przesylac starsze czy mlodsze bajty -> ustawic w tryb 4 bitowy
+
+Wyswietlacz mozemy ustawic jako urzadzenie stdout, podobnie jak uart i pisac znaki na jego wyswietlacz bezposrednio
+
+
+Elementy przełączające:
+1. przekaznik elektromagnetyczny - tak jak przycisk, ma przelacznik, ktory pod wplywem fizycznego bodzca zwiera przewod, a rownolegle
+do niego jest podlaczana cewka, ktora reaguje na zmiany prądu i indukuje przeplyw pradu przez cewke.
+
+Mala uwaga: cewka nie lubi zmian plynacego pradu, reaguje zmianami napiecia. Szczegolnie w przypadku wylaczenia naglego doplywu pradu do cewki,
+to cewka moze nam wytworzyc ogromne napiecie w tysiacach V.
+
+Dlatego do cewki podpina sie diode.
+
+Wtedy w powyzszym przypadku, cewka wytworzy napiecie, a prad poplynie przez diode.
+
+Wady:
+- są bardzo powolne (przelaczanie stycznika)
+
+Zalety:
+- mamy izolacje pomiedzy dwoma przewodami (przewodem z cewka i tym z przelacznikiem
+- jest tanszy od polprzewodnikow
+
+2. lampa elektronowa z próżnią w środku
+- wewnątrz od dołu jest grzałka, a od góry jest elektroda.
+- jeśli pojawi się u góry +, to elektrony są wybijane z grzałki i przepływają do górnej elektrody - płynie prąd
+- jeśli będzie na odwrót, nic się nie wydarzy - bo ta górna jest zimna i z niej elektrony się nie wybijają.
+- pomiędzy wstawia się siatke elektronową, która utrudnia przepływ elektronów:
+- jesli na siatce bedzie +, to czesc elektronow zostanie zlapanych przez siatke, ale reszta poplynie dalej
+-  jeśli na siatce będzie -, wtedy nie będzie przepływu prądu, bo od dolnej (-) do siatki (-) nie bedzie plynac prad
+
+Lampa z jedna siatka - trioda
+Lampa z 3 siatkami - pentoda
+heptoda, itd.
+
+3. Półprzewodniki - materiał, przez który prąd niemal nie płynie. Z natury jest izolatorem (nie przewodzi) jesli prad plynie normalnie, ale przewodzi
+gdy jest nadmiar albo niedomiar elektronow. Domieszkuje sie je po to, zeby naturalnie byl w nich nadmiar albo niedomiar elektronow
+Sa przewodniki typu P i typu N
+
+Przewodnik typu PN:
+- elektrony od N plyna w kierunku zlacza
+- od strony P plyna dziury - nastepuje rekombinacja powlok elektronowych
+- znowu dziala jak dioda - w przeciwnym wypadku odwrocenia potencjalow prad nie plynie (dziury i elektrony plyna w przeciwnych kierunkach)
+
+Przewodnik typu NPN (mylacy rysunek): (tez tranzystor NPN)
+- dwa 'N' sa roznie domieszkowane
+- warstwa P jest bardzo cieniutka. Gdyby bylo jak na rysunku, to bylyby 2 diody zlaczone ze soba (nie dzialaly by)
+- W dolnej polowie N i P dziala to tak samo jak w PN - dziury i elektrony plyna w kierunku zlacza
+- gorne N jest bardziej dodatnie niz dolne N, wiec te elektrony z samego dolu chca plynac jeszcze dalej niz za zlacze. Wiec efekt jest aki, ze wiekszosc
+plynie dalej (niz sie rekombinuje) i jesli uzyjemy tego w kontekscie tranzystora, to mamy korzystny efekt wzmocnienia
+
+Przewodnik typu PNP (tez tranzystor PNP)
+- podobny do poprzedniego, tylko diody sa odwrotnie podlaczone
+
+Triaki - element do modulowania pradu zmiennego
+
+Stany pracy tranzystora: aktywny, nasycenia, zatkania, inwersyjny
+- nasycenia - górna elektroda od N ma niższe napięcie od napięcia bazy. Wtedy elektrony uciekają do bazy. Stan nasycenia jest najlepszy do przelaczania pradu w ukladzie. Wadą jest to, że ciężko jest wyjść ze stanu nasycenia
+
+Układ darlingtona - jesli chcemy osiagnac wieksze wartosci beta i mnozniki pradow w tranzystorze, to podlaczamy 2 tranzystory razem.
+
+Tranzystory polowe - dren (kolektor), źródło (emiter), w środku jest substrat w postaci diody
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

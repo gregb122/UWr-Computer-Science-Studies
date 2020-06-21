@@ -1,0 +1,9 @@
+Dlaczego vTaskDelay zamiast _delay_ms ?
+- bo w przypadku delay_ms procesor liczył ileś jałowych iteracji w pętli
+co miało sens w przypadku jednozadaniowości. W przypadku wielozadaniowości
+to system operacyjny musi to wyliczyć w kontekście pracy innych zadań w stosunku do naszego.
+
+Jak działa vTaskDelay?
+Algorytm szeregowania patrzy na zbiór zadań gotowych do wykonania.
+TaskDelay informuje algorytm, że przez pewien czas zadanie jest gotowe do wykonania. Powrót gotowości jest wykonywane w przerwaniu zegarowym procesora.
+

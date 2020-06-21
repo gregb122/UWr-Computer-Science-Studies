@@ -1,0 +1,110 @@
+I. SELECT ( w tym tez RZUTOWANIE i PRZEMIANOWANIE)
+1) select distinct * from Klienci - zwraca wszystkich klientow z usunieciem duplikatow
+2) select klient_imie from Klienci - zwraca krotki zrzutowane na klient_imie --RZUTOWANIE
+3) select klient_imie k_i from Klienci - zwraca krotki zrzutowane na klient_imie i przemianowane na k_i (nazwa kolumny)
+
+
+II. ZLACZENIA.
+1) Produkt kartezjanski - zlaczenie:
+jesli mamy 4 rekordy w tabeli Klienci i 2 rekordy w tabeli Adresy:
+to wtedy SELECT * FROM Klienci, Adresy; :
+zwroci nam 8 rekordow bedacych zbiorem wszystkich kombinacji liniowych z tabeli KLienci, Adresy.
+
+2) Uwaga odnosnie zlaczen relacji zawierajacych te same nazwy kolumn.
+Wtedy: select klienci.klient_id, adresy.klient_id from ... //oznaczamy po prostu z ktorej relacji
+
+2a) Aliasy - from Os os1, Os os2 ... - kopiujemy te sama relacje nadajac jej nazwy os1 i os2
+
+
+3) Zlaczenie. Laczymy dwie relacje po wybranych kolumnach, otrzymujac tabele wynikowa z krotkami, ktore spelniaja dopasowanie:
+a) gdy chcemy zrobic n joina po idkach z kolumn i nazywaja sie tak samo (np. klient id)
+SELECT * FROM klienci JOIN adresy USING(klient_id)
+
+b) gdy chcemy zrobic n joina po dwoch kolumnach, z ktorych jedna ma referencje klucza obcego do drugiej (np. adres_id wskazuje na klient_id)
+SELECT * FROM klienci JOIN ADRES ON(klienci.klient_id=adresy.adres_id);
+
+c) naturalne: SELECT * FROM klienci NATURAL JOIN adresy; //zlacz wg wszystkich wspolnych kolumn
+
+d) left join: klienci LEFT JOIN adresy USING/ON (klient_id=adres_id);
+- zlacz dodajac do wyniku osoby bez wpisow z NULL w kolumnach wpisow
+
+ZLACZENIE JEST LACZNE LEWOSTRONNIE!!! NIE JEST PRZEMIENNE wzgledem zlaczenia zewnetrznego
+
+III. SORTOWANIA.
+Order by 1, 2 ASC - posortuj po 1 i 2 kolumnie rosnaco
+Order by 1, 2 DESC - posortuj po 1 i 2 kolumnie malejaco
+Order by klient_imie, klient_nazwisko - tak tez mozna
+
+IV. Ograniczenia co do ilosci zwracanych krotek:
+limit n - zwroc tylko n krotek
+
+V. Funkcje agregujace
+a) COUNT(cos) - funkcja agregujaca zwraca ilosc krotek wynikowych)
+
+
+VI. Operacje na napisach  
+a) IN - sprawdzanie elementu w zbiorze (NOT IN nie dziala!!!)
+- WHERE cwiczenia IN ('o', 'c', 'd') - gdy element jest w zbiorze true.
+b) LIKE - '%zimowy%' - wyszukiwanie wzorca w polach kolumny, dziala tylko dla napisow!!!
+np. select klient_imie from klienci where klient_imie like '%Adam%' - zwroci te krotki, ktorych pola w kolumnie klient_imie zawieraja ciag znakow 'Adam'
+Tu dziala tez NOT LIKE - w druga strone, zwroci te krotki, ktore nie zawieraja lancucha %%
+
+c) ||' '|| - konkatenacja napisow, AS nowa_kolumna -> zapisz wynik do nowej kolumny nowa_kolumna
+select klient_imie||' '||klient_nazwisko as imie_nazwisko from klienci;
+>>> Adam Kowalski (zapisuje zlaczony napis w jednej kolumnie imie_nazwisko)
+
+
+VII. Operacje na zbiorach - MUSZA MIEC TE SAME SCHEMY DWA ARGUMENTY!!
+a) Operacje na zbiorach automatycznie usuwaja duplikaty. Jesli chcemy je zostawic to: UNION/EXCEPT/INTERSECT ALL
+
+b) Between - select klient_nazwisko, klient_imie from klienci where klienci.klient_data BETWEEN
+'2019-03-01' AND '2019-04-01'; //zwroc tych klientow z data miedzy 1 marca a 1 kwietnia.
+
+
+
+VIII. O DATACH i GODZINACH NIECO WIECEJ
+- date mozna podawac jako hardokodowany string, tylko musi byc dobry format docelowy:
+'2018-02-30' jest ok
+'2018-02-32' nie jest ok
+'2018-32-3234' nie jest ok
+
+VIII/.1 ZMIENNE SQLOWE:
+
+a) NOW() - pobiera aktualny czas/date z systemu
+b) CURRENT_DATE - pobiera aktualna date
+select current_date;
+>>>> 2019-04-14
+
+c) current_timestamp - pobiera dokladna date z godzina co do mikrosekundy
+select current_timestamp;
+>>> 2019-04-14 18:16:02.864386+02
+
+d) current_time - pobiera dokladna godzine co do mikrosekundy
+ 18:15:59.706468+02
+
+VIII/.2 funkcja EXTRACT
+select extract (year/month/days/hour/minutes/second from current_timestamp/current_time/current_date);
+mozna wydobyc lata/miesiace/dni/godziny/minuty/sekundy z odpowiednich typow czasowych zawierajacych te pola.
+
+VIII/.3 operacje arytmetyczne na datach:
+data +- liczba -> data
+
+VIII/.4 porzadkowanie wyniku:
+- nazywanie kolumn wynikowych po SELECT za pomoca AS
+- order by 1 ASC, 2 desc - wskazujemy ktora jaka kolumna ma byc jak posortowana
+- limit n - ogranicza sie do n krotek;
+- offset n - wyswietl wynik od n-tej krotki wynikowej wlacznie;
+
+
+IX. KONKRETNE PROBLEMY Z TEJ LISTY:
+1. Zwroc tych uzytkownikow, ktorzy zarejestrowali sie w przeciagu ostatnich 30 dni
+SELECT * from user where user.created_at >= current_date - 30;
+
+2. Zwroc proponowane daty wyrejestrowania uzytkownikow (przyjmnij, ze sklada sie ona z daty wypisu + 30 dni przerwy)
+SELECT data_wypisu + 30 as data_wyrejestrowania from user;
+
+3. Wypisz pary osob, ktore zarejestrowaly sie tego samego dnia.
+select os1.id, os2.id from Os os1, Os os2 where os1.id!=os2.id AND os1.date=os2.date;
+mozna tez zamiast != zrobic os1.id>os2.id - tak samo na napisach aby uniknac par symetrycznych
+
+

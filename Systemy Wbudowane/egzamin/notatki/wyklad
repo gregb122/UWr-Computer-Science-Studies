@@ -1,0 +1,102 @@
+Wyklad 2:
+Nauka obslugi:
+1.pamieci programu
+2.przyciskow
+3.brzeczykow
+
+1.
+Ladowanie dosc duzych stalych do pamieci flash (typu dlugie napisy, enumy).
+a) #include <avr/pgmspace.h> - dostarcza potrzebne makra do obslugi pamieci flash
+
+static const char helloworld[] PROGMEM = "Hello world!\n\r"
+PROGMEM - makro w c tlumaczace sie do dyrektyw kompilatora, ktore oznacza, ze dane nalezace
+do tej zmiennej maja nie byc kopiowane do RAMu. 
+
+UWAGA, W ZWIAZKU Z TYM UZYCIE PRINTF NIE JEST MOZLIWE - ZAKLADA, ZE JEST W RAMIE
+
+- dlatego uzywamy putchar z polaczeniem pgm_read_byte
+putchar(pgm_read_byte(&helloworld));
+
+------ogladajac plik lst, bedzie tam instrukcja lpm (load program memory)-------
+
+2. GPIO
+Każdy port ma 3 rejestry
+
+DDxn - włącza dany port - 1 - OUT, 0 - IN
+PORTxn - ustawia sie zawartosc konkretnych pinów. 
+Jeśli jest DD=1 ( w trybie wyjscia), to 1 - ustaw 5V, 0 - ustaw 0
+Jeśli jest DD=0 (w trybie wejscia), to 1 - wlacz pull-up, 0 - nie wlaczaj pull-up.
+Sterowany jest element PUD na ukladzie ATMEGA w portach GPIO
+PINxn - 1 - na nóżce jest 5v, na 0 jest 0v
+
+3. Przycisk
+- uklad z 3 elementami, ktory przewodzi badz nie przewodzi.
+Ale mikrokontroler sam z siebie nie wie czy przycisk jest zwarty czy rozwarty. On czyta tylko napiecia. Potrzebny jest uklad sterowania napieciem, zeby mozna bylo to powiazac.
+Rozwiazanie jest podobne do dzielnika napiecia(rysunek).
+Problemem tego układu jest fakt, że w momencie zwalniania przycisku kawalek metalu zaczyna drgac
+i zewrzec sie kilka razy z ukladem, co jest wychwycone przez mega szybkie cykle procesora.
+- 2 metody zapobiegajace:
+1. programowa - sprawdzamy wejscie urzadzenia. Kosztem dodatkowych dostepow mozemy odpytac o stan przycisku kilka razy i sprawdzac, czy te probki sa takie same. Mozna tez czekac przez przyblizony czas drgania blaszki
+2. sprzetowe - kondensator, czyli sterowanie napięciem w czasie. Spowalnia czas przelaczania ukladu.
+Jak szybko sie zmienia wartosc przycisku. 
+
+
+Piny wejscia wyjscia w procesorze atmega nie sa w stanie zmieniac konkretnie stanow na dokladnie 5v lub 0v. 
+Pozycja pin driver strength. W zaleznosci od natezenia pradu napiecie na nóżce może być lekko różne
+np dla dużego pradu 20mA mamy 0.5V dla 0V.
+
+Dioda czerwona zabiera 2V, niebieska 3V, zielona ok 2.5V
+Zalezy to od dlugosci fali (fizyka kwantowa)
+
+Dioda krzemowa - 0.7V
+Dioda reaguje na nateżenie pradu w sposob logarytmiczny, czyli dla duzych pradow juz nie ma praktycznie roznicy w napieciach.
+
+Diody schotkyego - 0.3V
+
+Maksymalne natezenie pradu na nozke w Arduino nano jest 30mA.
+Nie ma ogranicznika prądowego, więc nóżka może spłonąć.
+
+Podlaczanie wiekszej liczby diod - tranzystory bipolarne.
+Tranzystor bipolarny - 3 nóżki:
+Baza, Emiter, kolektor.
+Moga byc uzywane jako przelaczniki sterowane elektronicznie.
+- Emiter podlaczamy do masy
+- do bazy poprzez rezystor podlaczamy GPIO
+- od strony kolektora podlaczamy obciazenie (+5V)
+
+Wartosc beta w typowych tranzystorach jest = 100. Ale moga byc miedzy 50-200
+Trzeba patrzec w dokumentacji tranzystora najmniejsza mozliwosc wartosc bety i dla niej budowac uklad.
+Wiec mozemy wzmocnic prad o prawie 100 razy.
+
+Mozna laczyc tranzystory podajac na wyjscie z emitera 1 baze drugiego i laczyc kolektory razem.
+Uklad Darlingtona - dwa tranzystory polaczone w ten sposob.
+
+Jakie sa inne zastosowania wzmocnionego ukladu?
+- mozna zapalic wiecej diod niz 10
+- mozna stworzyc uklad tzw siatke diod n x m w macierzy, ktora mozna sterowac n + m pinami.
+Podlaczamy wtedy kazdy blok poprzez tranzystor do procesora, zeby zmniejszyc prad na nozke.
+
+Jest to technika zwana multipleksowaniem.
+
+Brzeczyki.
+-troche jak glosnik piezoelektryczny. Piezoelektryk jest kondensatorem.
+Podajac sygnal slyszalny jak np 1khz dostamy dzwiek. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+Silniki elektryczne.
+
+Są silniki prądu stałego (AC) oraz prądu zmiennego (DC)
+
+DC - AGD, narzędzia
+AC - napięcia niższe 
+
+1. Silniki prądu zmiennego:
+Silniki synchroniczne:
+- prędkość obrotowa silnika jest związana z częstotliwością napięcia zasilającego
+
+silniki bezszczotkowe prądu stałego - są w gruncie rzeczy silnikami synchronicznymi, tylko ich zasilanie jest produkowanie elektronicznie
+
+Silnik indukcyjny - rolę magnesu w rotorze zajmuje uzwojenie. 
+
+Silniki uniwersalne - odkurzacze, pralki
+
+- prąd płynący w rotorze jest dostarczany przez szczotki. Pracuje z prądem stałym i zmiennym.
+
+
+2. Silniki prądu stałego:
+
+A. Prądu stałego
+- stator posiada magnesy, a rotor posiada uzwojenie.
+- komutator, z którym stykaja się szczotki wykonane z grafitu (po jakimś czasie się ścierają i wymagają wymiany)
+
+B. Bezszczotkowy (BLDC)
+- role komutatora przejmuje układ elektroniczny zasilany prądem stałym, który przełącza kierunek prądu płynącego przez uzwojenie.
+Skąd układ ma wiedzieć kiedy przełączyć? Czujnik stanu pola magnetycznego rotora (efekt Halla) lub poprzez pomiar napięcia pojawiającego
+się na uzwojeniach (uwaga, tylko wtedy, gdy silnik się kręci, inaczej nie ma napięcia i układ nic nie wie).
+
+C. Silnik krokowy - w maszynach CNC, drukarki 3d, do sterowania precyzyjnego. 
+
+D. Serwomotor - silnik połączony z układem sterującym, który ustala jego konkretny parametr (np. położenie wału obrotowego silnika).
+
+Parametry silnika:
+- prędkość obrotowa <-> napięcie
+- moment obrotowy <-> prąd
+
+

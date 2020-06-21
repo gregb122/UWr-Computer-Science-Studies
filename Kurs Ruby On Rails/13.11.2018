@@ -1,0 +1,37 @@
+sortowanie
+Testowanie:
+-model produkt - walidacje, rate, 
+pustych modeli nie testowac
+przeniesc sortowanie do:
+app/providers/product_provider i tam jest klasa 
+
+Lista zadań:
+
+1. przeniesienie do product_provider metody sortujacej z kontrolera 
+2. przetestowanie 
+	- customowej metody rate z modelu Product
+	- Przetestowanie asocjacji z modelu Productrate
+	- przetestowanie Product Providera
+
+Uwagi do 1. punktu:
+initialize is called by new which ignores its return value. Basically the default new method looks like this (except that it's implemented in C, not in ruby):
+
+class Class
+  def new(*args, &blk)
+    o = allocate
+    o.send(:initialize, *args, &blk)
+    o
+  end
+end
+
+2. Testowanie.
+Tworzymy w folderze spec folder models - tu beda testy modeli
+- potem nazwamodelu_spec
+
+1 test - testowanie asocjacji:
+- mozna to zrobic za pomoca refleksji: t = Productrate.reflect_on_association(:#pole_zwiazane asocjacja)
+oraz za pomoca matchera expect(t.macro).to eq(#rodzaj/nazwa asocjacji)
+
+
+
+

@@ -1,0 +1,109 @@
+I. PODSTAWOWE OPERACJE:
+1a. create table Kolumna(
+imie var_char(30),
+nazwisko var_char(30),
+wiek integer, 
+data_ur date,
+)
+
+-- oznaczanie jako klucz glowny, klucz obcy, itd.:
+create table Kolumna(
+person_id integer primary key, --klucz glowny
+imie var_char(30), --references Gr(id) --klucz obcy do tabeli Gr wskazujacy na kolumne id
+nazwisko var_char(30),
+wiek integer, 
+data_ur date not null default current_date,
+)
+
+Po co nam klucze obce i glowne? do tworzenia wiezow integralnosci.
+Przykladowo mamy tabele z klientami i tabele z adresami klientow. Wtedy:
+
+create table Klienci (klient_id serial not null primary key, klient_imie text, klient_nazwisko text, klient_data date);
+
+create table Adresy (adres_id serial not null primary key references Klienci(klient_id), adres_miejscowosc text, adres_ulica text, adres_numer_domu integer, adres_numer_mieszkania integer);
+
+Bez klucza obcego (references) mozemy dopuscic do sytuacji, w ktorej ktos usunie klienta z bazy danych, ale nie usunie adresu odpowiadajacego do jego id. Innymi slowy, chcemy uniknac sytuacji, w ktorej moglby istniec adres niezwiazany z klientem z Klienci. Do tego sluzy klucz obcy.
+
+Wiezy:
+FOREIGN KEY REFERENCES 
+CONSTRAINTS - wiezy nazwane
+
+1b. Zmiana struktury tablicy
+-- dodanie kolumny
+ALTER TABLE Klienci ADD COLUMN klient_drugie_imie text;
+-- zmiana ustawien domyslnych dla kolumny:
+ALTER TABLE Klienci ALTER klient_drugie_imie SET DEFAULT 'Marian';
+
+-- usuniecie kolumny
+ALTER TABLE Klienci DROP COLUMN klient_drugie_imie;
+
+DROP TABLE Klienci Cascade; - aplikuje konsekwencje usuniecia do tablic, ktore odwolywaly sie do Klienci przez klucz obcy (wskazywaly references Klienci(klient_id));
+
+1c. Wypelnianie tablicy
+>>>>>insert into tworzy jeden rekord tylko naraz
+insert into Klienci(klient_id) values (2);
+insert into Klienci values (1, 'Adam', 'Nowak', NOW(), 'Emil'); --NOW() - pobiera date z tego momentu z systemu.
+
+-- aktualizowanie tablicy
+update Klienci set imie='Mlody' where imie='Adam'; //ograniczamy do ktorej kolumny mamy to zrobic
+update Klienci set klient_id = klient_id+100; //aplikuje sie do wszystkich wartosci kolumn
+
+-- usuwanie rekordow:
+delete from Klienci; //usunie wszystko z relacji
+delete from Klienci where klient_imie is null;
+
+
+
+
+2. TYPY DANYCH
+- 2.1 Liczbowe:
+a) - calkowitoliczbowe - smallint (short), integer (int), bigint (long)
+b) - zmiennoprzecinkowe - real (float), double precision (double)
+d) - dokladne - numeric, decimal (takie same co do zasady uzytkowania)
+c) - autoincrement - zwieksza wartosc o 1 przy kazdym odwolaniu. small-serial, serial, bigserial
+(2,4,8 B)
+
+- 2.2 Znakowe:
+a) varchar(n) - napis o zmiennej dlugosci, maksymalnej n
+b) char(n)=character(n) - stala tablica znakowa dlugosci n (char = char(1) = character)
+c) text, varchar - napis o dowolnej dlugosci
+
+- 2.3 Daty i czasu:
+a) timestamp - data i czas z dokl. do 1 mikros.
+b) date - data (bez godziny, minut, sekund)
+c) time - godz:min:sek:mikrosek
+d) interval - przedzial czasu: 3 4:05:34.25 (oznacza 3 days 4 hours 5 minutes 34.25 seconds)
+
+- 2.4 Logiczne:
+a) boolean - wartosci false, true, unknown
+
+- 2.5 Binarne:
+a) muzyka, zdjecia BLOB (BYTEA)
+
+- 2.6 Struktury:
+a) rekord, tablica, obiekt geometryczny..
+
+- 2.7 Wyliczeniowe:
+- ENUM - tworzymy wlasny typ danych i ograniczamy go co do zbioru dozwolonych wartosci)
+np. typ z dniami tygodnia po angielsku:
+
+--tworzymy typ danych
+create type week_days as enum ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
+
+-- tworzymy tabele z tym typem:
+create table dni_tygodnia (dni week_days);
+
+
+Zadanie: chcemy dodac utworzono timestamp do tabeli.
+1. Alter table klienci add column utworzono timestamp;
+2. alter table klienci alter utworzono set default = NOW();
+
+
+
+
+
+
+
+
+
+

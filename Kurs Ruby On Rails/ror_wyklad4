@@ -1,0 +1,38 @@
+ActiveInteraction - wyodrebnienie logiki biznesowej - zeby nie bylo wszystko
+w akcjach kontrolera. Akcję biznesową możemy wywoływać z wielu kontrolerów
+(brak duplikacji kodu). Są określone reguły:
+Kontroler: 
+- sprwadzenie czy użytkownik jest zalogowany
+- prezentacja
+- przekazanie alertów i notyfikacji
+Interaktor:
+- walidacja - czy zamówienie jest nadal otwarte
+- modyfikacja stanu obiektu
+
+
+DelayedJobs i Sidekiq
+Są zadania realizowane w tle: np. obliczanie jakich znajomych mu zaproponować wg lokalizacji,
+jakie reklamy warto mu pokazać.
+- a co jeśli zmieni lokalizacje? Musiałby czekać kilka sekund bez DelayedJobs
+Sidekiq - osobny silnik do przetwarzania zadań w tle
+
+Assets - zawiera rzeczy statyczne
+
+ViewModel:
+- po prostu tworzymy katalog w app
+view_model, ktory bedzie przechowywal nadmiarowa logike kontrolerow.
+Izolacja testow kontrolerow od logiki
+
+Gen ActiveInteraction
+- tworzymy folder w app interactions
+a w nim klase class 
+Przyklad - zgloszenie obrazliwych komentarzy do administratora:
+dwie kolumny: czy jest ukryty, czy zostal zgloszony
+
+DelayedJobs: Sidekiq
+- kod z wykladu
+
+Active Storage
+
+
+

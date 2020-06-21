@@ -1,0 +1,169 @@
+I. PODZAPYTANIA W KLAUZULI WHERE
+W klauzuli where dotychczas stosowalismy jako argument staly zbior (np jawnie podana relacja).
+Ale mozemy uzyc zagniezdzoneego zapytania select zwracajacego zbior, czesto w kombinacji z:
+1. ANY
+2. ALL
+3. SOME
+4. EXISTS
+5. IN
+
+UWAGA: podzapytanie jest wyliczane w kontekscie zapytania, ale uzyte w nim nazwy przyslaniaja nazwy z kontekstu zapytania.
+
+1. ANY. (SOME to samo co ANY)	
+Przyklad 1. Zwroc osoby majace jakiś lepszy wynik niz JAKIŚ lepszy wynik Anny ABackiej
+
+SELECT Osoby.* FROM Osoba JOIN Wynik ON id=osoba
+WHERE wynik > ANY (wyniki Anny Abackiej); 
+
+wyniki Anny Abackiej === SELECT wynik FROM Wynik JOIN Osoba ON (id=osoba)
+WHERE nazwisko='Abacka' AND imie='Anna';
+
+2. ALL
+Przyklad 2. Zwroc osoby majace jakiś lepszy wynik niz WSZYSTKIE lepszy wynik Anny ABackiej
+
+SELECT Osoby.* FROM Osoba JOIN Wynik ON id=osoba
+WHERE wynik > ALL (wyniki Anny Abackiej);
+
+3. Podzapytanie zależne - ALL
+
+Przykład 3. Osoby, które od zeszłego roku poprawiły jakiś swój wynik za zadanie w 2019 (wynik za zadanie 2019 jest lepszy niz wyniki za TO SAMO ZADANIE TEGO SAMEGO STUDENTA z lat ubieglych)
+
+SELECT Osoby.* FROM Osoba JOIN Wynik w1 ON id=osob
+WHERE EXTRACT(year FROM wynik)=2019 AND wynik> ALL (SELECT wynik FROM Wynik WHERE osoba=w1.osoba AND
+zad=w1.zad AND EXTRACT(year FROM czaswyk)<2019);
+
+Różnica jest taka, że w podzapytanie odwołujemy się do tych samych krotek co w glownym zapytaniu (w1.osoba i w1.zad). Czyli zwiazanie w podzapytaniu:
+-- osoba (osoba zwiazana z FROM Wynik podzapytania) =w1.osoba (odwolanie do osoby z glownego zapytania)
+
+4.
+
+Przykład 4. Osoby, ktore uzyskaly wynik 100 za jakies zadanie z kategorii BD (sklasyfikowane jako takie z pewnoscia >= 50)
+
+SELECT Osoby.* FROM Osoba JOIN Wynik ON id=osoba 
+WHERE wynik=100 AND zad IN (SELECT Klas.zad FROM Klas JOIN Kat ON kat.id=klas.kat
+WHERE kat.nazwa = 'BD' and trafnosc>=50);
+
+IN jako argument przyjmuje zbior krotek.
+
+
+5. 
+
+Przyklad 5. Osoby, ktore od zeszlego roku poprawily swoj wynik za jakies zadanie
+
+SELECT Osoby.* FROM Osoba JOIN Wynik w1 ON id=osoba
+WHERE EXTRACT (year FROM czasWyk) = 2019 AND EXISTS(SELECT * FROM Wynik w2 WHERE
+EXTRACT (year FROM czasWyk) < 2019 AND w1.osoba=w2.osoba AND w2.zad=w1.zad AND w2.wynik<w1.wynik)
+
+- czyli szukamy wyniku, ktory nalezy do tej samej osoby, jest za to samo zadanie i jego wartosc jest mniejsza od nowego i jest starszy.
+
+
+6. ALTERNATYWNE POSTACI ZAPYTAŃ
+To samo zapytanie można przedstawić na kilka sposobów:
+Wyznacz grupę osób, które kiedyś chodziły na wyklad z BD.
+1. wybierz osoby i połącz z relacja uczeszczaly na kurs i wybierz kurs='BD' (JOIN)
+2. Wybierz te osoby, których id są w zbiorze tych, które chodziły na BD (IN)
+3. Wybierz te osoby, dla ktorych istnieje wybor, dla ktorych istnieje grupa, i istnieje kategoria BD
+(EXISTS)
+
+1)
+SELECT distinct nazwisko FROM 
+uzytkownik
+JOIN wybor USING(kod_uz)
+JOIN grupa USING(kod_grupy)
+JOIN przedmiot_semestr USING (kod_przed_sem)
+JOIN przedmiot USING (kod_przed)
+WHERE rodzaj_zajec='w' AND nazwa='BD';
+
+2)
+SELECT distinct nazwisko FROM
+uzytkownik
+WHERE kod_uz IN (SELECT kod_grupy FROM grupa WHERE rodzaj_zajec='w' AND kod_przed_sem IN
+(SELECT kod_przed_sem FROM przedmiot_semestr WHERE kod_przed IN (SELECT kod_przed FROM przedmiot
+WHERE nazwa='Bazy Danych'))));
+
+3)
+SELECT DISTINCT nazwisko FROM 
+uzytkownik u 
+WHERE EXISTS(SELECT * FROM wybor w WHERE u.kod_uz=w.kod_uz AND EXISTS (SELECT * FROM grupa g WHERE rodzaj_zajec='w' AND g.kod_grupy=w.kod_grupy AND EXISTS (SELECT * FROM przedmiot_semestr ps
+ WHERE ps.kod_przed_sem=g.kod_przed_sem AND
+ EXISTS (SELECT * FROM przedmiot p WHERE
+ p.nazwa='Bazy danych' AND
+ p.kod_przed=ps.kod_przed))));
+
+EXPLAIN lub EXPLAIN ANALYZE - do czasu trwania zapytan
+poprzedamy zapytanie explain analyze ...
+
+Przyklad 2.
+Wybierz osoby, ktore nigdy nie chodzily na wyklad z baz danych
+1. NOT IN - te osoby, ktore nie naleza do zbioru osob:
+SELECT distinct nazwisko FROM 
+ uzytkownik u WHERE u.nazwisko NOT IN (SELECT nazwisko FROM uzytkownik JOIN wybor USING(kod_uz)
+JOIN grupa USING(kod_grupy)
+JOIN przedmiot_semestr USING (kod_przed_sem)
+JOIN przedmiot USING (kod_przed)
+WHERE rodzaj_zajec='w' AND nazwa='BD');
+
+2. wybierz osoby, dla ktorych nie istnieje wpis na wyklad z baz danych (NOT EXISTS)
+SELECT distinct nazwisko FROM
+uzytkownik u WHERE NOT EXISTS (SELECT * from wybor join grupa using(kod_grupy) join 
+przedmiot_semestr USING (kod_przed_sem) JOIN przedmiot USING (kod_przed) WHERE rodzaj_zajec='w' AND nazwa = 'BD AND wybor.kod_uz=u.kod_uz);
+
+3. Wez pelen zbior osob i odejmij te, ktore chodzily na wyklad z baz danych (Except)
+SELECT distinct nazwisko, kod_uz From 
+uzytkownik EXCEPT (SELECT distinct nazwisko, kod_uz FROM uzytkownik JOIN wybor USING(kod_uz)
+JOIN grupa USING(kod_grupy) JOIN przedmiot_semestr USING(kod_przed_sem) JOIN przedmiot
+USING(kod_przed) WHERE rodzaj_zajec='w' AND nazwa='BD');
+
+4. Zlacz LEFT JOIN wszystkie osoby z wpisami na wyklad z baz danych i znajdz te, ktore z niczym sie nie polaczyly (Wybor.kod_uz IS NULL)
+
+SELECT distinct kod_uz, nazwisko FROM uzytkownik LEFT JOIN (
+	wybor USING(kod_uz) JOIN grupa USING(kod_grupy) JOIN przedmiot_semestr USING(kod_przed_sem) 	JOIN przedmiot USING(kod_przed) WHERE nazwa='BD" and rodzaj_zajec='w'
+) AA using(kod_uz) where AA.kod_uz IS NULL;
+
+
+II. PODZAPYTANIA W KLAUZULI FROM
+1. Wyrazenie w klauzuli FROM jest obliczane przed wyrazeniami w SELECT i WHERE
+2. To wyrazenie moze odwolywac sie do innych tabel, ale nie do innych zmiennych krotkowych
+3. Wyrazenia powinny miec aliasy.
+
+III. GRUPOWANIE I FUNKCJE AGREGUJĄCE
+A.Funkcje agregujace:
+w klauzuli SELECT mozemy uzyc funkcji agregujacej:
+SELECT min(...) FROM...
+1) count
+2) min
+3) max
+4) sum
+5) avg
+
+B. Grupowanie:
+Policz liczbe zapisanych do kazdej grupy wykladowej
+SELECT wybor.kod_grupy, count(*) FROM Wybor JOIN Grupa USING(kod_grupy)
+WHERE rodzaj zajec='w' GROUP BY nazwisko, Wybor.kod_grupy -- tworzymy grupy z krotek o tych samych wartosciach
+(wszystkie krotki o tej samej wartosci kod_grupy trafiaja do jednego worka)
+HAVING count(*)>100; --wybierz grupy powyzej 100 osob, te przejda dalej w zapytaniu
+W przypadku group by generalnie zasada jest, ze zwracane atrybuty sie grupuje
+
+
+IV. UPRASZCZANIE ZAPYTAŃ
+1. Temp table tabele tymczasowe - kasowane sa na koniec sesji, mozna uzywac wielokrotnie w ramach sesji
+2. Views Perspektywy - wirtualne obiekty trwale
+3. With (rekursja) 
+
+1.CREATE TEMP TABLE AA (...); INSERT INTO AA SELECT
+2. CREATE VIEW AA AS SELECT 
+
+V. WITH - tworzenie definicji relacji pomocniczych
+Za pomoca WITH mozemy tworzyc takie makrodefinicje - oznaczac zapytanie jedna zmienna
+i sie do niego potem odwolywac
+
+
+
+
+
+
+
+
+
+
+

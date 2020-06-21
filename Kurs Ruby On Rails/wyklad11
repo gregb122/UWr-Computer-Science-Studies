@@ -1,0 +1,34 @@
+race condition w swiecie webowym:
+Użytkownicy, którzy chcą kupić ten sam produkt w tym samym czasie.
+System zapisów, osoby, które chcą się zapisać na ten sam przedmiot.
+To zjawisko trzeba uwzględniać przy projektowaniu systemów, które mogą mieć duży ruch.
+Testowanie pod kątem race condition:
+tworzymy kilka wątków:
+Benchmark.measure do
+10.times do
+  fork do
+    sleep 1
+  end
+end
+Process.waitall #tutaj czekamy na wszystkie wątki - inaczej wcale nie musimy czekać 
+end
+
+- można zauważyć to zjawisko przy już 3 wątkach:
+
+tylko musimy je tworzyć równocześnie:
+<<<kod z wykladu >>>>
+
+
+Mechanizm ostrzegania:
+optimistic locking - w bazie danych mamy kolumne log version integer, to bedzie porownywal wersje. Jesli wersja
+jest nieaktualna, to rzuca wyjatek. 
+
+Jak zapobiegać takim sytuacjom?
+Można wykorzystać referencję do kolumny w bazie danych, a nie referencje do zmiennej.
+Uwaga: to rodzi konflikt z walidacjami po stronie modelu, ktore sa w ten sposob omijane.
+Można dodać walidację po stronie bazy danych
+
+Jak cofać pewne zmiany, któ©e powstaną na skutek rzucenia wyjątku bazy danych?
+Za pomocą transakcji
+
+

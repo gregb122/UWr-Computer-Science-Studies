@@ -1,0 +1,26 @@
+Pierwsze kroki i błędy z tworzeniem większych aplikacji:
+- gdy aplikacja w developmencie zaczyna puchnąć, to dodawanie nowych funkcji często psuje inne
+- po raz kolejny potrzeba testów automatycznych
+- brak odpowiedniego nazewnictwa funkcji
+- brak refactoringu
+
+Trzeba napisać kilka swoich rzeczy źle, popatrzeć na dobry kod.
+
+Powtarzające się błędy:
+- logika w kontrolerach
+- logika w widokach
+- praca na prostych typach
+- właściwy flow - podział flow aplikacji na kontrolery i akcje w kontrolerach
+
+Książka:
+Refaktoryzacja - Martin
+Też Rubocop AbcSize - długość metody
+
+Jak podzielić logikę w kontrolerach:
+Które metody zmieniają jakieś dane, a które tylko odczytują?
+Jaki obiekt jest najbliżej semantycznie danej metody?
+Jesli piszemy metode/funkcje, to w jezyku obiektowym musimy myslec, z jaka klasa ja zwiazac
+Przy pisaniu nowej funkcjonalności trzeba myśleć: Kto jest najbliżej tej funkcjonalności?
+
+
+

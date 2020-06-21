@@ -1,0 +1,9 @@
+DelayedJObs - zadania wykonywane w tle
+bootstrap - formularze
+panel logowania:
+gem devise - konflikt z activeadmin
+przt gen devise ma nadpisac pliki!
+navbar mozna zrobic dla wszystkich, w zaleznosci od zalogowania/niezalogowania wyswietla sie inne rzeczy
+widoki bedace niekompletne oznacza sie z _ na poczatku
+rubocop - statyczna analiza kodu - tylko na development
+rubocop -a - poprawi to co potrafi 

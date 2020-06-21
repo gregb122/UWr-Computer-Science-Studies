@@ -1,0 +1,450 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   9               		.text
+  10               	.Ltext0:
+ 182               	vSerial:
+ 183               		.stabd	46,0,0
+   1:main.c        **** /******************************************************************************
+   2:main.c        ****  * Header file inclusions.
+   3:main.c        ****  ******************************************************************************/
+   4:main.c        **** 
+   5:main.c        **** #include "FreeRTOS.h"
+   6:main.c        **** #include "task.h"
+   7:main.c        **** 
+   8:main.c        **** #include <avr/io.h>
+   9:main.c        **** 
+  10:main.c        **** #include <inttypes.h>
+  11:main.c        **** #include <stdio.h>
+  12:main.c        **** #include "uart.h"
+  13:main.c        **** 
+  14:main.c        **** 
+  15:main.c        **** /******************************************************************************
+  16:main.c        ****  * Private macro definitions.
+  17:main.c        ****  ******************************************************************************/
+  18:main.c        **** 
+  19:main.c        **** #define mainLED_TASK_PRIORITY   2
+  20:main.c        **** 
+  21:main.c        **** #define mainSERIAL_TASK_PRIORITY 1
+  22:main.c        **** 
+  23:main.c        **** #define LED PB5
+  24:main.c        **** #define LED_DDR DDRB
+  25:main.c        **** #define LED_PORT PORTB
+  26:main.c        **** 
+  27:main.c        **** #define BTN PB4
+  28:main.c        **** #define BTN_PIN PINB
+  29:main.c        **** #define BTN_PORT PORTB
+  30:main.c        **** 
+  31:main.c        **** #define LED_DDR_D DDRD
+  32:main.c        **** #define LED_PORT_D PORTD
+  33:main.c        **** #define LED_DELAY 40
+  34:main.c        **** 
+  35:main.c        **** #define TIMEFRAME 10
+  36:main.c        **** #define BUFFER_SIZE 1000 / TIMEFRAME
+  37:main.c        **** 
+  38:main.c        **** 
+  39:main.c        **** /******************************************************************************
+  40:main.c        ****  * Private function prototypes.
+  41:main.c        ****  ******************************************************************************/
+  42:main.c        **** 
+  43:main.c        **** static void vBlinkLed(void* pvParameters);
+  44:main.c        **** 
+  45:main.c        **** static void vSerial(void* pvParameters);
+  46:main.c        **** 
+  47:main.c        **** /******************************************************************************
+  48:main.c        ****  * Public function definitions.
+  49:main.c        ****  ******************************************************************************/
+  50:main.c        **** 
+  51:main.c        **** /**************************************************************************//**
+  52:main.c        ****  * \fn int main(void)
+  53:main.c        ****  *
+  54:main.c        ****  * \brief Main function.
+  55:main.c        ****  *
+  56:main.c        ****  * \return
+  57:main.c        ****  ******************************************************************************/
+  58:main.c        **** int main(void)
+  59:main.c        **** {
+  60:main.c        ****     // Create task.
+  61:main.c        ****     xTaskHandle blink_handle;
+  62:main.c        ****     xTaskHandle serial_handle;
+  63:main.c        **** 
+  64:main.c        ****     xTaskCreate
+  65:main.c        ****         (
+  66:main.c        ****          vBlinkLed,
+  67:main.c        ****          "blink",
+  68:main.c        ****          configMINIMAL_STACK_SIZE,
+  69:main.c        ****          NULL,
+  70:main.c        ****          mainLED_TASK_PRIORITY,
+  71:main.c        ****          &blink_handle
+  72:main.c        ****         );
+  73:main.c        **** 
+  74:main.c        ****     xTaskCreate
+  75:main.c        ****         (
+  76:main.c        ****          vSerial,
+  77:main.c        ****          "serial",
+  78:main.c        ****          configMINIMAL_STACK_SIZE,
+  79:main.c        ****          NULL,
+  80:main.c        ****          mainSERIAL_TASK_PRIORITY,
+  81:main.c        ****          &serial_handle
+  82:main.c        ****         );
+  83:main.c        **** 
+  84:main.c        ****     // Start scheduler.
+  85:main.c        ****     vTaskStartScheduler();
+  86:main.c        **** 
+  87:main.c        ****     return 0;
+  88:main.c        **** }
+  89:main.c        **** 
+  90:main.c        **** /**************************************************************************//**
+  91:main.c        ****  * \fn static vApplicationIdleHook(void)
+  92:main.c        ****  *
+  93:main.c        ****  * \brief
+  94:main.c        ****  ******************************************************************************/
+  95:main.c        **** void vApplicationIdleHook(void)
+  96:main.c        **** {
+  97:main.c        **** 
+  98:main.c        **** }
+  99:main.c        **** 
+ 100:main.c        **** /******************************************************************************
+ 101:main.c        ****  * Private function definitions.
+ 102:main.c        ****  ******************************************************************************/
+ 103:main.c        **** 
+ 104:main.c        **** /**************************************************************************//**
+ 105:main.c        ****  * \fn static void vBlinkLed(void* pvParameters)
+ 106:main.c        ****  *
+ 107:main.c        ****  * \brief
+ 108:main.c        ****  *
+ 109:main.c        ****  * \param[in]   pvParameters
+ 110:main.c        ****  ******************************************************************************/
+ 111:main.c        **** static void vBlinkLed(void* pvParameters)
+ 112:main.c        **** {
+ 113:main.c        ****   int8_t buffer[BUFFER_SIZE];
+ 114:main.c        ****   for (int8_t i=0; i<BUFFER_SIZE; i++)
+ 115:main.c        **** 	buffer[i] = 0;
+ 116:main.c        **** 
+ 117:main.c        ****   int8_t position = 0;
+ 118:main.c        **** 
+ 119:main.c        ****   BTN_PORT |= _BV(BTN);
+ 120:main.c        ****   LED_DDR |= _BV(LED);
+ 121:main.c        **** 
+ 122:main.c        ****   while (1) {
+ 123:main.c        ****     LED_PORT |= _BV(LED); // diode disable
+ 124:main.c        **** 	if (position == BUFFER_SIZE)
+ 125:main.c        **** 		position = 0;
+ 126:main.c        **** 
+ 127:main.c        **** 	//enable diode if 1 at current position
+ 128:main.c        **** 	if (buffer[position]){
+ 129:main.c        **** 	  LED_PORT &= ~_BV(LED); //turn on the light of diode
+ 130:main.c        **** 	  buffer[position] = 0; // after light clear this position in buffer
+ 131:main.c        **** 	}
+ 132:main.c        **** 	// if button is pushed in this timeframe
+ 133:main.c        ****     if (BTN_PIN & _BV(BTN))
+ 134:main.c        **** 		buffer[position] = 1;
+ 135:main.c        **** 		
+ 136:main.c        **** 	position++;
+ 137:main.c        ****     vTaskDelay(10 / portTICK_PERIOD_MS);
+ 138:main.c        ****   }
+ 139:main.c        **** }
+ 140:main.c        **** 
+ 141:main.c        **** 
+ 142:main.c        **** /**************************************************************************//**
+ 143:main.c        ****  * \fn static void vSerial(void* pvParameters)
+ 144:main.c        ****  *
+ 145:main.c        ****  * \brief
+ 146:main.c        ****  *
+ 147:main.c        ****  * \param[in]   pvParameters
+ 148:main.c        ****  ******************************************************************************/
+ 149:main.c        **** static void vSerial(void* pvParameters)
+ 150:main.c        **** {
+ 185               	.LM0:
+ 186               	.LFBB1:
+ 187               	/* prologue: function */
+ 188               	/* frame size = 0 */
+ 189               	/* stack size = 0 */
+ 190               	.L__stack_usage = 0
+ 151:main.c        **** 	LED_DDR_D  = 0xFF;
+ 192               	.LM1:
+ 193 0000 8FEF      		ldi r24,lo8(-1)
+ 194 0002 8AB9      		out 0xa,r24
+ 152:main.c        **** 	LED_PORT_D = 0x80;
+ 196               	.LM2:
+ 197 0004 80E8      		ldi r24,lo8(-128)
+ 198 0006 8BB9      		out 0xb,r24
+ 153:main.c        **** 	UCSR0B &= ~ _BV ( RXEN0 ) & ~ _BV ( TXEN0 ) ;
+ 200               	.LM3:
+ 201 0008 8091 C100 		lds r24,193
+ 202 000c 877E      		andi r24,lo8(-25)
+ 203 000e 8093 C100 		sts 193,r24
+ 204               	.L4:
+ 150:main.c        **** 	LED_DDR_D  = 0xFF;
+ 206               	.LM4:
+ 207 0012 C7E0      		ldi r28,lo8(7)
+ 208               	.L2:
+ 209               	.LBB2:
+ 154:main.c        **** 
+ 155:main.c        **** 	while (1)
+ 156:main.c        **** 	{
+ 157:main.c        **** 		//ascending
+ 158:main.c        **** 		for (int8_t i=0; i<7; i++)
+ 159:main.c        **** 		{
+ 160:main.c        ****             vTaskDelay(50 / portTICK_PERIOD_MS);
+ 211               	.LM5:
+ 212 0014 82E3      		ldi r24,lo8(50)
+ 213 0016 90E0      		ldi r25,0
+ 214 0018 0E94 0000 		call vTaskDelay
+ 161:main.c        **** 			LED_PORT_D >>= 1;
+ 216               	.LM6:
+ 217 001c 8BB1      		in r24,0xb
+ 218 001e 8695      		lsr r24
+ 219 0020 8BB9      		out 0xb,r24
+ 220 0022 C150      		subi r28,lo8(-(-1))
+ 158:main.c        **** 		{
+ 222               	.LM7:
+ 223 0024 01F4      		brne .L2
+ 224 0026 C7E0      		ldi r28,lo8(7)
+ 225               	.L3:
+ 226               	.LBE2:
+ 227               	.LBB3:
+ 162:main.c        **** 		}
+ 163:main.c        **** 		//descending
+ 164:main.c        **** 		for (int8_t j=0; j<7; j++)
+ 165:main.c        **** 		{
+ 166:main.c        ****             vTaskDelay(50 / portTICK_PERIOD_MS);
+ 229               	.LM8:
+ 230 0028 82E3      		ldi r24,lo8(50)
+ 231 002a 90E0      		ldi r25,0
+ 232 002c 0E94 0000 		call vTaskDelay
+ 167:main.c        **** 			LED_PORT_D <<= 1;
+ 234               	.LM9:
+ 235 0030 8BB1      		in r24,0xb
+ 236 0032 880F      		lsl r24
+ 237 0034 8BB9      		out 0xb,r24
+ 238 0036 C150      		subi r28,lo8(-(-1))
+ 164:main.c        **** 		{
+ 240               	.LM10:
+ 241 0038 01F4      		brne .L3
+ 242 003a 00C0      		rjmp .L4
+ 243               	.LBE3:
+ 245               	.Lscope1:
+ 247               		.stabd	78,0,0
+ 251               	vBlinkLed:
+ 252               		.stabd	46,0,0
+ 112:main.c        ****   int8_t buffer[BUFFER_SIZE];
+ 254               	.LM11:
+ 255               	.LFBB2:
+ 256 003c CF93      		push r28
+ 257 003e DF93      		push r29
+ 258 0040 CDB7      		in r28,__SP_L__
+ 259 0042 DEB7      		in r29,__SP_H__
+ 260 0044 C456      		subi r28,100
+ 261 0046 D109      		sbc r29,__zero_reg__
+ 262 0048 0FB6      		in __tmp_reg__,__SREG__
+ 263 004a F894      		cli
+ 264 004c DEBF      		out __SP_H__,r29
+ 265 004e 0FBE      		out __SREG__,__tmp_reg__
+ 266 0050 CDBF      		out __SP_L__,r28
+ 267               	/* prologue: function */
+ 268               	/* frame size = 100 */
+ 269               	/* stack size = 102 */
+ 270               	.L__stack_usage = 102
+ 271 0052 FE01      		movw r30,r28
+ 272 0054 3196      		adiw r30,1
+ 273 0056 CE01      		movw r24,r28
+ 274 0058 8B59      		subi r24,-101
+ 275 005a 9F4F      		sbci r25,-1
+ 276 005c 7F01      		movw r14,r30
+ 277               	.L9:
+ 278               	.LBB4:
+ 115:main.c        **** 
+ 280               	.LM12:
+ 281 005e 1192      		st Z+,__zero_reg__
+ 114:main.c        **** 	buffer[i] = 0;
+ 283               	.LM13:
+ 284 0060 E817      		cp r30,r24
+ 285 0062 F907      		cpc r31,r25
+ 286 0064 01F4      		brne .L9
+ 287               	.LBE4:
+ 119:main.c        ****   LED_DDR |= _BV(LED);
+ 289               	.LM14:
+ 290 0066 2C9A      		sbi 0x5,4
+ 120:main.c        **** 
+ 292               	.LM15:
+ 293 0068 259A      		sbi 0x4,5
+ 117:main.c        **** 
+ 295               	.LM16:
+ 296 006a 10E0      		ldi r17,0
+ 134:main.c        **** 		
+ 298               	.LM17:
+ 299 006c 01E0      		ldi r16,lo8(1)
+ 300               	.L13:
+ 123:main.c        **** 	if (position == BUFFER_SIZE)
+ 302               	.LM18:
+ 303 006e 2D9A      		sbi 0x5,5
+ 124:main.c        **** 		position = 0;
+ 305               	.LM19:
+ 306 0070 1436      		cpi r17,lo8(100)
+ 307 0072 01F4      		brne .L10
+ 125:main.c        **** 
+ 309               	.LM20:
+ 310 0074 10E0      		ldi r17,0
+ 311               	.L10:
+ 128:main.c        **** 	  LED_PORT &= ~_BV(LED); //turn on the light of diode
+ 313               	.LM21:
+ 314 0076 812F      		mov r24,r17
+ 315 0078 012E      		mov __tmp_reg__,r17
+ 316 007a 000C      		lsl r0
+ 317 007c 990B      		sbc r25,r25
+ 318 007e F701      		movw r30,r14
+ 319 0080 E80F      		add r30,r24
+ 320 0082 F91F      		adc r31,r25
+ 321 0084 2081      		ld r18,Z
+ 322 0086 2223      		tst r18
+ 323 0088 01F0      		breq .L11
+ 129:main.c        **** 	  buffer[position] = 0; // after light clear this position in buffer
+ 325               	.LM22:
+ 326 008a 2D98      		cbi 0x5,5
+ 130:main.c        **** 	}
+ 328               	.LM23:
+ 329 008c 1082      		st Z,__zero_reg__
+ 330               	.L11:
+ 133:main.c        **** 		buffer[position] = 1;
+ 332               	.LM24:
+ 333 008e 1C9B      		sbis 0x3,4
+ 334 0090 00C0      		rjmp .L12
+ 134:main.c        **** 		
+ 336               	.LM25:
+ 337 0092 F701      		movw r30,r14
+ 338 0094 E80F      		add r30,r24
+ 339 0096 F91F      		adc r31,r25
+ 340 0098 0083      		st Z,r16
+ 341               	.L12:
+ 136:main.c        ****     vTaskDelay(10 / portTICK_PERIOD_MS);
+ 343               	.LM26:
+ 344 009a 1F5F      		subi r17,lo8(-(1))
+ 137:main.c        ****   }
+ 346               	.LM27:
+ 347 009c 8AE0      		ldi r24,lo8(10)
+ 348 009e 90E0      		ldi r25,0
+ 349 00a0 0E94 0000 		call vTaskDelay
+ 138:main.c        **** }
+ 351               	.LM28:
+ 352 00a4 00C0      		rjmp .L13
+ 358               	.Lscope2:
+ 360               		.stabd	78,0,0
+ 361               		.section	.rodata.str1.1,"aMS",@progbits,1
+ 362               	.LC0:
+ 363 0000 626C 696E 		.string	"blink"
+ 363      6B00 
+ 364               	.LC1:
+ 365 0006 7365 7269 		.string	"serial"
+ 365      616C 00
+ 366               		.section	.text.startup,"ax",@progbits
+ 368               	.global	main
+ 370               	main:
+ 371               		.stabd	46,0,0
+  59:main.c        ****     // Create task.
+ 373               	.LM29:
+ 374               	.LFBB3:
+ 375 0000 EF92      		push r14
+ 376 0002 FF92      		push r15
+ 377 0004 0F93      		push r16
+ 378 0006 CF93      		push r28
+ 379 0008 DF93      		push r29
+ 380 000a 00D0      		rcall .
+ 381 000c 00D0      		rcall .
+ 382 000e CDB7      		in r28,__SP_L__
+ 383 0010 DEB7      		in r29,__SP_H__
+ 384               	/* prologue: function */
+ 385               	/* frame size = 4 */
+ 386               	/* stack size = 9 */
+ 387               	.L__stack_usage = 9
+  64:main.c        ****         (
+ 389               	.LM30:
+ 390 0012 CE01      		movw r24,r28
+ 391 0014 0396      		adiw r24,3
+ 392 0016 7C01      		movw r14,r24
+ 393 0018 02E0      		ldi r16,lo8(2)
+ 394 001a 20E0      		ldi r18,0
+ 395 001c 30E0      		ldi r19,0
+ 396 001e 45E5      		ldi r20,lo8(85)
+ 397 0020 50E0      		ldi r21,0
+ 398 0022 60E0      		ldi r22,lo8(.LC0)
+ 399 0024 70E0      		ldi r23,hi8(.LC0)
+ 400 0026 80E0      		ldi r24,lo8(gs(vBlinkLed))
+ 401 0028 90E0      		ldi r25,hi8(gs(vBlinkLed))
+ 402 002a 0E94 0000 		call xTaskCreate
+  74:main.c        ****         (
+ 404               	.LM31:
+ 405 002e CE01      		movw r24,r28
+ 406 0030 0196      		adiw r24,1
+ 407 0032 7C01      		movw r14,r24
+ 408 0034 01E0      		ldi r16,lo8(1)
+ 409 0036 20E0      		ldi r18,0
+ 410 0038 30E0      		ldi r19,0
+ 411 003a 45E5      		ldi r20,lo8(85)
+ 412 003c 50E0      		ldi r21,0
+ 413 003e 60E0      		ldi r22,lo8(.LC1)
+ 414 0040 70E0      		ldi r23,hi8(.LC1)
+ 415 0042 80E0      		ldi r24,lo8(gs(vSerial))
+ 416 0044 90E0      		ldi r25,hi8(gs(vSerial))
+ 417 0046 0E94 0000 		call xTaskCreate
+  85:main.c        **** 
+ 419               	.LM32:
+ 420 004a 0E94 0000 		call vTaskStartScheduler
+  88:main.c        **** 
+ 422               	.LM33:
+ 423 004e 80E0      		ldi r24,0
+ 424 0050 90E0      		ldi r25,0
+ 425               	/* epilogue start */
+ 426 0052 0F90      		pop __tmp_reg__
+ 427 0054 0F90      		pop __tmp_reg__
+ 428 0056 0F90      		pop __tmp_reg__
+ 429 0058 0F90      		pop __tmp_reg__
+ 430 005a DF91      		pop r29
+ 431 005c CF91      		pop r28
+ 432 005e 0F91      		pop r16
+ 433 0060 FF90      		pop r15
+ 434 0062 EF90      		pop r14
+ 435 0064 0895      		ret
+ 441               	.Lscope3:
+ 443               		.stabd	78,0,0
+ 444               		.text
+ 446               	.global	vApplicationIdleHook
+ 448               	vApplicationIdleHook:
+ 449               		.stabd	46,0,0
+  96:main.c        **** 
+ 451               	.LM34:
+ 452               	.LFBB4:
+ 453               	/* prologue: function */
+ 454               	/* frame size = 0 */
+ 455               	/* stack size = 0 */
+ 456               	.L__stack_usage = 0
+ 457 00a6 0895      		ret
+ 459               	.Lscope4:
+ 461               		.stabd	78,0,0
+ 462               		.comm	uart_file,14,1
+ 465               	.Letext0:
+ 466               		.ident	"GCC: (GNU) 5.4.0"
+ 467               	.global __do_copy_data
+ 468               	.global __do_clear_bss
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccxN12B6.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccxN12B6.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccxN12B6.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccxN12B6.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccxN12B6.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccxN12B6.s:182    .text:0000000000000000 vSerial
+     /tmp/ccxN12B6.s:251    .text:000000000000003c vBlinkLed
+     /tmp/ccxN12B6.s:370    .text.startup:0000000000000000 main
+     /tmp/ccxN12B6.s:448    .text:00000000000000a6 vApplicationIdleHook
+                            *COM*:000000000000000e uart_file
+
+UNDEFINED SYMBOLS
+vTaskDelay
+xTaskCreate
+vTaskStartScheduler
+__do_copy_data
+__do_clear_bss

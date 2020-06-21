@@ -1,0 +1,75 @@
+API:
+1) usługi sieciowe, np API dostawcy obsługi płatności
+2) API dla frontendu
+3) Komunikacja między serwerami:
+- JSON (domyślny dla api w rails)
+- czasem XML
+
+Walidacja:
+w controllers jest osobny folder api dla komunikacji z serwerem przez json
+osobny kontroler dla api
+
+Kontroler przekazuje do serwera json:
+nazwa:
+module Api
+  
+
+
+Routing:
+
+namespace 'api' (nazwa_folderu) 
+get 'users/email_exists(nazwa metody)
+
+Jak wywołać odpowiednim eventem sprawdzenie walidacji?
+jquery blur:
+
+do pliku z widokiem można dodać javascript:
+
+javascript:
+ $('input[name="user[email]"].blur(function {
+...metoda get jquery ...
+}
+
+Testy:
+
+describe .... do
+...
+
+it do
+  expect(subject).to be_succesful #sprawdzam czy zapytanie sie wykona
+  expect(JSON.parse(subject.body)).to eq(false)  #bo takiego emailu w subject nie ma, JSON.parse - zeby ewaluowac do bool
+
+2. Budowanie wyszukiwarki z API:
+- elasticsearch jako gotowe rozwiazanie wyszukiwania full-text.
+
+Struktura budowania wyszukiwarki:
+Kontroller API JSON -> pośrodku provider <- wynik api
+Provider zwraca cały obiekt - za dużo danych, do rpzetworzenia go w JSON jest serializacja w rails (Serializer)
+
+<<<<event w jquery keyup (keydown reaguje za wczesnie)
+ 
+
+
+
+ZROBIĆ::
+Walidację adresu email w formularzu rejestracji z wykorzystaniem API
+
+WYklad 11.12.2018:
+
+pg-search
+
+1.Dodać pg search do wyszukiwarki
+2.Usunąć odpytywanie serwera po każdej zmianie literki
+
+Uwaga, gdy korzystamy z pg search, to on potrafi nadpisywac sortowanie na nasza ewentualna implementacje
+
+
+rozbudowa userr panel:
+
+nawigacja w shared jako partial
+namespace user_panel:
+osobne kontrolery dla kazdego widoku
+
+
+
+

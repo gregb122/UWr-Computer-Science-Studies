@@ -1,0 +1,64 @@
+Wykład i podstawy teorii sterowania
+
+- dziedzina zajmująca się procesami używająca diagramów blokowych do rysowania zależności
+- każdy proces ma swoje wejście i wyjście
+- proces może modelować przeróżne zjawiska, niekoniecznie tylko określone funkcjonalności czy procedury:
+- np. roślina może być procesem, a padająca woda czy światło wejściem, a produkowany tlen np. wyjściem
+
+Inne czynniki, których bezpośrednio nie możemy kontrolować, możemy interpretować jako dodatkowe wejścia procesu.
+
+Sterowanie z pętlą otwartą - sterujemy procesem nie wiedząc do końca co on tak naprawdę będzie robić
+
+Sterowanie w pętli zamkniętej - obserwujemy wynik naszego sterowania z procesu po linii zwrotnej
+
+Wartość zadana - wartość zmierzona = wartość błędu
+
+gdzie oczywiście wartość błędu -> 0 najlepiej
+
+Sterowanie zerojedynkowe - czasem w przypadku ogrzewania
+- z wykorzystaniem histerezy - po to, aby zadać tolerancję wartości dla przełączania
+
+Sterowanie proporcjonalne:
+- przykład grzałka:
+- nigdy nie osiagnie wartości nastawy - bo gdyby osiągnęła, to wówczas przestałaby grzać, więc jej temperatura by zaczeła maleć.
+
+Sumowanie błędów po czasie i kompensacja błędu w zależności od czasu.
+Za pomocą całki z błędu (w funkcji czasu) otrzymamy rosnącą wartość błędu również w zależności od czasu, a nie tylko od samego błędu
+
+A co, gdy błąd jest zerowy? Wówczas całka jest stała i dopóki nie zmieni się temperatura, to nie wyjdziemy z tego stanu.
+
+Jakie są problemy z całkowym podejściem? Nieadekwatna reakcja w stosunku do wyliczonego błędu
+- może dojść do bardzo dużych zmian wartości i tzw. przestrzeleń w stosunku do wartości nastawy. Powstaną oscylacje.
+- Bardzo częsty jest układ, w którym wartość osiąga się przez ciąg malejących oscylacji wokół wartości nastawy - układ taki osiagnie
+wartość docelową szybciej niż układ bez oscylacji.
+
+- Wady współczynnika całkującego - słabo reaguje na szybkie zmiany!!
+
+Jaki układ sterowania mógłby reagować na szybkie zmiany, w zależności od czasu? 
+- układ sterowania z 3 współczynnikami (kontrolerami):
+** kontroler całkujący
+** kontroler różniczkujący - układ reaguje na szybkie zmiany, dodatkowo ma właściwość tłumienia oscylacji
+** kontroler proporcjonalności
+
+Taki układ nazywa się kontrolerem PID (P-proporcjonalny, I-całkujący, D-różniczkujący)
+- kontrolery PID są wszechobecne
+
+Mając model matematyczny procesu okazuje się, że jesteśmy w stanie nad nim panować - patrz stabilizator potrójnego wahadła.
+
+- przykład z życia - monocyped (jedno koło do poruszania się) - jest w stanie się nie przewrócić - dzięki teorii sterowania.
+
+- kondensator równolegle == cewka szeregowo i na odwrót (w kontekscie prądów i napięć)
+
+Zwiekszamy wspolczynnik p do takiej wartosci, aby uklad sam zaczal uscylowac - technika Zigglera- Nicholsa
+
+1. Jeśli błąd utrzymuje się przez długi okres czasu - wartość współczynnika całkującego osiąga duże wartośći i to może powodować przestrzelenie
+Jednym z rozwiązań tego problemu jest ograniczenie maksymalnej wartości współczynnika całkującego (w atmega 328p).
+Inna technika: to resetowanie wartosci współczynnika całkującego, gdy wartość błędu osiągnie krytyczną wartość (drukarki 3d w kontrolerze pid do temperatury oprogramowanie marvin - gdy ekstruder osiągnie zbyt wysoką temperaturę mogłoby dojść do wydzielenia neurotoksyn z kartridge.)
+
+<<<<< sterowanie różniczkowe jest bardzo czułe na szumy!!! >>>>>>>
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+I. Algorytmy:
+* Sortowanie
+(1v) - bubble, insert, selectionsort
+(1v) - sortowanie przez scalanie
+* Drzewa i grafy
+- algorytm DFS/BFS, reprezentacje grafu, drzewo binarne
+- algorytm Dijkstry, Bellmana-Forda
+- sortowanie topologiczne
+- algorytmy Prima i Kruskala
+- algorytm Warshalla-Floyda (znajdowanie najkrótszych ścieżek między wszystkimi parami wierzchołków)
+- technika spamiętywania danych w wierzchołkach (rekurencja ze spamiętywaniem)
+* Inne
+- Algorytm Euklidesa (też w wersji rozszerzonej)
+- Mnożenie po rosyjsku
+- Obliczanie n-tej liczby Fibonacciego (wszystkie 3 sposoby)
+- Implementacja kolejki 
+II. Złożoność pamieciowa/czasowa
+(1v) definicja jednostki czasu w oparciu o model maszyny RAM 
+(1v) - kryteria jednorodne i logarytmiczne kosztów
+(1v) - szacowanie złożoności czasowej: 
+(1v) -- alg iteracyjne - czas trwania pętli przy ustaleniu czasu wykonania jednej iteracji
+(1v) -- alg rekurencyjne - zliczanie wywołań rekurencyjnych (drzewo wywołań)
+III. Pseudokod i sposoby zapisywania algorytmów
+(1v) syntax może być oparty na Pythonie (wcięcia zamiast klamer, ekspresywny, etc)
+(1v) struktury danych i ich wielkość szacujemy w odniesieniu do wydajnej implementacji (język C): tablice, struktury, tablice dynamiczne, reprezentacje drzewa i grafów.
+IV. Pojęcia
+(1v) - stabliność algorytmu
+(1v)- rozkład danych
+(1v) - wielkośc rekordów
+(1v) intensywność wykorzystania algorytmu 
+(1v) optymalizacja stałej w złożoności algorytmu
+(1v) niezmiennik jako jeden ze sposobów dowodzenia algorytmu

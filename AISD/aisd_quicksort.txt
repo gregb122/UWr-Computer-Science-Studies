@@ -1,0 +1,86 @@
+procedure quicksort(A[1..n], p, r)
+	if r - p jest małe then insertsort(A[p..r])
+	else choosepivot(A, p, r)
+		q = partition(A,p,r)
+		quicksort(A, p, q)
+		quicksort(A, q+1, r)
+
+quicksort:
+- jesli r - p jest male, to stosujemy prostą procedurę sortowania z małą stałą - insertsort
+- q musi byc mniejsze od r
+
+proceura choosepivot umieści element dzielący w A[p]
+
+procedura partition:
+i, j to wskaźniki na początek i na koniec tablicy o jeden dalej
+i = p - 1
+j = r + 1
+>>>> Partition mówi tylko tyle, że elementy na lewo od j są mniejsze od pivota, a na prawo większe
+
+1.Załóżmy, że pivot znajduje się w 1 elemencie tablicy i jest unikalnie minimalny:
+Dokonujemy partition:
+- wówczas mamy tablice 1 elementową na lewo i n-1 elementową na prawo
+2. Pivot jest drugim co do wielkości elementem - istnieje jakiś mniejsze element od x. Pivot jest w 1 el. tablicy
+Wówczas element x' (najmniejszy) i x zostaną zamienione miejscami. Podział dokona się znów tak samo, jak w przypadku 1.
+3. Gdyby pivot był 3 elementem co do wielkości, to wówczas lewa podtablica będzie mieć 2 elementy, a prawa rezstę
+analogicznie dalej
+4.Załóżmy, że wszystkie elementy są takie same:
+- nie zapętlimy się, gdyż wskaźniki są zmieniane przez partition przed wejściem do pętli w procedurze
+
+Koszt: partition w czasie liniowym
+Pivot w czasie stałym
+koszt quicksorta: T(n) = T(k) koszt lewej podtablicy + T(n-k) + O(n)
+Jak dokonywać podziału podtablic?
+1. na pół, idealnie zbalansowane - drzewo o wysokości logn. Wówczas wykonamy pracę nlogn, bo na każdym poziomie wykonamy pracę rzędu n
+2. Skrajnie niezbalansowane: -lewe drzewo o wielkości 1, prawe o wielkośc n-1. Mamy wówczas drzewo o wysokości
+rzędu n, pracę wykonamy rzędu n, więc O(n^2) - słabo
+
+WYBÓR PIVOTA MA GŁÓWNE ZNACZENIE DLA ZŁOŻONOŚCI CAŁEJ PROCEDURY!!!
+
+Metody wyboru pivota:
+- deterministyczne:
+-- wybór pierwszego elementu jest ok, gdy dane są równomiernie losowe, ale jest fatalnie, gdy dane są posortowane
+- niedeterministyczne:
+--wybieramy indeks losowo w rozkładzie jednostajnym spośród elementów tablicy. Jakie jest prawdopodobieństwo, że będziemy natrafiać
+na bardzo małe elementy od lewej i tablica będzie się będzie zmniejszać bardzo niemrawo?
+1/n * 1/n-1 * 1/n-2 * ... co jest niebywale małe
+ALE
+jeśli wybierzemy pivota jako największego, albo 2 największego, 2 najmniejszego ... też słabo
+a prawdopodobieństwo już mocno rośnie wybrania elementu z tego zbioru
+
+Co by było gdyby każda podtablica miała rozmiar <3/4 n?
+Wówczas aby spełnić taki warunek, mamy szansę na wylosowanie pivota 1/2 (bo 25% elementów lub więcej musi być mniejsze od x, a co najwyżej 25% musi być większe od x)
+
+I w samym drzewie wywołań pivota analizujemy, jakie będa wartości pivota (złe czy dobre?)
+1. 1/2, 2. 1/4, 3. 1/8
+Wartość oczekiwana jest = 2 przy takim rozkładzie
+
+- mediana z małej próbki - wybieramy 3 elementy jako kandydatów na pivota i z tego zbioru bierzemy środek
+To konsekwencja powyższych obserwacji:
+
+OCZEKIWANY KOSZT ALGORYTMU
+Pokaż, że gdy pivot wybieramy z jednakowym prawdopodobieństwem z tablicy, koszt wynosi nlogn
+
+>>We wzorze nad 'Proste oszacowanie' powinny być na odwrót znaki równości i mniejsze równe w równaniu
+
+Metody analizy quicksorta:
+1. Mitzenmacher - 
+- elementy są różne (zal.)
+- pivot nie trafia do wywołań rekurencyjnych (zal) - 
+Niech 	x1,...,xn - dane wejściowe, a niech y1,...,yn to ciąg uporządkowany
+2. Friedmanna
+>>>Czemu nie wybierać mediany zbioru?
+>>>- bo algorytm znajdowania mediany jest w czasie liniowym i ma zbyt dużą stałą jak dla quicksorta
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,64 @@
+I. algorytmy sortowania w czasie liniowym
+Dolne granice - twierdzenie dla sortowania okresla dolna granie na nlogn
+
+Ale poniższe algorytmy nie spełniają warunków twierdzenia ze względu na tzw. mocne ograniczenia
+
+1. sortowanie przez zliczanie: mocne ograniczenie na wielkość danych
+- potrzebujemy tablicy wynikowej o rozmiarze k, gdzie k to wartość największej liczby w kolekcji
+- jest metodą stabilną
+- O(n+k) - bo k może być większe niż liczba rekordów
+
+2. sortowanie kubełkowe: mocne ograniczenie na losowość wygenerowanych liczb (rozkład jednostajny)
+- znów tworzymy tablicę kubełków o długości n (gdzie n to ilość liczb w kolekcji)
+- wrzucamy liczby do kubełków, których jest n. Dla każdego kubełka, w którym jest więcej niż 1 liczba, trzeba
+je posortować osobno
+Z: zmienne są losowane z rozkładem jednostajnym
+
+Określmy ciąg zmiennych losowych Yi = {1 jeśli ai jest w 1 kubełku,
+			0 wpp.} gdzie i = {1, 2, 3, ..., n}
+
+Yi opisuje wynik tego doświadczenia losowości dla każdej liczby.
+Weźmy teraz X1 = Y1 + Y2 + ... + Yn
+E[X1] = E[Y1] + E[Y2] + ... + E[Yn] = 1/n * n = 1
+E[Y1] = 1/n + 0 * (n-1)/n
+Zatem wartość oczekiwana liczby kulek w kubełku wynosi 1
+
+Uwaga: jak policzyć E[Xi^2] ? (Uwaga, zmienne Xi i Xi nie są niezależne!!!)
+Cormen: str. 199/200
+
+3. sortowanie leksykograficzne (ciągów słów o jednakowej, n długości)
+- niejednakowej? identyczne słowa o różnym prefiksie - słowo krótsze jest wcześniej
+Naiwne podejście:
+- rozrzucamy do 26 kubełków (na jedną literę) słowa na podstawie 1 litery
+- powtarzamy procedurę i tworzymy 26^n kubełków na słowa (niewydajne pamięciowo!!!)
+Lepsze:
+- sortujemy po ostatniej literze do 26 kubełków
+...
+
+Sortowanie ciągów słów o różnej długości
+1. 
+
+Sprawdzanie izomorfizmu drzew:
+- na każdym poziomie wierzchołki obu drzew muszą być wzajemnie odpowiednie. (tzn. każde dwa wierzchołki są tego
+samego typu jeśli oba ich poddrzewa są izomorficzne)
+
+Jeśli oba zbiory wierzchołków zaweirają wierzchołki tego samego typu, to są izomorficzne
+Idziemy od najniższego poziomu:
+- dla kazdego wierzchołka - sprawdź typ
+
+Jak opsiujemy typ:
+np. 0 = (0, 0, 0) - to oznacza, że ten wierzchołek ma 3 synów, z których każdy jest liści
+Przy czym oba typy są takie same bez względu na kolejność: ((0, 0), (0, 0, 0)) === ((0, 0, 0), (0, 0))
+
+
+
+
+
+
+
+
+
+
+
+
+

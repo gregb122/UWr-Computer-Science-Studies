@@ -1,0 +1,52 @@
+Poprawka wrzesień 2015 
+
+1. Opisz ideę algorytmu znajdowania mediny opartego na idei próbkowania losowego 
+
+2. Skreślone - błędna treść 
+
+3. Dlaczego Shift-And stosowany jest tylko do krótkich wzorców 
+
+4. Lemat zero-jedynkowy i idea dowodu 
+
+5. Jakiej struktury danych użyjesz do implementacji kolejki priorytetowej dla zbioru kluczy {0...n}, gdzie operacje kolejkowe są w O(lglgn). Opisz ideę jej konstrukcji. 
+
+6. Rozważmy słownik statyczny realizowany przy pomocy haszowania dwupoziomowego. Załóżmy, że pierwotna funkcja haszująca w k-tym kubełku umieszcza n elementów. Jaki jest rozmiar tablicy wtórnej w której będą te elementy umieszczane. Wyjaśnij dlaczego rozmiar jest taki a nie inny. 
+
+7. Idea sprawdzania izomorfizmu drzew. Czas działania 
+
+8. W jakim czasie można wykonać ciąg operacji union i find w którym wszystkie opracje union poprzedzają find. Odpowiedź uzasadnij (z tego co pamiętam, to było dopowiedziane, że find jest robiony z kompresją ścieżek). 
+
+9. Który drzewiec określony jest jednoznacznie: 
+a) wszystkie klucze różne, ale istnieje para równych priorytetów 
+b) wszystkie priorytety różne, ale istnieje para równych kluczy 
+c) wszystkie klucze i priorytety są różne 
+
+10. Jak można pogodzić istnienie dolnej granicy Omega(nlogn) na sortowanie ciągu n liczb z tym, że counting sort wykonuje mniej niz nlogn operacji. 
+
+11. Definicja i przykład uniwersalnej rodziny f-cji haszujących 
+
+12. Idea algorytmu plecakowego z powtórzeniami. Przedstaw pseudowielomianowy algorytm. Dlaczego jest on pseudowielomianowy. 
+
+13. FFT jest dziel i zwyciężaj. Na czym polega redukcja? 
+
+14. Niech H będzie kopcem dwumianowym (eager) zawierającym 1000000 elementów. Ile najmniej elementów musi zawierać kopiec dwumianowy G, tak aby po połączeniu G z H wynikowy kopiec zawierał: 
+a) 1 drzewo 
+b) 2 drzewa 
+c) 19 drzew 
+
+15. Pseudokod szybkiej budowy kopca. Jaki jest czas działania. 
+
+16. Załóżmy, że przełączniki w sieci ustawione są losowo. Dla jakich n istnieje sieć przełączników o n wejściach która z jednakowym prawdopodobieństwem wygeneruje każdą permutację n elementową. Uzasadnij 
+
+17. Na czym polega kaskadowe odcinanie w kopcach fibonacciego 
+
+18. Przykład danych dla których Dijkstra da niepoprawny wynik 
+
+19. Który algorytm sortowania w najgorszym wypadku robi n^2 porównań: 
+a) quicksort 
+b) mergesort 
+c) selectsort 
+d) insertsort 
+e) heapsort 
+
+20. Przedstaw w jaki sposób sieci półczyszczące są wykorzystywane w konstrukcji bitonicznych sieci sortujących. 

@@ -1,0 +1,30 @@
+(10 zadań po 2pkt, maksymalna ilość bombek - 2, wymagana ilość punktów 10 Bombka za brak lub bardzo głupią odpowiedź - należało wykazać się wszechstronną wiedzą)
+
+1. Redukcja problemu znajdowania w grafie G(V,E) maksymalnego podgrafu pełnego (tzw. kliki) do problemu programowania całkowitoliczbowego.
+
+2. Dla języka nad alfabetem dwuliterowym podano funkcję \pi(x) w tabelce:
+bardzo z pamięci tabelka \pi(x):
+|00|01|02|03|04|05|06|07|08|09|10|11|
+|__|__|__|__|__|__|__|__|__|__|__|__|
+|_0|_1|_2|_0|_1|_2|_3|_0|_1|_2|_3|_0|
+
+3. Czy problem mnożenia macierzy logicznych jest NC.
+
+4. Znajdź błąd w poniższym rozumowaniu (lub napisz że go nie ma)
+rozumowanie na temat słownika stałego ??
+
+5. Drzewem warstwowym nazywamy graf, powstały z drzewa z oznaczonym korzeniem poprzez połączenie niektórych (w szczególności wszystkich) wierzchołków leżących w takiej samej odległości od korzenia. Czy istnieje algorytm badający izomorfizm dla pary takich grafów (Np. powstaje on z delikatnej modyfikacji znanego algorytmu?) Jeżeli nie istnieje, to wytłumacz dlaczego, jeżeli istnieje, to opisz jak działa.
+
+6. Jak zmieni się zamortyzowany czas oczekiwania w typowym algorytmie Union-Find na drzewach BST, gdy podczas kompresji ścieżek, każdy wierzchołek na ścieżce od korzenia do v podwieszamy pod jego własnego dziadka.
+
+7. Narysuj kopiec Fibonaciego po wykonaniu następującego zestawu operacji (insert(1), insert(2),....,insert(10)), deletemin().
+
+8. ?
+
+9. Pytanie dotyczyło maszyny PRAM. Dlaczego nie jest możliwy taki przypadek (spełniający wszystkie podpunkty a,b i c)
+a) algorytm sortowania w czasie O(n).
+b) algorytm używa jedynie porównywania elementów
+c) ilość procesorów wynosi O(nlog*n)
+
+10. Narysować na ośmiu drutach optymalny zestaw komparatorów do znajdywania maksimum i minimum.
+

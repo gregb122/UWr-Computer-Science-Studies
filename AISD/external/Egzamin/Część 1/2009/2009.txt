@@ -1,0 +1,43 @@
+Część I, t2:
+1. Napisać procedurę do kopca, która jednocześnie zwiększa i zmniejsza wartość
+   klucza
+2. Izomorfizm drzew - opisz algorytm
+3. Ile rotacji wymaga drzewo AVL przy usuwaniu elementu z tego drzewa, swoją
+   odpowiedź uzasadnij
+4. Liczba drzew w kopcach dwumianowych wersja eager i lazy
+5. Jakieś dziwne zadanie o wyszukiwaniu elementów ze zbioru szukamy tych
+   elementów które mają specjalną cechę C i jest ich nie mniej niż 30%, chyba
+   dowód podobny do hashowania podwójnego zawartego w Cormenie, oczywiście mogę
+   się mylić.
+6. Zlepki w hashowaniu liniowym i kwadratowym
+7. dostaliśmy ciąg, pytanie: jak go reprezentować tak aby dodawanie elementów
+   (wtedy jeżeli dodamy k-ty element: elementy k,k+1, k+2 staną się k+1,k+2,k+3)
+   oraz usuwanie elementu (analogicznie usuniemy k-ty: k+1,k+2.. stanie się
+   k,k+1) były w czasie O(log n)
+8. na początku mamy n drzew będących tylko pojedynczymi wierzchołkami, budujemy
+   drzewa w taki sposób: podłączamy korzeń drzewa mniejszego pod wzgl. ilości
+   wierzchołków pod korzeń większego. jaka jest maksymalna wysokość drzewa,
+   którą można w ten sposób uzyskać 
+9. Co to jest odcięcie kaskadowe w kopcach fibonacciego 
+10.Algorytm LazySelect (podany prawdopodobnie taki jak w notatkach), powiedzieć
+   dlaczego w piątym kroku, gdy sprawdzamy czy elem. należy do zbioru jest na to
+   duże ppb
+
+Część I, t3:
+
+1. Jaka maksymalna wartość może osiągnąć funkcja Pi z KMP, podaj przykład.
+2. Modyfikujemy algorytm 4 Rosjan tak, że zamiast dzielić macierz na paski
+   długości logn dzielimy na paski długości loglogn. Ile wynosi złożoność
+   takiego algorytmu?
+3. Jak reprezentowane jest liniowe przekształcenie w FFT. (chodzi o macierz
+   Vandermonde'a)
+4. Jak działa i ile kosztuje delete w drzewcach.
+5. Mamy małe uniwersum A liczb rzeczywistych i chcemy je pamiętać na zbiorach
+   rozłącznych (union-find). Jak musimy zmodyfikować instrukcje?
+6. Zależność między sieciami bitonicznymi i sortującymi.
+7. Słownik statyczny - opis i złożoność instrukcji.
+8. Jak zmieni się złożoność algorytmu Dijkstry jeśli do zaimplementowania go
+   użyjemy kopców fibonacciego.
+9. Złożoność pesymistyczna i średnia find i union w union-find.
+10.Ile wywołań rekurencyjnych może najwięcej wywołać algorytm dziel i rządź
+   mnożenia macierzy n/4 x n/4 tak, żeby był szybszy od algorytmu Strassena.

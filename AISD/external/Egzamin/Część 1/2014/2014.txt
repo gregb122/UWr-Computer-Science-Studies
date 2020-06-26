@@ -1,0 +1,27 @@
+1. Podaj definicję pojęć
+- klasa NC
+- problem P-zupełny
+2. Szukając wystąpień wzorca P=ababababcaba w tekście T, algorytm KMP napotkał niezgodność znaku c wzorca z pewnym znakiem T[k] tekstu. Z iloma znakami wzorca P będzie porównywany znak T[k] w trakcie dalszej pracy algortymu KMP?
+3. Podaj ideę algorytmu równoległego rozwiązującego problem mnożenia liczb całkowitych. Podaj znłożoność (czas, liczba procesów, praca).
+4. Jak uogólnić algorytm izomorfizmu drzew ukorzenionych do algorytmu drzew nieukorzenionych?
+5. Jakie znasz metody wyboru pivota w Quicksorcie? Jaką złożoność osiąga quicksort stosując te metody?
+6. Niech n będzie wierzchołkiem w drzewie binarnych, a DSIZE(n) niech oznacza wartość bezwzględną różnicy liczby wierzchołków w jego lewym i prawym poddrzewie. Czy w drzewie AVL o n wierzchołkach największa wartość DSIZE(n) możę być Omega(n)?
+7. W których z następujących struktur długość najdłuższej ścieżki z wierzhcołka do korzenia może wynosić Omega(n), gdzie n jest liczbą kluczy przechowywanych w strukturze? Kopiec, Drzewo BST, Drzewo czerwono-czarne, B-drzewo, Kopiec dwumianowy, drzewiec, drzewo splay?
+8. Podaj sensowne ograniczenie górne na największa wysokość drzewa, która może powstać w wyniku wykonania w sposób zbalansowany n operacji union na rozłącznych zbiorach.
+9. Przekształcenie wektora a dokonywane przez FFT można opisać jako mnożenie pewnej macierzy A przez ten wektor y = Aa. Jaka jest wartość j-tego elementu i-tego wiersza tej macierzy. Jeśli a jest wektorem współczynnikach pewnego wielomianu to czym są składowe wektora y?
+10. Na wykładzie pokazaliśmy, że Omega(n log n) jest dolną granicą na złożoność problemu element-uniqueness w modelu liniowych drzew decyzyjnych. Co można powiedzieć o dolnej granicy na złożoność tego problemu w modelu (zwykłych) drzew decyzyjnych?
+11. Opisz ideę efektywnego algorytmu wyznaczania optymalnego kosztu obliczania iloczynu m macierzy. Jaki jest jego koszt?
+12.  Dana jest tablica int A[1..n] uporządkowana niemalejąco oraz liczba k. Należy znajelźć j takie że A[j] = k lub wypisać i = -1, jeśli takie j nie istnieje. Jaka jest dolna granica na rozwiązanie tego problemu w modelu drzew decyzyjnych? Odpowiedź uzsadnij.
+13. Czy prawdą jest że operacja rotacji wykonana na wierzhchołkach drzewa BST zachowuje porządek BST?
+14. Na czym polega metoda kwadratowa rozwiązywania kolizji podczas haszowania metodą adresowania otwartego?
+15. Chcemy znaleźć LCS dla 2^n słów i liczymy LCS(w1, w2), LCS(w3, w4), ..., itd. a potem rekurencyjnie. Czy algorytm wydaje ci się atrakcyjny?
+16. Czy algorytm Shift-And nadaje się do szukania długich wzorców?
+17. Masz do wyboru dwa algortmy rozwiązujące ten sam problem metodą dziel i zwyciężaj. Pierwszy z nich dzieli problem na cztery podproblemy rozmiaru n/2, a drugi na osiem podproblemów rozmiaru n/3. Poza wywołaniami rekurencyjnymi agorytm wykona podobną, liniową liczbę operacji. Ktory z nich ma lepszą złożonośc asymptotyczną?
+18. Napisz w pseudokodzie implementację operacji deletemin na kocpu przechowywanym w tablicy T. Przyjmijmy, że aktualny rozmiar kopca jest prechowywany w zmiennej n. Zadbaj o czystość kodu.
+19. Jaki jest koszt poniższej procedury? Q i P są Omega(1)
+miniicfun(n):
+int k <- 0
+for i=0 to n
+	while (k > 0 & P(i,k)) do k <- floor(k/2) 
+	if Q(i,k) then optput(i) else k <- k+1
+20. Jaka jest oczekiwana liczba kolizji gdy do umieszczenia 20 różnych kluczy w tablicy 200 elementowej używamy losowo wybranej funkcji z uniwersalnej rodziny funkcji haszujących?

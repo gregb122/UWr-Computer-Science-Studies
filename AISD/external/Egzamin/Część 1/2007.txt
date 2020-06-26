@@ -1,0 +1,13 @@
+Część pierwsza:
+1. Podaj definicję O(f(n)), przykłady.
+2. Podaj trzy algorytmy sortowania stabilne i trzy niestabilne.
+3. Omów counting-sort (typ danych, złożoność, czy w miejscu, czy stabilny).
+4. Podaj czas pesymistyczny i zamortyzowany m operacji append().
+5. Podaj minimalną i maksymalną ilość węzłów w B-drzewie o wys.4 (krawędziowej) i minimalnym stopniu wierzchołka t=3.
+6. Wykonaj splay na podanym drzewie.
+7. Mnożenie długich liczb za pomocą programowania dynamicznego.
+8. Podaj LCS i narysuj tablicę pomocniczą dla dwóch ciągów.
+9. Rozwiąż ciągły (nie dyskretny) problem plecakowy.
+10. Przykłady problemów NP-trudnych, ich złożoność.
+
+

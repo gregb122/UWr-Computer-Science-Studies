@@ -1,0 +1,20 @@
+II czesc: 
+1. Uloz algorytm ktory dla danego slowa w znajdzie najkrotsze slowo x takie ze wx jest palindromem, tj. takim slowem ktore czytane wprost i wspak jest takie same. Uzasadnij poprawnosc swojego algorytmu. Podaj jego zlozonosc. 
+2.Rozwaz nastepujacy problem ktory pojawia sie podczas automatycznej analizy programow. Dla zbioru zmiennych x1...xn dane sa pewne rownosci postaci xi = xj oraz nierownosci x1 != x2. Zadanie polega na znalezieniu odpowiedzi na pytanie, czy mozliwe jest spelnienie wszystkich warunkow. Uloz efektywny algorytm znajdujacy odpowiedz na to pytanie. Uzasadnij jego poprawnosc. Jaka jest jego zlozonosc? Jako rozmiar danych przyjmij m - liczbe warunkow oraz n - liczbe zmiennych. 
+3. Rozwazamy nastepujaca wersje problemu przejscia przez tablice liczbowa nxn: 
+* przechodzimy z lewa na prawo 
+* mozemy wykonac pewna liczeb ruchow pionowych, nie wiecej niz k (k jest liczba naturalna) 
+* suma liczb z pol, przez ktore przejdziemy ma byc mozliwie najmniejsza 
+Podaj algorytm rozwiazujacy ten problem. Uzasadnij jego poprawnosc. 
+III czesc: 
+1.Rozwazmy cialo F_2 liczb calkowitych modulo 2. 
+* Uloz algorytm ktory mnozy macierze nxn nad F_2 w czasie O( n^log2(7) / (logn)^0.4 ) 
+* Czy Twoj algorytm mozna uogolnic na ciala mod q, gdzie q jest liczba pierwsza wieksza od 2? Jesli tak, to jaka on osiaga zlozonosc? 
+2. Uloz algorytm klasy NC dla problemu znajdowania porzadku topologicznego w acyklicznym grafie skierowanym. Uzasadnij jego poprawnosc. Oszacuj zlozonosc(czas,liczbe procesorow,prace). 
+3. Dany jest zbior A = { (x1,y1) ... (xn,yn) } punktow na plaszczyznie. Uloz algorytm znajdujacy najkrotsza sciezke, ktora: 
+* startuje z punktu P o najmniejszej wartosci wspolrzednej x 
+* idac ciagle na prawo(tj. przez punkty o coraz wiekszej wartosci wspolrzednej x) dochodzi do punktu Q o najwiekszej mozliwej wspolrzednej x 
+* idac ciagne na lewo wraca z punktu Q do P 
+* przechodzi przez wszystkie punkty ze zbioru A 
+Mozesz zalozyc ze wszystkie punkty ze zbioru A maja rozne wartosci wspolrzednej x 
+Uzasadnij poprawnosc swojego algorytmu i oszacuj jego zlozonosc. 

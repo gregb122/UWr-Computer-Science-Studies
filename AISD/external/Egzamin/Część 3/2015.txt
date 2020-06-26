@@ -1,0 +1,29 @@
+AiSD III - 23.06.2015 
+
+Zadanie 1 
+--------- 
+Dane: ciąg A = { a[1], a[2], ..., a[n] }, liczba B 
+Wynik: Ilość par (p, k), takich, że mediana podciągu ciągu A złożonego z: { a[p], a[p+1], ..., a[k-1], a[k] } jest większa od liczby B. 
+
+
+
+Zadanie 2 
+--------- 
+Dane: n par złożonych z liczb (c[i], w[i]), gdzie c[i] oznacza ciężar i-tej cegły, a w[i] wytrzymałość i-tej cegły (tzn jaki ciężar można bezpiecznie na niej położyć). 
+Wynik: wysokość najwyższej wieży, którą da się ułożyć z tych cegieł tak, że wieża ta jest stabilna (na danej cegle nie ma cegieł łącznie cięższych niż jej wytrzymałość). 
+
+
+Zadanie 3 
+--------- 
+Dane: Zbiór S, który jest podzbiorem { 1, 2, ..., n }, oraz ciąg operacji SIGMA złożony z operacji: 
+- INSERT(i) - wstawia do zbioru element i. Dla każdego "i" taka operacja może pojawić się co najwyżej raz. 
+- DELETEMIN() - zwraca minimum z wstawionych elementów i usuwa je ze zbioru. 
+- MIN(i) - usuwa wszystkie elementy mniejsze od i ze zbioru 
+Wynik: 
+Lista elementów, które zostaną usunięte przez operacje DELETEMIN() w kolejności w jakiej zostaną usunięte. 
+
+
+Zadanie 4 
+--------- 
+Dane: n punktów na płaszczyźnie 2D 
+Wynik: Trzy punkty spośród podanych, które dają trójkąt o najmniejszym obwodzie z wszystkich możliwych. 

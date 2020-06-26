@@ -1,0 +1,6 @@
+
+Część druga:
+1. Zaimplementuj słownik, na którym insert(), search(), delete(), number(x) i select(i) działają w O(log n).
+2. Dana jest tablica T[0...n-1]. Znależć w czasie o(n^2) takie i i j, że tab[i]-tab[j] jest maksymalne.
+3. Coś o znajdowaniu najdłuższej drogi w grafie skierowanym.
+4. Coś o cyklach Hamiltona w grafie skierowanym.

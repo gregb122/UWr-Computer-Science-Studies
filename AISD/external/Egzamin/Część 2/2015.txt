@@ -1,0 +1,24 @@
+AiSD II - 22.06.2015 
+
+Zadanie 1 
+--------- 
+Opisz strukturę danych, która wspiera operacje: 
+- INSERT(x, k) - wstawia element X na k-te miejsce od lewej. Elementy na pozycjach k, k+1, ... przesuwane są o 1 w prawo 
+- AVERAGE(k1, k2) - zwraca śrędnia spośród elementów: k1, k1 + 1, k1 + 2, ..., k2. 
+Podaj złożoność operacji oraz wymaganą złożoność pamięciową dla struktury. 
+
+
+Zadanie 2 
+--------- 
+a) 
+Niech A = { a, b, c } ze zdefiniowaną operacją * (która nie jest ani łączna ani przemienna). 
+Niech ciąg sigma = x1 * x2 * ... * xn. Czy da się tak rozstawić nawiasy, by możliwym wynikiem była wartość "a"? 
+
+b) 
+Zmodyfikuj poprzedni algorytm tak, by wypisywał również rozwiązanie takie, że możliwe najmniejsza ilość wartości "b" została obliczona po drodze do celu. 
+
+
+Zadanie 3 
+--------- 
+Algorytm dla danego słowa w oblicza ile minimalnie znaków należy usunąć z niego by pozostałe słowo było palindromem. Przedstaw złożoność podanego algorytmu oraz uzasadnienie jego poprawności. 
+

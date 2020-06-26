@@ -1,0 +1,43 @@
+Część III, t1:
+
+Zad 1:
+
+Dane mamy 2n punktów położonych na kole. Każde dwa punkty możemy połączyć
+odcinkiem, każdy z takich odcinków ma swoją wagę.
+
+ a) Ile jest wszystkich możliwych nieprzecinających się połączeń, w których
+    każdy punkt będzie końcem dokładnie jednego odcinka?
+    Zdaje się, że dobrym rozwiązaniem były liczby Catalana.
+
+ b) Podaj algorytm, który znajdzie najtańsze takie połączenie
+
+
+Zad 2:
+
+Danych mamy n punktów (x1,y1), (x2,y2)...(xn,yn).
+Wszytkie punkty mają różne współrzędne x.
+Zadanie: Ułożyć ścieżkę, której początkiem jest x1,y1 a końcem xn,yn. W ścieżce
+tej jedynym możliwym ruchem jest ruch w prawo (tj, kolejne odcinki muszą mieć
+współrzędną x większą od poprzedniego). Potem ułożyć ścieżkę w drugą stronę,
+czyli taką, której początkiem jest xn,yn a końcem x1,y1, która idzie zawsze w
+lewo. Zrobić to trzeba tak, żeby każdy z punktów należał do jednej z tych
+ścieżek, i aby suma długości tych ścieżek była minimalna.
+
+Część III, t2:
+
+3. Należało obliczyć oczekiwaną złożoność czasową algorytmu Hoare'a (quicksorto-
+   podobnego algorytmu znajdującego k-ty element)
+4. Dane były zbiór A, (|A| = małe naturalne k) i ciąg a1,a2...an liczb z tego
+   zbioru oraz tablica D[k][k] określajaca wyniki niełącznego i nieprzemiennego
+   działania (*).
+   Wykonywaliśmy ciąg działań a1(*)a2(*)...(*)an, z tym, że nie znaliśmy
+   nawiasowania. Każde nawiasowanie było tak samo prawdopodobne - należało
+   obliczyć najbardziej prawdopodobny wynik.
+
+
+Część III, t3:
+
+1. Najbardziej odległe punkty na płaszczyźnie.
+2. Mamy daną drabinę z wagami na krawędziach z przedziału <-100;100>, w której
+   możemy każdą jej składową (kwadrat) cyklicznie obracać. Algorytm ma wyznaczyć
+   ciąg obróceń takich kwadratów, tak aby suma wag była jak najmniejsza. 

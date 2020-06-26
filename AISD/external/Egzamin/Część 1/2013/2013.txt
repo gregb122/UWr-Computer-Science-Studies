@@ -1,0 +1,22 @@
+I czesc: 
+Zadania: 
+1. (KMR) Jak numerować słowa 17-literowe mając numerację 16-literowych 
+2. Jak uogólnić wykładowy algorytm szukania izomorfizmów drzew ukorzenionych na drzewa nieukorzenione. Jaką ma złożoność nowy algorytm? 
+3. Maksymalna liczba rotacji przy usuwaniu klucza z drzewa AVL 
+4. Po co rozróżnienie na pola nieużywane/usunięte przy haszowaniu z mapowaniem otwartym 
+5. Złożoność funkcji pi (z KMP) 
+6. Jak powinna wyglądać struktura wierzchołka w drzewie dwumianowym (jakie pola ma zawierać) 
+7. Przykłady dwóch problemów NP-zupełnych (innych niż cykl hamiltona) 
+8. Pseudokod dla operacji `insert` w drzewcu 
+9. Wskazać i uzasadnić błąd w opisie FFT 
+10. Ile może być maksymalnie drzew w kopcu dwumianowym eager/lazy 
+11. W algorytmie wyznaczania mediany przez próbkowanie ze zbioru S wybiera się najpierw zbiór R. Jaki jest jego maksymalny rozmiar (procentowo względem S) 
+12. Jaka jest oczekiwana maksymalna długość listy w haszowaniu liniowym (albo łańcuchowym?) w słowniku o N miejscach jeśli haszujemy N kluczy 
+13. Maksymalna liczba odwołań do pamięci zewnętrznej przy B-drzewie 1000/2000 
+14. Jak i po co stosuje się zaokrąglanie rozwiązania programu liniowego 
+15. Dolna granica liczby porównań dla scalenia dwóch ciągów n-elementowych 
+16. Do czego służy algorytm Strassena i jaka jest jego złożoność? 
+17. Jak szybko można znaleźć najdłuższy rosnący podciąg 
+18. Jakiego rodzaju kopca użyć dla asymptotycznie najefektywniejszego zaimplementowania algorytmu a) Prima, b) Dijkstry 
+19. Jak działą sieć półczyszcząca (i jej wykorzystanie) w sortowaniu ciągów bitonicznych 
+20. Jak równolegle mnożyć liczby binarne w czasie O(log n) 

@@ -1,0 +1,20 @@
+Część II:
+
+1. Należało obliczyć koszt zamortyzowany operacji add(k), dodającą 2^k do
+   licznika binarnego. Zadanie ładnie opisane jest w Cormenie, w rozdziale
+   poświęconym kosztowi zamortyzowanemu.
+2. Pół zadania: Mieliśmy dane n punktów na prostej i m odcinków na niej.
+   Należało obliczyć minimalny zbiór odcinków pokrywający wszystkie punkty.
+   Coś podobnego było chyba na liście 2.
+   Drugie pół:
+   Potem należało tak zmodyfikować algorytm, by dla zadanego k obliczał takie
+   pokrycie punktów, w którym każdy punkt jest pokryty przez dokładnie k
+   odcinków.
+
+Część II:
+
+1. Chcemy stworzyć strukturę danych, która będzie przechowywać pary (klucz,
+   wartość) i efektywnie obsługiwać instrukcje insert, delete i int_sum(k1,k2),
+   która wyznacza sumę wartości kluczy zawierających się w przedziale <k1,k2>.
+2. KMP dla wyszukiwania 2-ch wzorców w tekście.
+

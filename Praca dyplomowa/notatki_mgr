@@ -1,0 +1,38 @@
+Aplikacja bazodanowa do zarządzania kontrolą jakości w fabryce pochodnych produktów papierowych
+
+(Database application for quality control management in paper products factory)
+
+Adam Kufel
+
+Promotor: dr Leszek Grocholski
+
+
+...
+
+
+Streszczenie
+
+Niniejsza praca opisuje całość procesu wytworzenia oprogramowania do zarządzania kontrolą jakości w fabryce produktów papierowych. Przechodzi przez wszystkie jego etapy - poczynając od planowania i analizy ryzyka, poprzez implementację i testowanie aż do wdrożenia i utrzymania.
+Celem aplikacji jest automatyzacja oraz 
+
+1. Wprowadzenie
+
+2. Kontrola jakości w fabryce pochodnych produktów papierowych
+
+3. Koncepcja wykonania projektu oparta o architekturę MVT frameworka Django
+
+4. Baza danych
+
+5. Komponenty składowe projektu
+- aplikacje:
+-- klienci
+-- produkty
+-- zlecenia produkcyjne
+-- użytkownicy
+
+
+...
+
+Podsumowanie
+
+Bibliografia

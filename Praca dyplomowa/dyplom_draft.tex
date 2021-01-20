@@ -1,0 +1,375 @@
+% Opcje klasy 'iithesis' opisane sa w komentarzach w pliku klasy. Za ich pomoca
+% ustawia sie przede wszystkim jezyk i rodzaj (lic/inz/mgr) pracy, oraz czy na
+% drugiej stronie pracy ma byc skladany wzor oswiadczenia o autorskim wykonaniu.
+\documentclass[declaration,shortabstract]{iithesis}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+
+%%%%% DANE DO STRONY TYTUŁOWEJ
+% Niezaleznie od jezyka pracy wybranego w opcjach klasy, tytul i streszczenie
+% pracy nalezy podac zarowno w jezyku polskim, jak i angielskim.
+% Pamietaj o madrym (zgodnym z logicznym rozbiorem zdania oraz estetyka) recznym
+% zlamaniu wierszy w temacie pracy, zwlaszcza tego w jezyku pracy. Uzyj do tego
+% polecenia \fmlinebreak.
+\polishtitle    {Aplikacja bazodanowa do zarządzania\fmlinebreak kontrolą jakości w fabryce pochodnych\fmlinebreak produktów papierowych}
+\englishtitle   {Database application for quality control\fmlinebreak management in paper products factory}
+\polishabstract {
+Kontrola jakości w fabryce pochodnych produktów papierowych polega na zmierzeniu parametrów technicznych danego produktu, ich porównaniu z wartościami referencyjnymi oraz sporządzeniu raportu wynikowego. Obecnie często jest tak, że cały proces odbywa się w oparciu o papierowe formularze, które trafiają do segregatorów w archiwum. 
+
+Celem niniejszej pracy jest automatyzacja oraz cyfryzacja całego procesu kontroli jakości zarówno od strony interfejsu użytkownika oraz przechowywania danych. Projekt opisany w pracy ma postać aplikacji webowej, która może być hostowana w fabrycznej sieci lokalnej, do której mają dostęp pracownicy. Za pomocą mobilnego komputera na wózku kontroler jakości może wykonywać swoją pracę tak samo jak dotychczas - z tą różnicą, że dane pomiarowe nanosi do aplikacji w komputerze zamiast na papier. Takie rozwiązanie daje wiele korzyści - zgromadzone dane można wyszukiwać, filtrować, edytować itp. co znacząco ułatwia zarządzanie procesem kontroli jakości zarówno na płaszczyźnie biznesowej jak i produkcyjnej. Przejście na nowy system nie jest dla pracownika obciążeniem, gdyż aplikacja wiernie odwzorowuje papierowe formularze w interfejsie użytkownika - dzięki temu jej elementy wyglądają dla użytkownika znajomo, co znacząco ułatwia adaptację nowego systemu.
+
+Ważnym elementem aplikacji jest część związana z generowaniem raportów, specyfikacji czy świadectw jakości produktów na podstawie uprzednio wprowadzonych danych produktów. To te funkcjonalności wykorzystują zgromadzone dane i nadają sens biznesowy całej aplikacji. Przykładowo, klient ma możliwość określenia interesującej go specyfikacji produktowej na podstawie historii specyfikacji produktu zanim zostanie złożone zlecenie produkcyjne. Może również ocenić czy zamówienie zostało zrealizowane z zachowaniem odpowiednich parametrów technicznych określonych w specyfikacji mając wygenerowane świadectwo jakości. 
+}
+\englishabstract {
+
+From the areal point of view, a quality control process in paper factory is based on the following steps: product measurements, results comparison with reference and report creation. Such process is often implemented manually - data are written on paper sheets which finally are stored in archive binders. 
+
+Main goal of this thesis is automation and digitalization of this quality control process. Project included in thesis is a web application which can be hosted in factory local network accessible by employees. Using computer put on mobile cart, quality control inspector can work as usual - but measured data are stored in system database instead on paper sheet. Such way of working has many advantages - gathered data can be searched, filtered, edited and so on - management of quality control process is much more easier and effective from both bussiness and production point of view. Transition from manual workflow towards a new system is user friendly - application interface reproduces forms from paper datasheets very closely. 
+
+Other important functionalites of this system are: measurement report generation, quality control certificates printing and specifications creation. These functionalites are key from the business point of view, because they respond to customer needs directly. For example, client has a possibiility of verification of specification before production order is opened. Also, customer is able to validate within generated quality report if delivered product is assured by expected quality level. 
+}
+% w pracach wielu autorow nazwiska mozna oddzielic poleceniem \and
+\author         {Adam Kufel}
+% w przypadku kilku promotorow, lub koniecznosci podania ich afiliacji, linie
+% w ponizszym poleceniu mozna zlamac poleceniem \fmlinebreak
+\advisor        {dr Leszek Grocholski}
+%\date          {}                     % Data zlozenia pracy
+% Dane do oswiadczenia o autorskim wykonaniu
+%\transcriptnum {}                     % Numer indeksu
+%\advisorgen    {dr. Jana Kowalskiego} % Nazwisko promotora w dopelniaczu
+%%%%%
+%%%%% WLASNE DODATKOWE PAKIETY
+%
+%\usepackage{graphicx,listings,amsmath,amssymb,amsthm,amsfonts,tikz}
+%
+%%%%% WŁASNE DEFINICJE I POLECENIA
+%
+%\theoremstyle{definition} \newtheorem{definition}{Definition}[chapter]
+%\theoremstyle{remark} \newtheorem{remark}[definition]{Observation}
+%\theoremstyle{plain} \newtheorem{theorem}[definition]{Theorem}
+%\theoremstyle{plain} \newtheorem{lemma}[definition]{Lemma}
+%\renewcommand \qedsymbol {\ensuremath{\square}}
+% ...
+%%%%%
+
+\begin{document}
+
+%%%%% POCZĄTEK ZASADNICZEGO TEKSTU PRACY
+
+\chapter{Wprowadzenie}
+Głównym celem działalności fabryki pochodnych produktów papierowych jest produkcja dóbr przemysłowych. Takie dobra często nazywamy komponentami, a ich wytwórców podwykonawcami. Z punktu widzenia klienta różnica pomiędzy dobrem przemysłowym, a konsumenckim (czyli takim, które trafia do końcowego odbiorcy jako gotowy produkt) jest niewielka - zazwyczaj oczekujemy, że towar zostanie wyprodukowany w jak najkrótszym czasie, przy zachowaniu jak najkorzystniejszej ceny oraz jakości. Innymi słowy, zachodzi powszechnie znana zależność - klient chce mieć towar 'szybko, dobrze i tanio', a wytwórca jest w stanie zapewnić tylko dwie własności jednocześnie.
+ 
+Powyższa własność zmusza przedsiębiorców do ciągłego dostosowywania i unowocześniania procesu biznesowego w firmie. 
+Z punktu widzenia biznesu we wspomnianej fabryce pochodnych produktów papierowych dla produkcji najistotniejszymi czynnikami są: 
+\begin{itemize}
+	\item czas, ponieważ komponent jest niezbędny do wyprodukowania przez klienta swojego towaru na wyższym poziomie
+	\item cena, gdyż cena komponentu nie może być zrekompensowana tak zwanym efektem skali
+\end{itemize}
+
+Czy mając powyższe dwa czynniki, jakość takiego komponentu można uznać jako drugorzędną? Nie do końca - bubla zaakceptować nie można, gdyż wtedy końcowy produkt stałby się niezdatny do sprzedaży. Należy się spodziewać, że pożądaną sytuacją jest osiągnięcie jakościowego minimum - zdefiniowanego tak, by przy jak najmniejszym wysiłku osiągnąć próg jakościowy wymagany przez produkt wyższego rzędu. Skąd jednak wziąć wiedzę potrzebną do realizacji jakościowego celu?
+
+W przypadku produktów papierowych problem rozwiązują specyfikacja produktu oraz świadectwo jakości. Specyfikacja to zbiór ściśle określonych, referencyjnych parametrów technicznych danego produktu, istotnych z punktu widzenia jakości - kreuje idealistyczny obraz tego, jaki powinien być produkt. Świadectwo jakości reprezentuje rzeczywistość - ideał zdegradowany do minimum przez świat biznesowych racji. Pod postacią tabelek z dopuszczalnymi wartościami odchyleń i norm decyduje, czy wyprodukowany komponent może zostać dostarczony do klienta i sprzedany. Ostatecznie, mając zbiór referencyjnych wartości i dopuszczalne marginesy błędów interesujących nas parametrów jesteśmy w stanie określić spełnienie pożądanego progu jakościowego.
+
+Implementacja procesu zapewnienia jakości produktu powinna wymagać jak najmniejszego nakładu środków materialnych i czasowych od kontrolerów jakości, pracowników biurowych, czy menedżerów. Nietrudno zauważyć potrzebę stworzenia wspólnej platformy, w ramach której można byłoby łatwo śledzić stan zamówień, specyfikacji produktów, czy przeprowadzonych kontroli jakościowych. Projekt opisany w niniejszej stara się rozwiązać ten problem - pod postacią aplikacji internetowej udostępnionej na serwerze lokalnym, z jedną bazą danych dostępną dla wszystkich. W swoich założeniach stara się precyzyjnie zaspokoić wszyskie wymagania procesowe pod postacią odpowiednich komponentów aplikacji opisanych w dalszej części pracy.
+
+
+\chapter{Opis i budowa aplikacji}
+W tym rozdziale przedstawione zostaną elementy składowe projektu. Zasadniczo można wyróżnić kilka głównych, współdziałających ze sobą komponentów składających się na całość aplikacji:
+\begin{itemize}
+	\item klienci - część odpowiedzialna za tworzenie, modyfikowanie i usuwanie klientów w bazie danych oraz przeglądanie historii wystawionych specyfikacji dla klienta
+	\item produkty i specyfikacje - komponent, który umożliwia zarządzanie produktami wraz ze specyfikacjami w bazie danych oraz zapewnia funkcjonalność generowania specyfikacji z produktu dla danego klienta
+	\item zlecenia produkcyjne - pozwala na tworzenie, modyfikowanie i usuwanie zleceń produkcyjnych, raportów pomiarowych dla potrzeb kontrolerów jakości
+	\item użytkownicy - odpowiada za tworzenie, edytowanie i usuwanie kont pracowników za pośrednictwem panelu administratora. Daje również użytkownikowi możliwość zmiany hasła.
+\end{itemize}
+
+\section{Klienci}
+Komponent klientów jest zaimplementowany jako moduł oparty na architekturze \emph{CRUD (ang. Create-Read-Update-Delete)}. Pojęcie do odnosi się do typowych akcji wykonywanych nad danymi - zazwyczaj dane chcemy móc odczytać, zmieniać, tworzyć i usuwać. Komponent składa się z następujących widoków i akcji:
+
+Widok główny - przedstawia listę klientów znajdujących się w bazie danych w postaci tabelki. Listowany zbiór jest stronicowalny oraz są dostępne filtry w postaci wyszukiwania danych klientów po słowach kluczowych. Przy każdym kliencie znajdują się również linki do pozostałych widoków i akcji.
+
+\begin{figure}[H]
+\includegraphics[width=16cm]1
+\caption{Widok główny komponentu klientów}
+\end{figure}
+
+Widok szczegółowy - wyświetla historię wystawionych specyfikacji wraz z datą, kodem produktu oraz linkiem do podglądu danej specyfikacji w formie pliku PDF, umożliwiającym jej pobranie w tym formacie.
+
+\begin{figure}[H]
+\includegraphics[width=16cm]2
+\caption{Widok szczegółowy klienta}
+\end{figure}
+
+Widok edycji - dostarcza formularz do edycji danych klienta oraz możliwości usuwania z historii wystawionych specyfikacji.
+Wygląd interfejsu jest bardzo podobny do widoku szczegółowego, z tą różnicą, że wyświetlane wartości są umieszczone w tekstowych polach edycyjnych.
+
+Akcja usunięcia - prowadzi do formularza modalnego proszącego o potwierdzenie tego, czy chcemy usunąć danego klienta
+
+\begin{figure}[H]
+\includegraphics[width=16cm]4
+\caption{Formularz potwierdzający usunięcie klienta}
+\end{figure}
+
+\section{Produkty i specyfikacje}
+Pod względem budowy ten komponent jest bardzo podobny do klientów - również jest oparty na architekturze \emph{CRUD} z podobnymi widokami i akcjami:
+
+Widok główny - jest analogiczny do widoku głównego klientów. Umożliwia filtrowanie po numerze SAP, indeksie produktu oraz opisie, a także są umieszczone odsyłacze do wyświetlenia szczegółów produktu wraz ze specyfikacją, formularza edycyjnego i akcji usuwania. 
+
+Widok szczegółowy - poza informacjami o produkcie i specyfikacji zawiera link prowadzący do formularza umożliwiającego wygenerowanie specyfikacji dla klienta.
+Po podaniu daty wystawienia specyfikacji i numeru SAP klienta i wysłaniu formularza następuje przekierowanie do wygenerowanej specyfikacji w formacie PDF osadzonej w widoku.
+
+\begin{figure}[H]
+\includegraphics[width=16cm]5
+\caption{Widok osadzonej specyfikacji w formacie PDF}
+\end{figure}
+
+Widok edycyjny - umożliwia edycję danych produktu i powiązanej z nim specyfikacji.
+
+\begin{figure}[H]
+\includegraphics[width=16cm]6
+\caption{Widok górnej części formularza produktu i specyfikacji}
+\end{figure}
+
+Akcja usuwania jest w pełni analogiczna do akcji opisanej w komponencie klientów.
+
+\section{Zlecenia produkcyjne i raporty pomiarowe}
+Ten komponent, mając do dyspozycji dane klientów i produktów, implementuje pełen cykl życia zleceń produkcyjnych i wykonywanych dla nich raportów pomiarowych. Pełen proces można przedstawić w postaci listy kroków:
+\begin{itemize}
+	\item Mając kod produktu i numer SAP klienta, biuro przepisuje nr partii wygenerowany z systemu SAP oraz wpisuje liczbę sztuk produktu w formularzu zamówienia
+
+\begin{figure}[H]
+\includegraphics[width=16cm]7
+\caption{Widok formularza do tworzenia nowego zlecenia}
+\end{figure}
+
+	\item Następnie kontroler jakości może odszukać w widoku głównym otwarte zlecenie produkcyjne oraz dokonać pomiarów, klikając w link prowadzący do widoku raportu pomiarowego z napisem \texttt{Dodaj pomiary}
+	
+\begin{figure}[H]
+\includegraphics[width=16cm]8
+\caption{Otwarte zamówienie w widoku głównym}
+\end{figure}
+
+	\item Po dodaniu i zapisaniu pomiarów, zamówienie zmienia swój status na \texttt{W trakcie} - jest to stan, w którym partia produktu ma wykonane pomiary wszystkich obowiązkowych parametrów, ale wciąż są możliwe poprawki do naniesienia przez kontrolera.
+	
+\begin{figure}[H]
+\includegraphics[width=16cm]9
+\caption{Górna część formularza do wprowadzania pomiarów}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=16cm]a
+\caption{Zamówienie w trakcie w widoku głównym}
+\end{figure}
+
+	\item Aby zakończyć pomiary, kontroler wchodzi w widok formularza edycyjnego, dokonuje weryfikacji wprowadzonych uprzednio pomiarów i klika w przycisk kończący pomiary dla wybranego zamówienia
+	
+\begin{figure}[H]
+\includegraphics[width=16cm]b
+\caption{Dolna część formularza do wprowadzania pomiarów}
+\end{figure}
+
+	\item Wraz z zakończeniem pomiarów wewnątrz raportu pomiarowego zamówienie zmienia status na zakończone i od tego momentu zmiany w raporcie pomiarowym kontroli jakości nie są możliwe
+	
+\begin{figure}[H]
+\includegraphics[width=16cm]c
+\caption{Zamknięte zamówienie w widoku głównym}
+\end{figure}
+
+	\item Zamknięte zamówienie zostaje zrealizowane w przypadku przejścia kontroli jakości. Jeśli kontrola jakości da negatywny wynik, wówczas kierownik produkcji w oparciu o zmierzone dane podejmuje decyzję, czy partię można dopuścić warunkowo czy trzeba powtórzyć produkcję.
+\end{itemize}
+
+\section{Użytkownicy}
+Komponent ten ma charakter pomocniczy - choć nie dostarcza  funkcjonalności stricte biznesowych, zapewnia opcje logowania,  zmiany hasła oraz interfejs do rozpoznania tożsamości i uprawnień użytkownika wykorzystywany przez pozostałe komponenty. Udostępnia również i dostosowywuje do potrzeb aplikacji wbudowany panel administratora, który umożliwia tworzenie, modyfikowanie i usuwanie kont użytkowników.
+
+\begin{figure}[H]
+\includegraphics[width=16cm]l
+\caption{Widok strony logowania}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[width=16cm]p
+\caption{Widok strony profilu użytkownika}
+\end{figure}
+
+\subsection{Grupy uprawnień użytkowników}
+W aplikacji możemy wyróżnić następujące grupy użytkowników:
+\begin{itemize}
+	\item administrator - jako jedyny może tworzyć konta użytkowników i je usuwać, ponadto posiada pełnię uprawnień do wszystkich komponentów
+	\item biuro - posiada pełne prawa do tworzenia i modyfikowania klientów, zleceń produkcyjnych, specyfikacji i  produktów oraz prawa w trybie do odczytu dla raportów pomiarowych
+	\item kontrola jakości - posiada pełne prawa do tworzenia i modyfikowania raportów pomiarowych oraz prawa w trybie do odczytu dla części z klientami, produktami i zleceniami produkcyjnymi
+	\item gość - ma dostęp do klientów, produktów, specyfikacji i zleceń produkcyjnych tylko w trybie do odczytu
+\end{itemize}
+
+\begin{figure}[H]
+\includegraphics[width=16cm]j
+\caption{Widok główny panelu administratora}
+\end{figure}
+
+\chapter{Stos technologiczny i narzędzia użyte w projekcie}
+Aplikacja jest zaimplementowana z wykorzystaniem języka Python 3.7 i frameworka Django 2.10, który wyznacza ramy architektoniczne dla projektu zgodnie ze wzorcem \emph{MVT (ang. Model-View-Template)}:
+\begin{itemize}
+	\item \emph{Model} - warstwa klas odwzorowujących relacje tabel w bazie danych zgodnie z ideą mapowania obiektowo-relacyjnego 
+	\item \emph{View} - warstwa klas odpowiedzialnych za obsługę przychodzących żądań i wyprodukowanie odpowiedzi po stronie serwera.
+	\item \emph{Template} - warstwa interfejsu użytkownika tworzona przy użyciu technologii HTML, CSS i JavaScript - tak zwany front-end aplikacji.
+\end{itemize}
+	
+Silnikiem bazodanowym użytym w projekcie jest MySQL w wersji 14.14.
+
+Kod aplikacji korzysta z infrastruktury dostarczanej przez framework Django oraz z następujących bibliotek:
+\begin{itemize}
+	\item django-bootstrap4 - umożliwia korzystanie z frameworku CSS Bootstrap w Django
+	\item xhtml2pdf - wspiera tworzenie stron osadzonych w formacie PDF
+	\item mysql-connector-python - klient obsługujący połączenie aplikacji z bazą danych
+	\item django-filter - ułatwia tworzenie filtrów w widokach i opcji wyszukiwania
+\end{itemize}
+
+\chapter{Architektura aplikacji}
+Architektura aplikacji wynika z użytego frameworka Django, który samoczynnie proponuje podział projektu na mniejsze aplikacje. W projekcie możemy wyróżnić następujące aplikacje:
+\begin{itemize}
+	\item \emph{clients} - klienci
+	\item \emph{products} - produkty i specyfikacje
+	\item \emph{orders} - zlecenia produkcyjne i raporty pomiarowe
+	\item \emph{users} - użytkownicy i panel administratora 
+\end{itemize}
+
+Każda aplikacja posiada ustandaryzowaną strukturę wspierającą opisany w poprzednim rozdziale wzorzec projektowy \emph{MVT}, jej główne elementy to:
+\begin{itemize}
+	\item moduł \emph{models.py} - warstwa modeli pośredniczących w komunikacji między aplikacją a bazą danych
+	\item moduł \emph{views.py} - warstwa widoków obsługujących przychodzące żądania i realizujące oczekiwane odpowiedzi lub akcje
+	\item moduł \emph{forms.py} - warstwa formularzy odciążających modele w kwestii walidacji danych od użytkownika
+	\item moduł \emph{urls.py} - warstwa deklaratywna mapowań adresów URL przychodzących żądań na poszczególne akcje widoków
+	\item moduł \emph{filters.py} - funkcje pomocnicze dla celów filtrowania w widokach głównych aplikacji
+	\item folder \emph{templates} - zawiera szablony HTML używane przez widoki danej aplikacji do wyprodukowania odpowiedzi.  
+	\item folder \emph{migrations} - zawiera automatycznie generowany kod przez mechanizm synchronizacji frameworka 
+	warstwy aplikacji z bazą danych
+\end{itemize}
+
+\chapter{Baza danych}
+Rozkład tabel jest ściśle związany z modelami zdefiniowanymi w warstwie kodu serwerowego aplikacji. Każdej klasie modelu odpowiada poszczególna tabela, zaś pola składowe klasy określają kolumny tabeli. Można wyróżnić następujące tabele i relacje:
+\begin{itemize}
+	\item Klienci - każdy klient może być w wielu zleceniach produkcyjnych
+	\item Produkty - każdy jeden produkt ma swoją jedną specyfikację, ponadto jeden produkt może być w wielu zleceniach produkcyjnych
+	\item Specyfikacje - przypisana do jednego produktu zawiera znaczną część danych technicznych, odciążając tabelę produktu, na przykład w sytuacji wyszukiwania produktu po jego kodzie
+	\item Zlecenia produkcyjne - musi mieć przypisanego klienta i produkt. Sytuacja, w której w ramach jednego zlecenia produkcyjnego możemy mieć wiele produktów jest rozbita na osobne zlecenia, gdyż każda partia danego produktu
+wymaga osobnej kontroli jakości.
+	\item Raporty pomiarowe - łączy zlecenie produkcyjne z wykonanymi pomiarami.
+	\item Pomiary - przechowuje dane pomiarowe dla danej palety, jest przypisany do danego raportu pomiarowego
+	\item Użytkownicy - przechowuje login, imię, nazwisko i hasło użytkownika. Grupy użytkowników są przechowywane jako rekordy w tabeli grup, generowanej domyślnie przez framework - z tego powodu tabela ta nie jest uwzględniona w poniższym diagramie.
+	
+\end{itemize}
+\begin{figure}[H]
+\includegraphics[width=16cm, height=24cm]d
+\caption{Diagram ER bazy danych}
+\end{figure}
+
+\chapter{Testowanie i zapewnienie jakości aplikacji}
+Głównym narzędziem procesu zapewnienia jakości jest testowanie. Proces testowania dla potrzeb niniejszej aplikacji został podzielony na następujące czynności i zadania testowe:
+\begin{itemize}
+	\item analiza potrzeb zapewnienia jakości projektu
+	\item planowanie i podejście testowe
+	\item projektowanie testów
+	\item imlementacja testów
+	\item wykonywanie i utrzymywanie testów
+\end{itemize}
+
+\section{Definicje}
+\begin{itemize}
+	\item testy białoskrzynkowe - wymagają znajomości wewnętrznej struktury i sposobu działania kodu testowanego komponentu aplikacji. Do ich głównych zalet należą: łatwość automatyzacji oraz duża granularność i separacja testowanych funkcjonalności.
+	\item testy czarnoskrzynkowe - testy, które są wykonywane bez wiedzy na temat wewnętrznej struktury i kodu testowanego elementu aplikacji. Głównymi zaletami testów czarnoskrzynkowych są testy w warunkach zbliżonych do warunków środowiskowych użytkownika końcowego oraz możliwość przeprowadzania testów w oparciu o przypadki użycia aplikacji.
+	\item testy eksploracyjne - rodzaj testu, w którym tester ma określone jedynie warunki początkowe i punkt startowy, bez procedury testów. Ideą tego rodzaju testowania jest próba jak najwierniejszego odwzorowania zachowania użytkownika, który błądzi po aplikacji i wykonuje w niej bliżej nieprzewidywalne akcje. Jest to jeden z najbardziej efektywnych sposobów detekcji nieszablonowych błędów.
+	\item \emph{CI (ang. Continuous Integration)} - praktyka projektowa polegająca na każdorazowym testowaniu zmian wprowadzanych w kodzie głównego repozytorium. Tym mianem określa się często również samo środowisko uruchomieniowe testów wymagane do wdrożenia tej praktyki.
+\end{itemize}
+
+\section{Analiza potrzeb zapewnienia jakości projektu}
+Aplikacja opisana w niniejszej pracy spełnia kryteria projektu przeznaczonego do wykonywania ściśle określonych zadań. Ta własność sugeruje wysoką przydatność testów funkcjonalnych opartych o wymagania odbiorcy i testów opartych o przypadki użycia - możliwa jest bowiem nie tylko detekcja błędów, ale jednocześnie zweryfikowanie, czy dana funkcjonalność działa zgodnie z jej wymaganiami.
+
+Inną potrzebą jest zapewnienie trwałości i poprawności danych przechowywanych w bazie danych oraz bezpieczeństwo aplikacji.  
+Pomysłem na osiągnięcie zadowalających rezultatów jest przeprowadzenie testów kodu serwerowego, pokrywających dużą liczbę możliwych przypadków.
+
+\section{Planowanie i podejście testowe}
+Z powyższej analizy możemy wytworzyć następujące podejście testowe wraz z planem testów:
+\begin{itemize}
+	\item testowanie części serwerowej - automatyczne testy białoskrzynkowe na poziomach testów jednostkowych i integracyjnych. Ze względu na niski koszt testów możliwe jest pokrycie dużej ilości przypadków, szczególnie przypadków brzegowych, a także przeprowadzenie testów negatywnych.
+	\item testowanie interfejsu użytkownika - funkcjonalne testy czarnoskrzynkowe oraz testy akceptacyjne w oparciu o przypadki użycia. 
+\end{itemize}
+
+\section{Projektowanie testów}
+\subsection{Część serwerowa}
+\begin{itemize}
+	\item testy jednostkowe modeli - głównie pod kątem zdefiniowanych relacji między obiektami i wynikających z nich zachowań (np. kaskadowe usuwanie rekordów wraz z rekordami wskazującymi na nie kluczami obcymi)
+	\item testy jednostkowe formularzy - wynikające ze specyfiki frameworka Django, koncentrują się wokół walidacji danych od użytkownika
+	\item testy integracyjne widoków (kontrolerów) - sprawdzają czy na dane żądanie jest wyprodukowana odpowiednia odpowiedź albo jest wykonywana określona akcja, ponadto testują strukturę i zawartość odpowiedzi czy rezultat wykonanej akcji
+	\item testy jednostkowe lub integracyjne dodatkowych funkcjonalności - testy określonych modułów, jak np. moduł do generowania widoków osadzalnych w formacie PDF
+\end{itemize}
+
+\subsection{Interfejs użytkownika}
+\begin{itemize}
+	\item testy funkcjonalne - przeprowadzane z poziomu interfejsu użytkownika testy poszczególnych funkcjonalności.
+	\item testy oparte o przypadki użycia. Można je interpretować jako testy łączące testy wielu funkcjonalności w scenariusze zgodne z danymi przypadkami użycia.
+\end{itemize}
+
+\subsection{Przykładowe przypadki użycia}
+\begin{itemize}
+	\item Dodanie nowego klienta do bazy danych, użytkownik niezalogowany
+	\begin{enumerate}
+		\item Użytkownik loguje się do aplikacji
+		\item Wchodzi w zakładkę klientów do widoku głównego
+		\item Klika w opcję utworzenia nowego klienta
+		\item Wypełnia danymi formularz i wysyła go na serwer.
+		Dwa przypadki:
+		\begin{itemize}
+		\item sukces: następuje przekierowanie użytkownika do widoku głównego aplikacji wraz z informacją o utworzeniu nowego klienta.
+		\item niepowodzenie: użytkownik pozostaje na stronie formularza z informacją zwrotną o niepowodzeniu utworzenia nowego klienta
+		\end{itemize}
+	\end{enumerate}
+
+	\item Wyszukanie zleceń produkcyjnych złożonych na dany 			  produkt w ostatnich 3 miesiącach przez zalogowanego użytkownika
+	\begin{enumerate}
+		\item Użytkownik wchodzi w zakładkę zleceń produkcyjnych
+		\item W filtrach wybiera: 
+		\begin{itemize} 
+			\item datę początkową 3 miesiące wcześniejszą od dzisiejszej, datę końcową jako dzisiejszą
+			\item wpisuje identyfikator produktu bądź jego opis odpowiednio w pola filtrów kodu produktu lub opisu
+		\end{itemize}
+		\item Klika opcję wyszukiwania
+	\end{enumerate}	
+\end{itemize}
+
+
+\section{Implementacja testów}
+\subsection{Część serwerowa}
+Testy automatyczne uruchamiane za pomocą środowiska \emph{unittest} oraz z wykorzystaniem dedykowanej dla frameworka Django infrastruktury testowej, takich jak sztuczny widok czy fabryki modeli danych testowych.
+
+\subsection{Interfejs użytkownika}
+Testy manualne, choć możliwa jest stopniowa automatyzacja
+testów funkcjonalnych przy użyciu technologii Selenium.
+
+\section{Wykonywanie testów}
+\subsection{Część serwerowa}
+Wykonywane przy każdej zmianie dorzucanej na zdalne repozytorium w ramach \emph{CI}. 
+
+\subsection{Interfejs użytkownika}
+Funkcjonalne testy manualne są wykonywane po ukończeniu nowych funkcjonalności. Regresja manualna jest wykonywana w momencie dostarczania nowych wersji aplikacji do środowiska produkcyjnego, istnieje jednak możliwość stopniowej automatyzacji przy użyciu technologii Selenium, co skutkowałoby możliwością częstszej egzekucji testów regresyjnych.
+
+Testy oparte o przypadki użycia powinny być wykonywane tylko manualnie ze względu na wysokopoziomowy charakter opisu przypadku użycia - istnieje pewna dowolność w testowaniu, wprowadzająca walor testów eksploracyjnych.
+
+\chapter{Przyszłość projektu pod kątem rozwoju nowych funkcjonalności}
+W obecnym stadium rozwoju aplikacja umożliwia kontrolę procesów jakości produktów. Niemniej, projekt jest rozwojowy i otwarty na modyfikacje i nowe funkcjonalności. Do głównych pomysłów na rozwój nowych funkcjonalności można zaliczyć moduł do generowania wykresów ze statystyk przeprowadzonych pomiarów - niektórzy klienci potrzebują wiedzieć jak kształtowały się wyniki kontroli jakości zamawianych przez nich produktów w dłuższym przedziale czasowym. 
+
+Innym pomysłem jest dodanie funkcjonalności związanej z generowaniem świadectw jakości produktu - formalnego dokumentu w formacie PDF podobnego do specyfikacji, ale zawierającego analizę porównawczą pomiarów przeprowadzonych przez kontrolę jakości i wartości referencyjnych ze specyfikacji produktu.
+
+Kolejnym, bardziej dalekosiężnym pomysłem, którego  realizacja przerasta obecne możliwości autora projektu, jest umozliwienie integracji aplikacji z systemem SAP, wdrożonym w firmach. 
+Jest jednak możliwe, iż w przypadku sukcesu projektu wraz z pojawieniem się budżetu pojawią się nowe możliwości w zakresie rozwoju wymienionych funkcjonalności, które obecnie znajdują poza zakresem niniejszej pracy.
+
+\chapter{Podsumowanie}
+Projekt opisany w niniejszej pracy znajduje się w końcowej fazie przygotowywania pierwszej wersji produkcyjnej aplikacji.
+Jego wersja próbna przechodzi pierwsze testy po stronie odbiorcy. Pomimo dużej ilości uwag i propozycji ulepszeń, które dotyczą w znacznej większości interfejsu użytkownika, reakcja firmy oraz jej pracowników jest pozytywna - dostrzegają zalety systemu oraz usprawnienia, jakie wprowadza.
+
+Można uznać, że projekt, choć jest nadal w fazie rozwoju, okazuje się być sukcesem - założenia projektowe okazały się zgodne z rzeczywistością i zadania, które realizuje aplikacja, są w stanie faktycznie wspomóc proces kontroli jakości w firmie. Co więcej, osadzenie projektu w architekturze aplikacji internetowej nie zamyka go na dalszy rozwój - wybrana technologia umożliwia tworzenie kolejnych narzędzi za pomocą dedykowanej infrastruktury, takich jak interfejs internetowy umożliwiający dostęp do bazy danych projektu dla aplikacji zewnętrznych.
+
+\begin{thebibliography}{1}
+\bibitem{teststrategy} Sylabus poziomu podstawowego ISTQB, wersja 2018 V 3.1.
+\end{thebibliography}
+
+\end{document}

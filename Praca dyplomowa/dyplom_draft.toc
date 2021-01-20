@@ -1,0 +1,38 @@
+\babel@toc {english}{}
+\babel@toc {polish}{}
+\babel@toc {english}{}
+\babel@toc {polish}{}
+\babel@toc {polish}{}
+\babel@toc {polish}{}
+\babel@toc {polish}{}
+\babel@toc {english}{}
+\babel@toc {polish}{}
+\babel@toc {english}{}
+\babel@toc {polish}{}
+\contentsline {chapter}{\numberline {1.}Wprowadzenie}{7}{chapter.1}
+\contentsline {chapter}{\numberline {2.}Opis i budowa aplikacji}{9}{chapter.2}
+\contentsline {section}{\numberline {2.1.}Klienci}{9}{section.2.1}
+\contentsline {section}{\numberline {2.2.}Produkty i specyfikacje}{11}{section.2.2}
+\contentsline {section}{\numberline {2.3.}Zlecenia produkcyjne i raporty pomiarowe}{13}{section.2.3}
+\contentsline {section}{\numberline {2.4.}U\IeC {\.z}ytkownicy}{16}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1.}Grupy uprawnie\IeC {\'n} u\IeC {\.z}ytkownik\IeC {\'o}w}{17}{subsection.2.4.1}
+\contentsline {chapter}{\numberline {3.}Stos technologiczny i narz\IeC {\k e}dzia u\IeC {\.z}yte w projekcie}{19}{chapter.3}
+\contentsline {chapter}{\numberline {4.}Architektura aplikacji}{21}{chapter.4}
+\contentsline {chapter}{\numberline {5.}Baza danych}{23}{chapter.5}
+\contentsline {chapter}{\numberline {6.}Testowanie i zapewnienie jako\IeC {\'s}ci aplikacji}{25}{chapter.6}
+\contentsline {section}{\numberline {6.1.}Definicje}{25}{section.6.1}
+\contentsline {section}{\numberline {6.2.}Analiza potrzeb zapewnienia jako\IeC {\'s}ci projektu}{26}{section.6.2}
+\contentsline {section}{\numberline {6.3.}Planowanie i podej\IeC {\'s}cie testowe}{26}{section.6.3}
+\contentsline {section}{\numberline {6.4.}Projektowanie test\IeC {\'o}w}{26}{section.6.4}
+\contentsline {subsection}{\numberline {6.4.1.}Cz\IeC {\k e}\IeC {\'s}\IeC {\'c} serwerowa}{26}{subsection.6.4.1}
+\contentsline {subsection}{\numberline {6.4.2.}Interfejs u\IeC {\.z}ytkownika}{27}{subsection.6.4.2}
+\contentsline {subsection}{\numberline {6.4.3.}Przyk\IeC {\l }adowe przypadki u\IeC {\.z}ycia}{27}{subsection.6.4.3}
+\contentsline {section}{\numberline {6.5.}Implementacja test\IeC {\'o}w}{28}{section.6.5}
+\contentsline {subsection}{\numberline {6.5.1.}Cz\IeC {\k e}\IeC {\'s}\IeC {\'c} serwerowa}{28}{subsection.6.5.1}
+\contentsline {subsection}{\numberline {6.5.2.}Interfejs u\IeC {\.z}ytkownika}{28}{subsection.6.5.2}
+\contentsline {section}{\numberline {6.6.}Wykonywanie test\IeC {\'o}w}{28}{section.6.6}
+\contentsline {subsection}{\numberline {6.6.1.}Cz\IeC {\k e}\IeC {\'s}\IeC {\'c} serwerowa}{28}{subsection.6.6.1}
+\contentsline {subsection}{\numberline {6.6.2.}Interfejs u\IeC {\.z}ytkownika}{28}{subsection.6.6.2}
+\contentsline {chapter}{\numberline {7.}Przysz\IeC {\l }o\IeC {\'s}\IeC {\'c} projektu pod k\IeC {\k a}tem rozwoju nowych funkcjonalno\IeC {\'s}ci}{29}{chapter.7}
+\contentsline {chapter}{\numberline {8.}Podsumowanie}{31}{chapter.8}
+\contentsline {chapter}{Bibliografia}{33}{chapter*.2}
